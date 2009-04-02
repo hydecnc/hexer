@@ -1,0 +1,46 @@
+NAME
+       myc - a simple calculator
+
+SYNOPSIS
+       myc [command]
+
+DESCRIPTION
+       Myc  is  a  simple  calculator  capable  of all operations
+       available in C.  Commands are entered in  infix  notation.
+       It  is  possible  to use parentheses.  If a myc-command is
+       specified on the command-line, the result  is  echoed  and
+       myc  exits immediately.  If invoked with no arguments, myc
+       starts reading commands from standard-in.  myc understands
+       the  following binary infix operators (from highest prior-
+       ity to lowest): ** (power), * (multiply),  /  (divide),  %
+       (modulo),  +  (add),  -  (subtract),  <<  (shift left), >>
+       (shift right), < (less), <= (less or equal), >  (greater),
+       >=  (greater  or  equal),  ==  (equal),  != (not equal), &
+       (arithmetical and), | (arithmetical or),  ^  (arithmetical
+       exclusive  or),  &&  (logical  and),  ||  (logical  or), =
+       (assign);  and the following  unary  prefix  operators:  -
+       (negate,  unary  minus), !  (logical not), ~ (bitwise com-
+       plement).  myc knows three data  types:  boolean,  integer
+       (32 bit), float (64 bit, equivalent to C double).  On some
+       esoteric platforms the precision of integer and float  may
+       be different.  As in C the result of a division depends on
+       the data types of the operands.  An integer divided by  an
+       integer yields an integer.  If you want the result to be a
+       float, make sure one of the operands is a float, e.g. type
+       4/7.   instead  of  4/7  or a/(b+0.)  instead of a/b.  The
+       power operation returns a float if the result is too large
+       to  fit  in  an  integer.   The result of a calculation is
+       stored in the special variables $$ and $n where n  is  the
+       number of the command.
+
+BUGS
+       Maybe.  Please report bugs to demetrio@cs.uni-sb.de.
+
+COPYRIGHT
+       myc is not in the public domain, but freely distributable.
+       It may be used for any non-commercial purpose.   See  file
+       COPYRIGHT for details.
+
+AUTHOR
+       Sascha Demetrio
+       demetrio@cs.uni-sb.de

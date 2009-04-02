@@ -1,0 +1,15 @@
+/* Configuration file
+ */
+
+#define HAVE_STRCMP          1
+#define HAVE_STRCASECMP      1
+#define HAVE_SIGTYPE_INT     0
+#define HAVE_CONST           0
+#define HAVE_NCURSES         0
+#define HAVE_USLEEP          1
+#define HAVE_FLOAT_H         1
+#define HAVE_ALLOCA          0
+#define NEED_ALLOCA_H        0
+
+#define USE_STDARG           1
+

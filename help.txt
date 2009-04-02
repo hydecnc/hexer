@@ -1,0 +1,792 @@
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+NNAAMMEE
+       hexer - binary file editor
+
+SSYYNNOOPPSSIISS
+       hheexxeerr [options] [file [...]]
+
+DDEESSCCRRIIPPTTIIOONN
+       hheexxeerr  is a multi-buffer editor for viewing and manipulat-
+       ing binary files.  It can't (shouldn't) be used for  edit-
+       ing block devices, because it tries to load the whole file
+       into a buffer (it should work for  diskettes).   The  most
+       important  features  of  hheexxeerr  are:  multi buffers, multi
+       level undo, command line editing with  completion,  binary
+       regular  expressions  (see  below).  The user interface is
+       kept similar to vvii, so if you know how to use  vvii,  you'll
+       get started easily.
+
+OOPPTTIIOONNSS
+       --RR,, ----rreeaaddoonnllyy
+
+       --vv,, ----vviieeww
+           Edit files in read only mode.
+
+       --rr,, ----rreeccoovveerr _f_i_l_e_n_a_m_e
+           Recover  the  file _f_i_l_e_n_a_m_e after a crash. (not imple-
+           mented)
+
+       --cc,, ----ccoommmmaanndd _c_o_m_m_a_n_d
+           Start the editing session by executing the editor com-
+           mand  _c_o_m_m_a_n_d.  If _c_o_m_m_a_n_d contains spaces, it must be
+           surrounded by double quotes.  It is possible to  spec-
+           ify multiple commands on the command line:
+           hheexxeerr --cc _c_o_m_m_a_n_d_1 --cc _c_o_m_m_a_n_d_2 ......
+
+       --tt,, ----ttiittee
+           Turn  off  the  usage  of  the  termcap/terminfo ti/te
+           sequence.
+
+       --hh,, ----hheellpp
+           Print out a short help message and exit.
+
+       ++_c_o_m_m_a_n_d
+           This is equivalent to the --cc option.
+
+       NNoottee:: The long options are not available on all systems.
+
+CCUUSSTTOOMMIIZZIINNGG
+       The editor  reads  its  startup  commands  from  the  file
+       ~~//..hheexxeerrrrcc  (another startup file may be specified by set-
+       ting the environment variable HHEEXXEERRRRCC).  Empty  lines  and
+       lines  starting  with  a  `"'-character (double quote) are
+       ignored.  It is not possible to have a command and a  com-
+       ment in the same line.
+
+
+
+
+Hexer 0.1.4b             1996 January 12                        1
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+EEDDIITTOORR CCOOMMMMAANNDDSS
+       As in vvii, there are several editing modes:
+
+       CCoommmmaanndd MMooddee
+           Some commands in CCoommmmaanndd MMooddee can take a numeric argu-
+           ment.  To enter a numeric argument just type the (dec-
+           imal) number.  The number will be echoed at the bottom
+           line of the screen as you type.   To  enter  an  octal
+           number,  type  a  `0'  as the first digit.  To enter a
+           hexadecimal number, type `0x' (this is not a  problem,
+           because  the  xx-command  with  a zero counter wouldn't
+           make sense anyway).  Some of the commands can  take  a
+           visually  selected area as an argument (see subsection
+           VViissuuaall MMooddee).
+
+           bb      Move backwards to the beginning of a word.
+
+           ee      Move to the end of a word.
+
+           GG      If a numeric argument nn is given, move the cur-
+                  sor  to  position  nn.  If no argument is speci-
+                  fied, set  the  position  to  the  end  of  the
+                  buffer.   The  first  byte  in the buffer is at
+                  position `0', so the command  to  move  to  the
+                  beginning of the buffer is `0G'.
+
+           CCoonnttrrooll--GG
+                  Display  the  buffer name, size, status and the
+                  current position at the bottom line.
+
+           hh jj kk ll
+                  Move the cursor.  The arrow keys work as  well.
+                  The  numeric argument (if specified) determines
+                  the number rows  or  columns  the  cursor  will
+                  move.   Different  from  vvii:  the cursor can be
+                  positioned bbeehhiinndd the last byte in the  buffer.
+
+           ii      Enter  IInnsseerrtt  MMooddee  (see below) at the current
+                  position of the point.  If a numeric argument nn
+                  is  given,  the  typed  text will be inserted nn
+                  times.  NNoottee::  Moving  the  cursor  (using  the
+                  arrow  keys) will discard the numeric argument.
+
+           nn      Move to the next match using  the  current  RE.
+                  This is equivalent to typing `/', <Return>.
+
+           NN      Move  to  the  previous match using the current
+                  RE.   This  is  equivalent   to   typing   `?',
+                  <Return>.
+
+           CCoonnttrrooll--OO
+                  Paste  over.   Copy the kill buffer to the cur-
+                  rent position overwriting the contents  of  the
+                  current  buffer.   If  a  numeric argument nn is
+
+
+
+Hexer 0.1.4b             1996 January 12                        2
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+                  given, the kill buffer is pasted nn times.
+
+           pp      Paste.  Insert the kill buffer at  the  current
+                  position.   If  a  numeric argument nn is given,
+                  the kill buffer is pasted nn times.
+
+           rr      Replace a single byte using the  RReeppllaaccee  MMooddee.
+                  If  an  area  is  selected,  all  bytes  in the
+                  selected area are replaced.  If a numeric argu-
+                  ment is given, the specified number of bytes is
+                  replaced.
+
+           RR      Enter RReeppllaaccee MMooddee (see below).  If  a  numeric
+                  argument  nn  is  given,  the replace command is
+                  repeated nn  times.   NNoottee::  Moving  the  cursor
+                  (using the arrow keys) will discard the numeric
+                  argument.
+
+           CCoonnttrrooll--RR
+                  Redo the last undo.
+
+           uu      Undo the last change to the current buffer.
+
+           Whenever possible hheexxeerr creates a file  _n_a_m_e..hheexxeerr  in
+           the  current  directory (the sswwaappffiillee) for each buffer
+           visited (where _n_a_m_e is the name of the  buffer).   All
+           changes  made  to  the  buffer _n_a_m_e are stored in that
+           file, so it is possible to undo (and redo) all changes
+           made to the buffer.  If the sswwaappffiillee can't be created,
+           the undo list is stored in the memory.
+
+           vv      Enter VViissuuaall MMooddee (see below).   Visual  selec-
+                  tion of areas.
+
+           ww      Move forward to the beginning of a word.
+
+           xx      Delete the byte under the cursor.  If a numeric
+                  argument nn is given, nn bytes are  deleted.   In
+                  VViissuuaall  MMooddee,  the  selected  area  is deleted.
+                  NNoottee:: The bytes deleted using the xx-command are
+                  not copied to the kill buffer.
+
+           CCoonnttrrooll--XX
+                  The  same  as  the  xx-command,  but  the  bytes
+                  deleted are copied to the kill buffer.
+
+           yy      Yank.  Yank the byte under the cursor into  the
+                  kill buffer.  If a numeric argument nn is given,
+                  nn bytes are yanked into the  kill  buffer.   In
+                  VViissuuaall MMooddee, the selected area is copied to the
+                  kill buffer.
+
+           zzbb     Place the cursor in  the  bottom  line  of  the
+                  screen.
+
+
+
+Hexer 0.1.4b             1996 January 12                        3
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           zztt     Place the cursor in the top line of the screen.
+
+           zzzz     Place the cursor in  the  middle  line  of  the
+                  screen.
+                  Note  that  the  commands  zzbb,  zztt and zzzz don't
+                  change the position in  the  file  -  only  the
+                  screen is scrolled (if necessary).
+
+           ::      Enter  EExxhh  MMooddee  (see below).  The EExxhh MMooddee is
+                  similar to the eexx-mode in vvii, but not  compati-
+                  ble.  If an area is selected, the bounds of the
+                  selection are copied to the command line.
+
+           //      Search  forward  through  the  buffer  using  a
+                  RREE(rreegguullaarr eexxpprreessssiioonn).  If no RREE is specified,
+                  the RREE given in the previous //- or ??-command is
+                  reused.
+                  NNoottee:: The RREEs in hheexxeerr are a little bit differ-
+                  ent from regular expressions in vvii (see section
+                  RREEGGUULLAARR EEXXPPRREESSSSIIOONNSS).
+
+           ??      Search reverse using a regular expression.
+
+           ..      Repeat  the  last  change  to the buffer aatt tthhee
+                  ccuurrrreenntt ppoossiittiioonn.  This means that if the  pre-
+                  vious command deleted nn bytes and replaced them
+                  by mm other bytes (nn or  mm  may  be  zero),  the
+                  ..-command  will do eexxaaccttllyy the same at the cur-
+                  rent position in the file.
+
+           <<      Shift the hex column left nn bytes, where  nn  is
+                  the (optional) numeric argument.  Note that the
+                  <<-command only changes the way  the  buffer  is
+                  displayed  in the hex column, the buffer itself
+                  is kept unchanged.
+
+           >>      Shift the hex column right nn bytes.
+
+           CCoonnttrrooll--^^
+                  Switch to the alternate buffer (see below).
+
+           %%      Enter a calculator command (see section  CCAALLCCUU--
+                  LLAATTOORR).
+
+
+       VViissuuaall MMooddee
+           Select  an  area  on  the  buffer.   You can enter the
+           VViissuuaall MMooddee by using the vv-command or by specifying an
+           area  in EExxhh MMooddee.  The selection starts at the cursor
+           position when entering the VViissuuaall MMooddee and ends at the
+           current  cursor  position.   You  can leave the VViissuuaall
+           MMooddee without performing a command on the selected area
+           by  pressing vv or EEssccaappee.  To perform a command on the
+           selected area simply enter the command as if you where
+
+
+
+Hexer 0.1.4b             1996 January 12                        4
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           in  CCoommmmaanndd  MMooddee.  Commands that can't use the selec-
+           tion will ignore it.  As in CCoommmmaanndd MMooddee, it is possi-
+           ble  to specify a numeric argument.  Commands that can
+           take the selection as  an  argument  will  ignore  the
+           numeric argument.
+
+       IInnsseerrtt MMooddee
+           In  IInnsseerrtt MMooddee the bytes you type are inserted at the
+           current position of the cursor.  At any time, you  can
+           toggle  the  active column (hex column or text column)
+           by pressing the TTAABB-key.  If the hex column is  active
+           the bytes are entered as two digit hex numbers, if the
+           text column is active, the bytes are entered as  ASCII
+           text.  The DDeelleettee- or BBaacckkSSppaaccee-key deletes the previ-
+           ously inserted byte.  If the hex column is active, the
+           previously inserted nibble (hex digit) is deleted.  It
+           is not possible to delete more bytes  than  have  been
+           inserted  in  the  current  insert  command.  While in
+           IInnsseerrtt MMooddee, you can move the cursor using  the  arrow
+           keys.   Note  that  moving  the  cursor  discards  the
+           numeric argument given  to  the  insert  command.   To
+           leave  the  IInnsseerrtt  MMooddee,  type  EEssccaappee.  If a numeric
+           argument nn was given to  the  insert  command  and  is
+           hasn't  been discarded by a cursor movement, the typed
+           bytes are inserted nn times.
+
+       RReeppllaaccee MMooddee
+           In RReeppllaaccee MMooddee you replace the bytes under the cursor
+           as  you type.  Hitting BBaacckkSSppaaccee restores the original
+           contents of the buffer.  The effect of a numeric argu-
+           ment  is  similar  to the IInnsseerrtt MMooddee: the typed bytes
+           are replaced nn times.  As in IInnsseerrtt MMooddee,  moving  the
+           cursor using the arrow keys discards the numeric argu-
+           ment.
+
+       EExxhh MMooddee
+           The EExxhh MMooddee in hheexxeerr is kept similar to  the  eexx-mode
+           in vvii.  Typically, an eexxhh command looks like:
+
+           ::_a_r_e_a _c_o_m_m_a_n_d _a_r_g_u_m_e_n_t_s
+                  Perform the command _c_o_m_m_a_n_d on the area _a_r_e_a.
+
+
+           ::_c_o_m_m_a_n_d _a_r_g_u_m_e_n_t_s
+                  Perform  the  command  ccoommmmaanndd  at  the current
+                  position.
+
+           ::_a_r_e_a  Select the area _a_r_e_a.
+
+           ::_p_o_s_i_t_i_o_n
+                  Move the cursor to position _p_o_s_i_t_i_o_n.
+
+           An area may be defined as:
+
+
+
+
+Hexer 0.1.4b             1996 January 12                        5
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           _p_o_s_i_t_i_o_n_1_,_p_o_s_i_t_i_o_n_2
+                  The area starts at _p_o_s_i_t_i_o_n_1 and ends at  _p_o_s_i_-
+                  _t_i_o_n_2 (inclusive).
+
+           _p_o_s_i_t_i_o_n
+                  The area selects one byte at _p_o_s_i_t_i_o_n
+
+           _%      The area selects the entire buffer.
+
+           A position may be defined as:
+
+           _o_f_f_s_e_t A  decimal,  octal  (prefixed  with `0') or hex
+                  (prefixed with `0x') number.
+
+           _.      The beginning of the buffer.
+
+           _$      The end of the buffer.
+
+           /_r_e_g_e_x_p/
+                  A  regular  expression  (see  section   RREEGGUULLAARR
+                  EEXXPPRREESSSSIIOONNSS).   The  buffer is searched forward
+                  starting at the current position.  If  a  match
+                  was  found,  the current position is set to the
+                  position of the match.
+
+           ?_r_e_g_e_x_p?
+                  The buffer is searched reverse.
+
+           Commands may be abbreviated with a  unique  prefix  of
+           the  command,  some commands may be abbreviated with a
+           single character,  even  if  that  character  isn't  a
+           unique prefix of the command name.  Currently the fol-
+           lowing commands are supported:
+
+           ss,, ssuubbssttiittuuttee
+                  SSyynnooppssiiss:: _a_r_e_a ss /_r_e_g_e_x_p/_r_e_p_l_a_c_e/_f_l_a_g_s
+                  Search for the regular  expression  _r_e_g_e_x_p  and
+                  replace  it  with  _r_e_p_l_a_c_e (see section RREEGGUULLAARR
+                  EEXXPPRREESSSSIIOONNSS).  _r_e_p_l_a_c_e may contain  `\'  refer-
+                  ences to subexpressions of regexp_.  _f_l_a_g_s:
+
+                  gg:     global, this flag is ignored (it doesn't
+                         make sense in a binary editor).
+
+                  cc:     confirm, ask the user  to  confirm  each
+                         substitution.
+
+                  (Note  that the `/' character used as separator
+                  could be any character, it's just common  prac-
+                  tice  to  use  `/'.) Trailing separators may be
+                  omitted.  If _a_r_e_a is omitted, the whole  buffer
+                  is searched.
+
+
+
+
+
+Hexer 0.1.4b             1996 January 12                        6
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           ww,, wwrriittee
+                  SSyynnooppssiiss:: _a_r_e_a ww _f_i_l_e_n_a_m_e
+                  Write  _a_r_e_a  to  the file _f_i_l_e_n_a_m_e.  If _a_r_e_a is
+                  omitted. the whole buffer  is  written  to  the
+                  file,  if  _f_i_l_e_n_a_m_e  is  omitted,  the filename
+                  associated with the buffer is used.
+
+           rr,, rreeaadd
+                  SSyynnooppssiiss:: _p_o_s_i_t_i_o_n rr _f_i_l_e_n_a_m_e
+                  Insert the contents of  the  file  _f_i_l_e_n_a_m_e  at
+                  _p_o_s_i_t_i_o_n.   If _p_o_s_i_t_i_o_n is omitted, the current
+                  position is used.
+
+           ee,, eeddiitt
+                  SSyynnooppssiiss:: ee _n_a_m_e oorr:: ee ##
+                  Change to buffer _n_a_m_e.  If  there  is  no  such
+                  buffer,  hheexxeerr  tries to open a file named _n_a_m_e
+                  and load it into a new buffer.  If  _n_a_m_e  is  a
+                  hash   sign   (##),   the  alternate  buffer  is
+                  selected.   On  success  the   current   buffer
+                  becomes the alternate buffer.
+
+           bb,, bbuuffffeerr
+                  SSyynnooppssiiss:: bb _n_a_m_e
+                  oorr:: bb
+                  Change  to buffer _n_a_m_e.  On success the current
+                  buffer becomes the alternate buffer.   If  _n_a_m_e
+                  is omitted, a list of all buffers is displayed.
+
+           nn,, nneexxtt
+                  Select the next buffer in the buffer list.
+
+           NN,, pprreevviioouuss
+                  Select the previous buffer in th buffer list.
+
+           SS,, sskkiipp
+                  Select the next unvisited buffer in the  buffer
+                  list.
+
+           rreewwiinndd Select the first buffer in the buffer list.
+
+           wwaallll   Write all unsaved buffers.
+
+           cc,, cclloossee
+                  SSyynnooppssiiss:: cc _n_a_m_e
+                  oorr:: cc!!  _n_a_m_e
+                  oorr:: cc
+                  oorr:: cc!!
+                  Close the buffer _n_a_m_e.  If _n_a_m_e is omitted, the
+                  current buffer is closed.  If  the  buffer  has
+                  been  modified,  but  not  saved,  it  can't be
+                  closed using a ::cc-command; use  ::cc!!   to  over-
+                  ride.
+
+
+
+
+Hexer 0.1.4b             1996 January 12                        7
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           hh,, hheellpp
+                  View an online help text.
+
+           qq,, qquuiitt
+                  SSyynnooppssiiss:: qq _n_a_m_e
+                  oorr:: qq!!  _n_a_m_e
+                  oorr:: qq
+                  oorr:: qq!!
+                  Close  all  buffers and exit the editor.  If an
+                  opened buffer has bee modified, but not  saved,
+                  the  ::qq-command can't be performed; use ::qq!!  to
+                  override.
+
+           mmaapp
+
+           iimmaapp
+
+           vvmmaapp   SSyynnooppssiiss:: mmaapp _f_r_o_m _t_o
+                  oorr:: iimmaapp _f_r_o_m _t_o
+                  oorr:: vvmmaapp _f_r_o_m _t_o
+                  The key sequence _f_r_o_m  is  mapped  to  _t_o.   To
+                  enter  special  keys (e.g. function keys), mask
+                  them using CCoonnttrrooll--VV.  ::mmaapp affects the CCoommmmaanndd
+                  MMooddee  only,  ::iimmaapp affects the IInnsseerrtt MMooddee only
+                  and ::vvmmaapp affects the VViissuuaall MMooddee only.  It  is
+                  not  possible  to  re-map  key sequences on the
+                  command line editor.
+
+           uunnmmaapp
+
+           iiuunnmmaapp
+
+           vvuunnmmaapp SSyynnooppssiiss:: uunnmmaapp _f_r_o_m
+                  oorr:: iiuunnmmaapp _f_r_o_m
+                  oorr:: vvuunnmmaapp _f_r_o_m
+                  Delete a key mapping created with  ::mmaapp,  ::iimmaapp
+                  or ::vvmmaapp.
+
+           sseett    SSyynnooppssiiss:: sseett _v_a_r_i_a_b_l_e [...]
+                  oorr:: sseett _v_a_r_i_a_b_l_e=_v_a_l_u_e [...]
+                  oorr:: sseett nnoo_v_a_r_i_a_b_l_e [...]
+                  oorr:: sseett
+                  There  are not too many variables that could be
+                  modified, this might change though.   The  fol-
+                  lowing variables can be used: iissoo (bool):  dis-
+                  play the whole ISO-8859/1 character set;  aasscciiii
+                  (bool):   display  ASCII  characters only; TTEERRMM
+                  (string):  the name of the  terminal;  mmaaxxmmaattcchh
+                  (number), ssppeecciiaallnnll (bool): see section RREEGGUULLAARR
+                  EEXXPPRREESSSSIIOONNSS.  ::sseett called without  an  argument
+                  lists all variables and values.
+
+           dd,, ddeelleettee
+                  SSyynnooppssiiss:: _a_r_e_a dd
+
+
+
+Hexer 0.1.4b             1996 January 12                        8
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+                  Delete  all  bytes  in _a_r_e_a.  The deleted bytes
+                  are copied to the kill buffer.
+
+           yy,, yyaannkk
+                  SSyynnooppssiiss:: _a_r_e_a yy
+                  Copy the bytes in _a_r_e_a to the kill buffer.
+
+           vveerrssiioonn
+                  Display the version number of hheexxeerr.
+
+           zzzz     Place the cursor in  the  middle  line  of  the
+                  screen.   Note  that the screen is scrolled (if
+                  necessary);  the  cursor   position   is   kept
+                  unchanged.
+
+           zztt     Place the cursor in the top line of the screen.
+
+           zzbb     Place the cursor in  the  bottom  line  of  the
+                  screen.
+
+           wwqq     The same as ::xx.
+
+           xx,, eexxiitt
+                  Save all buffers and exit the editor.
+
+           If  a  command is called and can't use the given posi-
+           tions, areas or arguments, the  additional  positions,
+           areas, arguments are ignored.
+           CCoonnddiittiioonnaall ccoommmmaannddss:: It is possible to specify a list
+           of terminal names for which the given  command  should
+           be executed. The syntax is:
+                  ::_t_e_r_m_i_n_a_l_s::_c_o_m_m_a_n_d
+           where  _t_e_r_m_i_n_a_l_s is a colon-separated list of terminal
+           names.  The command is executed if  and  only  if  the
+           value  of  TTEERRMM is in the list.  I.e. you could have a
+           command like
+                  ::xxtteerrmm::sseett iissoo
+           in your ..hheexxeerrrrcc-file (use the ISO character set  only
+           if working on an xterm).
+
+       CCuurrssoorr MMoottiioonn
+           In  CCoommmmaanndd MMooddee, IInnsseerrtt MMooddee, RReeppllaaccee MMooddee and VViissuuaall
+           MMooddee, you can use the  following  cursor  motion  com-
+           mands:
+
+           AArrrrooww KKeeyyss
+                  Move the cursor.
+
+           CCoonnttrrooll--FF
+                  Move forward one page.
+
+           CCoonnttrrooll--BB
+                  Move back one page.
+
+
+
+
+Hexer 0.1.4b             1996 January 12                        9
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+           CCoonnttrrooll--DD
+                  Move forward half a page.
+
+           CCoonnttrrooll--UU
+                  Move back half a page.
+
+
+CCOOMMMMAANNDD LLIINNEE EEDDIITTIINNGG
+       On the command line you can use the following commands:
+
+       UUppAArrrrooww DDoowwnnAArrrrooww
+              Move up and down through the history of the current
+              context.
+
+       LLeeffttAArrrrooww RRiigghhttAArrrrooww
+              Move the cursor.
+
+       CCoonnttrrooll--AA
+              Move the cursor to the beginning of the line.
+
+       CCoonnttrrooll--EE
+              Move the cursor to the end of the line.
+
+       CCoonnttrrooll--KK
+              Delete all characters from the current cursor posi-
+              tion up to the end of the line.
+
+       CCoonnttrrooll--UU
+              Delete  all  characters  from  the beginning of the
+              line up to the current cursor position.
+
+       DDeelleettee
+
+       BBaacckkSSppaaccee
+              Delete the character left of the cursor.
+
+       CCoonnttrrooll--DD
+              Delete the character under the cursor.
+
+       EEnntteerr RReettuurrnn
+              Accept the line.
+
+       EEssccaappee Discard the line.  NNoottee:: This is different from vvii.
+
+       TTAABB    Try  to complete currently typed word.  If the com-
+              pletion is not unique, the word is completed as far
+              as unique.  If the TTAABB-key is hit twice on the same
+              position,  a list of all  possible  completions  is
+              displayed.
+
+RREEGGUULLAARR EEXXPPRREESSSSIIOONNSS
+       In  this  section it is assumed that you are familiar with
+       REs (regular expressions).  In most  applications  (eeggrreepp,
+       vvii, ...)  REs work on lines, that means it is not possible
+
+
+
+Hexer 0.1.4b             1996 January 12                       10
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+       to use a RE containing a line break  (newline  character).
+       In  hheexxeerr,  the buffer is not split up into distinct lines
+       and a newline character is considered  to  be  a  `normal'
+       character,  now  here's the problem: imagine searching for
+       "a.*b" in a 5 MB file, this would take very long (might be
+       up  to  several  minutes  on  a slow machine).  That's why
+       there's a mmaaxxmmaattcchh limit (a  repeat  operator  matches  at
+       most  mmaaxxmmaattcchh  occurrences  of its operand).  The default
+       value of mmaaxxmmaattcchh is 1024, but it may be customized  using
+       the ::sseett-command.  For simple expressions (expressions for
+       which the length of the match can be determined  from  the
+       expression)  it is possible to override the mmaaxxmmaattcchh limit
+       by doubling the `*'  or  `+'  operator,  e.g.  "a.**b"  or
+       "foo\(bar\)\+\+".
+       Note that the context specifiers `^'/`$' (beginning/end of
+       a line) and `\<'/`\>' (beginning/end of a word) are avail-
+       able  and  actually do what you expect.  If you don't want
+       the atoms `.' and `[^...]' to match the newline  character
+       you can set the ssppeecciiaallnnll option using the ::sseett-command.
+       To  enter  a special character, you can use the standard C
+       `\'-escape sequences.  To  enter  a  character  using  its
+       octal  code,  use  a  `\o'-prefix  followed by up to three
+       octal digits.  (C-style octal escapes are  not  supported,
+       because  `\0', ... `\9' are interpreted as back-references
+       to subexpressions of the RE.)  To enter a character  using
+       it's  hex  code,  type a `\x'-prefix followed by up to two
+       hex  digits;  decimal  codes  can  be  entered   using   a
+       `\d'-prefix followed by up to three decimal digits.  It is
+       possible to enter strings of codes by  doubling  the  base
+       specifier,  e.g. "\xxfe ff 5a 7e" or "\oo276 277 132 176".
+       Note that such a string is treated as an atom,  i.e.   the
+       RE  "\xxff fe*" matches any number (< mmaaxxmmaattcchh) of repeti-
+       tions of ffff ffee.
+       It is possible to use all kinds of  character  `\'-escapes
+       (escapes   representing   a   single   character)   within
+       `[]'-ranges.  Within a range, the `o' selecting  an  octal
+       base  for the escape may be omitted, since back-references
+       within a range don't make sense.  When specifying a  mini-
+       mum   and/or  maximum  number  of  repetitions  using  the
+       `\{,}'-operator, the numbers may be given in  decimal  (no
+       prefix),  octal  (`0'-prefix) or hex (`0x'-prefix).  If no
+       maximum number is specified and the operand is not a  sim-
+       ple expression, at most mmaaxxmmaattcchh matches will be found.
+
+CCAALLCCUULLAATTOORR
+       HHeexxeerr  provides  a  simple calculator (mmyycc) capable of all
+       operations available in C.  To enter a  mmyycc  command  just
+       enter  a %% (percent) sign and an expression in infix nota-
+       tion.  It is possible to use parentheses.  mmyycc understands
+       the  following binary infix operators (from highest prior-
+       ity to lowest): **** (power), ** (multiply),  //  (divide),  %%
+       (modulo),  ++  (add),  --  (subtract),  <<<<  (shift left), >>>>
+       (shift right), << (less), <<== (less or equal), >>  (greater),
+       >>==  (greater  or  equal),  ====  (equal),  !!== (not equal), &&
+
+
+
+Hexer 0.1.4b             1996 January 12                       11
+
+
+
+
+
+HEXER(1)                                                 HEXER(1)
+
+
+       (arithmetical and), || (arithmetical or),  ^^  (arithmetical
+       exclusive  or),  &&&&  (logical  and),  ||||  (logical  or), ==
+       (assign);  and the following  unary  prefix  operators:  --
+       (negate,  unary  minus), !!  (logical not), ~~ (bitwise com-
+       plement).  mmyycc knows three data  types:  bboooolleeaann,  iinntteeggeerr
+       (32 bit), ffllooaatt (64 bit, equivalent to C double).  On some
+       esoteric platforms the precision of integer and float  may
+       be different.  As in C the result of a division depends on
+       the data types of the operands.  An integer divided by  an
+       integer yields an integer.  If you want the result to be a
+       float, make sure one of the operands is a float, e.g. type
+       _4_/_7_.   instead  of  _4_/_7  or _a_/_(_b_+_0_._)  instead of _a_/_b.  The
+       power operation returns a float if the result is too large
+       to  fit  in  an  integer.   The result of a calculation is
+       stored in the special variables $$$$ and $$_n where _n  is  the
+       number of the command.
+
+BBUUGGSS
+       Probably.  Please report bugs to _d_e_m_e_t_r_i_o_@_c_s_._u_n_i_-_s_b_._d_e.
+
+CCOOPPYYRRIIGGHHTT
+       hheexxeerr  is  nnoott  iinn  tthhee  ppuubblliicc  ddoommaaiinn,  but  freely dis-
+       tributable.  It may be used for  any  non-commercial  pur-
+       pose.  See file CCOOPPYYRRIIGGHHTT for details.
+
+AAUUTTHHOORR
+       Sascha Demetrio
+       _d_e_m_e_t_r_i_o_@_c_s_._u_n_i_-_s_b_._d_e
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hexer 0.1.4b             1996 January 12                       12
+
+
