@@ -117,7 +117,7 @@ clean:
 	rm -f tags core *.bak
 
 distclean: clean
-	rm -f Makefile~
+	rm -f *~
 	sed '/\#\#\# DO NOT DELETE THIS LINE \#\#\#/q' \
 	  < Makefile > Makefile~
 	echo >> Makefile~
