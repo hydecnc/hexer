@@ -31,9 +31,5 @@ INSTALL:
 	  type `make myc'.
 	- Type `make install' to install the binaries and the manual.
 
-Feel free to send comments, bug reports and suggestions to:
-
-	demetrio@cs.uni-sb.de
-
-Sascha Demetrio
-
+Feel free to send comments, bug reports and suggestions to
+Peter Pentchev <roam@ringlet.net>
