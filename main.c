@@ -65,6 +65,9 @@
 
 #include "hexer.h"
 
+extern char *optarg;
+extern int optind;
+
 static char *usage_message = "\
 hexer - a binary file editor\n\
 usage: hexer [options] [file [...]]\n\
@@ -110,8 +113,6 @@ process_args(argc, argv)
   int argc;
   char **argv;
 {
-  extern char *optarg;
-  extern int optind;
   extern tio_tite_f;
   int c, i;
   int exit_f = 0;

@@ -46,6 +46,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
+
+extern char *optarg;
+extern optind;
 
 static char *usage = "\
 usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
@@ -69,8 +73,6 @@ main(argc, argv)
   char *outfile = 0;
   char c;
   int i;
-  extern char *optarg;
-  extern optind;
 
   while ((c = getopt(argc, argv, "htn:o:")) != -1)
     switch (c) {

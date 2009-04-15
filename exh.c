@@ -107,7 +107,6 @@ exh_shell_command(command, pager_f)
    * gonna pipe the command into the shell.
    */
 {
-  extern errno;
   int shell_pid, pager_pid;
   int shell_status, pager_status;
   int shell_x, pager_x;

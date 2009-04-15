@@ -50,6 +50,8 @@
 #include <ctype.h>
 #include <assert.h>
 #include <unistd.h>
+#include <curses.h>
+#include <term.h>
 
 #if USE_STDARG
 #include <stdarg.h>
@@ -58,9 +60,6 @@
 #endif
 
 #include "hexer.h"
-
-extern char *tgetstr();
-extern char *tgoto();
 
 int he_hex_column[] = { 12, 15, 18, 21, 24, 27, 30, 33,
                         37, 40, 43, 46, 49, 52, 55, 58 };
@@ -1593,7 +1592,7 @@ he_insert_mode(hedit, replace_mode, count)
               tio_bell();
       break;
     case HXKEY_ESCAPE:
-      goto exit_insert_mode;
+      goto hx_exit_insert_mode;
         /* The refresh has to be performed by the calling function.
          */
     case 'v' & 0x1f: /* C-v */
@@ -1646,7 +1645,7 @@ he_insert_mode(hedit, replace_mode, count)
         }
         b_write_append(hedit->buffer, &hx_insert_character, hedit->position, 1);
         b_append(insert, &hx_insert_character, 1);
-        if (replace_mode == 2) goto exit_insert_mode;
+        if (replace_mode == 2) goto hx_exit_insert_mode;
         ++hedit->position;
       }
     } /* switch */
@@ -1661,7 +1660,7 @@ he_insert_mode(hedit, replace_mode, count)
     if (insert_state) tio_printf("%x", (unsigned)x);
   } /* for */
 
-exit_insert_mode:
+hx_exit_insert_mode:
   if (insert->size) {
     char *data_replace;
     long c;

@@ -65,9 +65,6 @@
 
 #include "hexer.h"
 
-extern int errno;
-
-extern mkstemp();
 extern char *strerror();
 
 const struct buffer_s NO_BUFFER = { 0, 0, 0, 0, 0, 0 };

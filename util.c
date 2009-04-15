@@ -197,8 +197,6 @@ util_trunc(s)
 util_pstrcmp(a, b)
   char **a, **b;
 {
-  extern strcmp();
-
   return strcmp(*a, *b);
 }
 /* util_pstrcmp */

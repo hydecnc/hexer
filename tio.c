@@ -82,6 +82,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <curses.h>
+#include <term.h>
 
 #ifndef bzero
 #define bzero(a, b) memset((a), 0, (b))
@@ -105,9 +107,6 @@
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
 int *tio_interrupt;
-
-extern char *tgetstr();
-extern char *tgoto();
 
   static int
 outc(c)
@@ -509,9 +508,6 @@ static struct t_keys_s {
   { (enum t_keys_e)0, 0 }
 };
 #define HXKEY_ESCAPE_NAME "escape"
-
-extern vfprintf();
-extern vsprintf();
 
 #ifndef HEXER_ASCII_ONLY
 #define HEXER_ASCII_ONLY 0

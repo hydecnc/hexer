@@ -53,6 +53,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/param.h>
+#include <stdlib.h>
 #if HAVE_ALLOCA
 #if NEED_ALLOCA_H
 #include <alloca.h>
@@ -1174,7 +1175,6 @@ exhcmd_help(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern errno;
   extern char helptext[];
   extern char *he_pagerprg;
   int pid1, pid2, status, x = 0;
@@ -1249,7 +1249,6 @@ exhcmd_exit(hedit, args)
   int cant_write_f = 0;
   long k;
   char *errormsg;
-  extern int errno;
   char *skip, *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
