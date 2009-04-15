@@ -74,6 +74,6 @@ regex_reset();
 
 /* VIM configuration: (do not delete this line)
  *
- * vim:aw:bk:bdir=./bak:ch=2:nodg:ef=make.log:efm=%f\:%l\:%m:et:hid:icon:
+ * vim:aw:bk:ch=2:nodg:efm=%f\:%l\:%m:et:hid:icon:
  * vim:sw=2:sc:sm:si:textwidth=79:to:ul=1024:wh=12:wrap:wb:
  */
