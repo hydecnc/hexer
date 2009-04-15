@@ -1,4 +1,4 @@
-#  Makefile for hexer version 0.1.4c
+#  Makefile for hexer version 0.1.5
 
 #  It might be helpful to read the `README'-file first.
 
@@ -27,7 +27,7 @@ TERMCAP = -ltermcap -lm
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
-DEFINES = -DHEXER_VERSION=\"0.1.4c\"
+DEFINES = -DHEXER_VERSION=\"0.1.5\"
 
 #  -- Which compiler? --
 CC = cc
