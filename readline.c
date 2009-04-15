@@ -152,7 +152,7 @@ static int rl_history_c[RL_MAX_CONTEXTS];
   /* current size of the history buffer for each context.
    */
 
-extern hx_lines, columns;
+extern hx_lines, hx_columns;
   /* height and width of the screen.
    * these variables are maintained by "tio.c".
    */
@@ -485,13 +485,13 @@ rl_display_line(clear_to_eol)
     tio_goto_column(rl_prompt_len);
   if (clear_to_eol) tio_clear_to_eol();
   rl_make_vline();
-  strncpy(line, rl.vline + rl_offset, columns - rl_prompt_len);
-  line[columns - rl_prompt_len - 1] = 0;
+  strncpy(line, rl.vline + rl_offset, hx_columns - rl_prompt_len);
+  line[hx_columns - rl_prompt_len - 1] = 0;
   if (rl_offset) tio_printf(RL_LEFT_MORE);
-  if (strlen(rl.vline) - rl_offset >= columns - rl_prompt_len)
-    line[columns - rl_prompt_len - 2] = 0;
+  if (strlen(rl.vline) - rl_offset >= hx_columns - rl_prompt_len)
+    line[hx_columns - rl_prompt_len - 2] = 0;
   tio_raw_printf("%s", line + !!rl_offset);
-  if (rl_get_vlength(&rl) - rl_offset >= columns - rl_prompt_len)
+  if (rl_get_vlength(&rl) - rl_offset >= hx_columns - rl_prompt_len)
     tio_printf(RL_RIGHT_MORE);
   tio_goto_column(rl_prompt_len + rl_get_vposition() - rl_offset);
   return 0;
@@ -524,7 +524,7 @@ rl_insert(x)
   rl_make_vline();
   vposition = rl_get_vposition();
   for (i = 0; i < sl; ++i) {
-    if (vposition - rl_offset + 2 >= columns - rl_prompt_len + append) {
+    if (vposition - rl_offset + 2 >= hx_columns - rl_prompt_len + append) {
       ++rl_offset;
       ++vposition;
       tio_goto_column(rl_prompt_len);
@@ -533,22 +533,22 @@ rl_insert(x)
       else {
 	tio_printf(RL_LEFT_MORE);
 	last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-	if (last_col > columns - 1) {
-	  last_col = columns - 1;
+	if (last_col > hx_columns - 1) {
+	  last_col = hx_columns - 1;
           if (!append) {
             tio_goto_column(last_col - 2);
             tio_clear_to_eol();
-            tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3]);
+            tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3]);
             tio_printf(RL_RIGHT_MORE);
           } else {
             tio_goto_column(last_col - 1);
             tio_clear_to_eol();
-            tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2]);
+            tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2]);
           }
           tio_goto_column(rl_prompt_len + vposition - rl_offset);
 	} else {
 	  tio_goto_column(last_col - 1);
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2]);
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2]);
 	}
       }
     } else {
@@ -557,8 +557,8 @@ rl_insert(x)
 	redisplay_f = 1;
       else {
 	last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-	if (last_col > columns - 1) {
-	  last_col = columns - 1;
+	if (last_col > hx_columns - 1) {
+	  last_col = hx_columns - 1;
           if (!append) {
             tio_goto_column(last_col - 1);
             tio_clear_to_eol();
@@ -639,19 +639,19 @@ rl_delete(under_cursor)
         if (tio_delete_character())
           rl_display_line(1);
 	last_col = rl_prompt_len + strlen(rl.vline) + replen - rl_offset;
-	if (last_col > columns - 1) {
-	  last_col = columns - 1;
+	if (last_col > hx_columns - 1) {
+	  last_col = hx_columns - 1;
 	  tio_goto_column(last_col - 2);
 	  tio_clear_to_eol();
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3
                                - replen]);
 	  tio_printf(RL_RIGHT_MORE);
-	} else if (last_col == columns - 1) {
+	} else if (last_col == hx_columns - 1) {
 	  tio_goto_column(last_col - 2);
 	  tio_clear_to_eol();
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3
                                - replen]);
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2
                                - replen]);
 	} else if (rl_offset) {
 	  --rl_offset;
@@ -672,19 +672,19 @@ rl_delete(under_cursor)
       if (tio_delete_character())
         rl_display_line(1);
       last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-      if (last_col > columns - 1) {
-	last_col = columns - 1;
+      if (last_col > hx_columns - 1) {
+	last_col = hx_columns - 1;
 	tio_goto_column(last_col - 2);
 	tio_clear_to_eol();
-	tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3
+	tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3
                              - replen]);
 	tio_printf(RL_RIGHT_MORE);
-      } else if (last_col == columns - 1) {
+      } else if (last_col == hx_columns - 1) {
 	tio_goto_column(last_col - 2);
 	tio_clear_to_eol();
-	tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3
+	tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3
                              - replen]);
-	tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2
+	tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2
                              - replen]);
       } else if (rl_offset) {
 	--rl_offset;
@@ -761,8 +761,8 @@ rl_end()
   length = rl_get_length(&rl);
   rl_position = length;
   vposition = rl_get_vposition();
-  if (rl_offset < vposition - columns + rl_prompt_len + 1) {
-    rl_offset = vposition - columns + rl_prompt_len + 1;
+  if (rl_offset < vposition - hx_columns + rl_prompt_len + 1) {
+    rl_offset = vposition - hx_columns + rl_prompt_len + 1;
     if (rl_offset < 0) rl_offset = 0;
     rl_display_line(1);
   } else
@@ -806,18 +806,18 @@ rl_left()
 	if (tio_insert_character(rl.vline[rl_offset + 1])) redisplay_f = 1;
       }
       last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-      if (last_col > columns - 1) {
-	last_col = columns - 1;
+      if (last_col > hx_columns - 1) {
+	last_col = hx_columns - 1;
 	tio_goto_column(last_col - 2);
 	tio_clear_to_eol();
-	tio_putchar(rl.vline[rl_offset + columns + skip - rl_prompt_len - 3]);
+	tio_putchar(rl.vline[rl_offset + hx_columns + skip - rl_prompt_len - 3]);
 	tio_printf(RL_RIGHT_MORE);
 	tio_goto_column(rl_prompt_len + vposition + skip - rl_offset);
-      } else if (last_col == columns - 1) {
+      } else if (last_col == hx_columns - 1) {
 	tio_goto_column(last_col - 2);
 	tio_clear_to_eol();
-	tio_putchar(rl.vline[rl_offset + columns + skip - rl_prompt_len - 3]);
-	tio_putchar(rl.vline[rl_offset + columns + skip - rl_prompt_len - 2]);
+	tio_putchar(rl.vline[rl_offset + hx_columns + skip - rl_prompt_len - 3]);
+	tio_putchar(rl.vline[rl_offset + hx_columns + skip - rl_prompt_len - 2]);
 	tio_goto_column(rl_prompt_len + vposition + skip - rl_offset);
       }
     } else
@@ -852,29 +852,29 @@ rl_right()
   vposition = rl_get_vposition();
   while (skip--) {
     append = (position == strlen(rl.line));
-    if (vposition - rl_offset + 1 >= columns - rl_prompt_len + append) {
+    if (vposition - rl_offset + 1 >= hx_columns - rl_prompt_len + append) {
       ++rl_offset;
       tio_goto_column(rl_prompt_len);
       if (tio_delete_character()) redisplay_f = 1;
       else {
 	tio_printf(RL_LEFT_MORE);
 	last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-	if (last_col > columns - 1) {
-	  last_col = columns - 1;
+	if (last_col > hx_columns - 1) {
+	  last_col = hx_columns - 1;
 	  tio_goto_column(last_col - 2);
 	  tio_clear_to_eol();
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3]);
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3]);
 	  tio_printf(RL_RIGHT_MORE);
 	  tio_goto_column(rl_prompt_len + vposition - rl_offset);
-	} else if (last_col == columns - 1) {
+	} else if (last_col == hx_columns - 1) {
 	  tio_goto_column(last_col - 2);
 	  tio_clear_to_eol();
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3]);
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2]);
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3]);
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2]);
 	  tio_left(1);
 	} else {
 	  tio_goto_column(last_col - 1);
-	  tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 3]);
+	  tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 3]);
 	}
       }
     } else
@@ -900,7 +900,7 @@ rl_complete(context, again)
   int stop_f = 0;
   extern util_strsort();
 
-  extern int columns;
+  extern int hx_columns;
 
   if (!completer) return 0;
   strcpy(line, rl.line);
@@ -954,11 +954,11 @@ rl_complete(context, again)
 	  }
 	  /* find the maximum length of a completion */
 	  for (i = l = 0; list[i]; ++i) if ((j = strlen(list[i])) > l) l = j;
-	  m = columns / ++l; /* number of columns */
+	  m = hx_columns / ++l; /* number of hx_columns */
 	  m += !m;
           util_strsort(list);
 	  k = (n - 1) / m + 1; /* number of lines */
-	  /* rearrange the list sorted in columns */
+	  /* rearrange the list sorted in hx_columns */
 	  list2 = (char **)malloc(m * k * sizeof(char *));
 	  memset(list2, 0, m * k * sizeof(char *));
 	  for (i = 0, j = 0; list[i]; ++i) {
@@ -994,7 +994,7 @@ dont_list:
 	for (i = 0; i < j; ++i)
 	  rl.line[rl_position + i] = prefix[prefix_len + i];
 	rl_position += j;
-	while (rl_position - rl_offset + 1 >= columns - rl_prompt_len)
+	while (rl_position - rl_offset + 1 >= hx_columns - rl_prompt_len)
 	  ++rl_offset;
 	tio_return();
 	tio_puts(rl_prompt);
@@ -1012,7 +1012,7 @@ dont_list:
 	rl.line[rl_position + i] = list[0][prefix_len + i];
       if (!dir_f) rl.line[rl_position + i] = ' ';
       rl_position += j;
-      while (rl_position - rl_offset + 1 >= columns - rl_prompt_len)
+      while (rl_position - rl_offset + 1 >= hx_columns - rl_prompt_len)
 	++rl_offset;
       tio_return();
       tio_puts(rl_prompt);
@@ -1036,7 +1036,7 @@ rl_verbatim()
   int last_col;
   extern int window_changed;
 
-  if (vposition - rl_offset + 2 >= columns - rl_prompt_len + append) {
+  if (vposition - rl_offset + 2 >= hx_columns - rl_prompt_len + append) {
     ++rl_offset;
     tio_goto_column(rl_prompt_len);
     if (tio_delete_character())
@@ -1044,15 +1044,15 @@ rl_verbatim()
     else {
       tio_printf(RL_LEFT_MORE);
       last_col = rl_prompt_len + strlen(rl.vline) - rl_offset;
-      if (last_col > columns - 1) {
-        last_col = columns - 1;
+      if (last_col > hx_columns - 1) {
+        last_col = hx_columns - 1;
         tio_goto_column(last_col - 1);
         tio_clear_to_eol();
         tio_printf(RL_RIGHT_MORE);
         tio_goto_column(rl_prompt_len + vposition - rl_offset);
       } else {
         tio_goto_column(last_col);
-        tio_putchar(rl.vline[rl_offset + columns - rl_prompt_len - 2]);
+        tio_putchar(rl.vline[rl_offset + hx_columns - rl_prompt_len - 2]);
       }
     }
   }
@@ -1086,7 +1086,7 @@ readline(prompt, default_val, context)
   static int history_initialized = 0;
   int stop_f = 0;
 
-  extern hx_lines, columns;
+  extern hx_lines, hx_columns;
   extern window_changed;
 
   rl_redisplay = 0;
@@ -1109,8 +1109,8 @@ readline(prompt, default_val, context)
     rl_default = default_val;
     strncpy(rl.line, default_val, LINE_MAXLEN - 1);
     rl_make_vline();
-    if (rl_prompt_len + rl_position > columns - 2)
-      rl_offset = columns - 1 - rl_prompt_len - strlen(rl.vline);
+    if (rl_prompt_len + rl_position > hx_columns - 2)
+      rl_offset = hx_columns - 1 - rl_prompt_len - strlen(rl.vline);
     tio_raw_printf("%s", rl.line + rl_offset);
     tio_goto_column(rl_prompt_len + strlen(rl.vline) - rl_offset);
   }
@@ -1140,8 +1140,8 @@ readline(prompt, default_val, context)
       if (!(hist = rl_history_up())) break;
       strcpy(rl.line, hist->line);
       rl_offset = 0;
-      if (rl_prompt_len + rl_position > columns - 2)
-        rl_offset = rl_prompt_len + strlen(rl.vline) - columns + 1;
+      if (rl_prompt_len + rl_position > hx_columns - 2)
+        rl_offset = rl_prompt_len + strlen(rl.vline) - hx_columns + 1;
       rl_display_line(1);
       break;
     case HXKEY_DOWN:
@@ -1149,8 +1149,8 @@ readline(prompt, default_val, context)
       if (!(hist = rl_history_down())) break;
       strcpy(rl.line, hist->line);
       rl_offset = 0;
-      if (rl_prompt_len + rl_position > columns - 2)
-        rl_offset = columns - 2 - rl_prompt_len - strlen(rl.vline);
+      if (rl_prompt_len + rl_position > hx_columns - 2)
+        rl_offset = hx_columns - 2 - rl_prompt_len - strlen(rl.vline);
       rl_display_line(1);
       break;
     case HXKEY_ESCAPE:

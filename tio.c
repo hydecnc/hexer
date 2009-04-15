@@ -193,7 +193,7 @@ void (*warning_msg)( /* const char *, ... */ ) = tio_warning_msg;
 void (*tio_winch)( /* void */ );
 
 int hx_lines; /* Number of lines. */
-int columns; /* Number of columns. */
+int hx_columns; /* Number of columns. */
 int window_changed;
   /* A non-zero value indicates, that the window size has changed.
    */
@@ -795,32 +795,32 @@ tio_init(prog)
     struct ttysize size2;
     if (!ioctl(0, TIOCGSIZE, &size2)) {
       hx_lines = size2.ts_lines;
-      columns = size2.ts_cols;
-      if (hx_lines > 0 && columns > 0) break;
+      hx_columns = size2.ts_cols;
+      if (hx_lines > 0 && hx_columns > 0) break;
     }
 #endif
 #ifdef TIOCGWINSZ
     if (!ioctl(0, TIOCGWINSZ, &size1)) {
       hx_lines = size1.ws_row;
-      columns = size1.ws_col;
-      if (hx_lines > 0 && columns > 0) break;
+      hx_columns = size1.ws_col;
+      if (hx_lines > 0 && hx_columns > 0) break;
     }
 #endif
     /* `ioctl()' didn't work. See if we can get the screen size form the
      * the environment variables `LINES' ans `COLUMNS'.
      */
     if ((p = getenv("LINES"))) hx_lines = atoi(p);
-    if ((p = getenv("COLUMNS"))) columns = atoi(p);
-    if (hx_lines > 0 && columns > 0) break;
+    if ((p = getenv("COLUMNS"))) hx_columns = atoi(p);
+    if (hx_lines > 0 && hx_columns > 0) break;
     /* Hmm... didn't work... we gotta believe what termcap tells us :-|
      */
     hx_lines = tgetnum("li");
-    columns = tgetnum("co");
-    if (hx_lines > 0 && columns > 0) break;
+    hx_columns = tgetnum("co");
+    if (hx_lines > 0 && hx_columns > 0) break;
     /* Yuck!  Default the screen size to 80x24.
      */
     hx_lines = 24;
-    columns = 80;
+    hx_columns = 80;
     break;
   }
 
@@ -961,7 +961,7 @@ tio_right(count)
     tio_goto_column(0);
     tio_right(count);
   } else {
-    if (t_column + count > columns - 1) count = columns - t_column;
+    if (t_column + count > hx_columns - 1) count = hx_columns - t_column;
     if (!count) return;
     t_column += count;
     if (t_RIght)
@@ -1481,9 +1481,9 @@ tio_goto_column(column)
   /* Move cursor to column `column'.
    */
 {
-  extern int columns;
+  extern int hx_columns;
 
-  if (column > columns - 1) column = column - 1;
+  if (column > hx_columns - 1) column = column - 1;
   if (t_column >= 0)
     if (abs(t_column - column) <= column) {
       tio_rel_move(0, column - t_column);
@@ -1505,11 +1505,11 @@ tio_move(lin, col)
   /* Move the cursor to position `line'/`column'.
    */
 {
-  extern int hx_lines, columns;
+  extern int hx_lines, hx_columns;
   char *cmd;
 
   if (lin > hx_lines - 1 || lin < 0) lin = hx_lines - 1;
-  if (col > columns - 1 || col < 0) col = columns - 1;
+  if (col > hx_columns - 1 || col < 0) col = hx_columns - 1;
   cmd = tgoto(t_cm, col, lin);
   tio_command(cmd, 1);
   t_line = lin;
@@ -1683,15 +1683,15 @@ tio_puts(s)
       x = t_column;
       t_column += T_TABSTOP;
       if (x % T_TABSTOP) while (!(t_column % T_TABSTOP)) --t_column;
-      if (t_column >= columns) {
-        t_column = columns - 1;
+      if (t_column >= hx_columns) {
+        t_column = hx_columns - 1;
         while (x++ < t_column) *c2++ = ' ';
         mask_f = 1;
       }
       break;
     default:
-      if (++t_column >= columns) {
-        t_column = columns - 1;
+      if (++t_column >= hx_columns) {
+        t_column = hx_columns - 1;
         mask_f = 1;
       }
       break;
@@ -1927,7 +1927,7 @@ tio_display(text, indent_arg)
   int eol_f, back_f, absolute_f;
   char *s = (char *)malloc(strlen(text) + 1);
   static int indent = 0;
-  int maxcol = columns - 1;
+  int maxcol = hx_columns - 1;
 
   if (indent_arg >= 0) indent = indent_arg;
   for (i = 0; i < indent && t_column < maxcol; ++i) tio_putchar(' ');
@@ -2197,9 +2197,9 @@ sigwinch_handler()
     t_line = -1;
     tio_goto_line(hx_lines - 1);
   }
-  if (t_column > columns) {
+  if (t_column > hx_columns) {
     t_column = -1;
-    tio_goto_column(columns - 1);
+    tio_goto_column(hx_columns - 1);
   }
   window_changed = 1;
 }

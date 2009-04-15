@@ -1328,7 +1328,7 @@ he_get_counter(hedit)
    */
 {
   extern int hx_lines;
-  extern int columns;
+  extern int hx_columns;
   long count = -1;
   int key, digit;
   enum mode_e { OCT = 8, DEC = 10, HEX = 16 } mode = DEC;
@@ -1396,8 +1396,8 @@ he_get_counter(hedit)
       int indent = 60;
       sprintf(arg, fmt, count);
       tio_goto_line(hx_lines - 1);
-      if (indent + strlen(arg) > columns - 1)
-        indent = columns - 1 - strlen(arg);
+      if (indent + strlen(arg) > hx_columns - 1)
+        indent = hx_columns - 1 - strlen(arg);
       if (indent < 0) indent = 0;
       tio_return();
       tio_right(indent);
@@ -1406,8 +1406,8 @@ he_get_counter(hedit)
     } else {
       int indent = 60;
       tio_goto_line(hx_lines - 1);
-      if (indent + strlen(prefix) > columns - 1)
-        indent = columns - 1 - strlen(prefix);
+      if (indent + strlen(prefix) > hx_columns - 1)
+        indent = hx_columns - 1 - strlen(prefix);
       if (indent < 0) indent = 0;
       tio_return();
       tio_right(indent);
