@@ -52,19 +52,19 @@ extern rx_nomagic;
 extern rx_allmagic;
 extern long rx_maxmatch;
 
-  extern long
+  long
 regex_search( /* unisgned char *, long, long, int, char *, long * */ );
 
-  extern
+  int
 regex_match( /* unisgned char *, long, int, char *, long * */ );
 
-  extern long *
+  long *
 regex_compile( /* char *, char * */ );
 
-  extern
+  int
 regex_init( /* long (*)(char *, long), long (*)(long), long (*)() */ );
 
-  extern
+  int
 regex_reset();
 
 #endif

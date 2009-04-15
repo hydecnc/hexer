@@ -48,10 +48,10 @@
 extern char **(*completer)( /* char *prefix, char *command,
                                char *line, int context */ );
 
-extern char *
+char *
 readline( /* char *prompt, char *default_val, int context */ );
 
-extern
+int
 keys_length();
 
 #endif

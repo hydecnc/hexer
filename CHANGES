@@ -8,6 +8,8 @@ Change log for hexer, the multi-view binary editor
 	- bring config.linux up to date
 	- add a HAVE_STRERROR definition to the config files and roll out
 	  our own strerror() function if needed
+	- clean up the header files:
+	  - remove "extern" before the function prototypes
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

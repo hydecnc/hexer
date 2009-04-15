@@ -117,28 +117,28 @@ struct he_message_s {
 
 extern struct he_message_s *he_messages;
 
-extern void
+void
 #if USE_STDARG
 he_message( int beep, char *fmt, ... );
 #else
 he_message( );
 #endif
 
-extern void
+void
 he_refresh_part( /* struct he_s *hedit, long pos1, long pos2 */ );
 
-extern void
+void
 he_refresh_lines( /* struct he_s *hedit, int first, int last */ );
 
-extern
+int
 he_refresh_check( /* struct he_s *hedit */ );
 
 #define he_refresh_all(hedit) ((void)he_refresh_part((hedit), 0, -1))
 
-extern void
+void
 he_refresh_screen( /* const struct he_s *hedit */ );
 
-extern
+int
 he_update_screen( /* struct he_s *hedit */ );
 
 
@@ -208,16 +208,16 @@ struct he_command_s {
  *  - The inserted/deleted data.
  */
 
-  extern void
+  void
 he_free_command( /* struct he_command_s *command */ );
   /* Free the memory allocated by command and all the following commands
    * in the list.
    */
 
-  extern void
+  void
 he_compound_comand( /* struct he_s *hedit, struct he_command_s *command */ );
 
-  extern void
+  void
 he_subcommand( /* struct he_s *hedit,
                   int type, long position, long count, char *data */ );
   /* Update the undo-list of `hedit' by inserting the given subcommand.
@@ -228,7 +228,7 @@ he_subcommand( /* struct he_s *hedit,
    *   flag will be set to 1.
    */
 
-  extern long
+  long
 he_do_command( /* struct he_s *hedit, struct he_command_s *command */ );
   /* Perform the compound command `command'.  The return value is the
    * position of the last change made.
@@ -274,23 +274,23 @@ struct exh_cmd_s {
 
 #define HE_LINE(x) ((long)(x) >> 4)
 
-extern
+int
 he_open_buffer( /* char *name, char *path */ );
 
-extern
+int
 he_select_buffer( /* char *name */ );
 
-extern
+int
 he_alternate_buffer( /* void */ );
 
-extern
+int
 he_set_buffer_readonly( /* char *name */ );
   /* Return values:
    * -1: no buffer named `name'
    * 0:  ok
    */
 
-extern
+int
 he_buffer_readonly( /* char *name */ );
   /* Return values:
    * -1: no buffer named `name'
@@ -298,7 +298,7 @@ he_buffer_readonly( /* char *name */ );
    * 1:  buffer is readonly
    */
 
-extern
+int
 he_buffer_modified( /* char *name */ );
   /* Return values:
    * -1: no buffer named `name'
@@ -306,40 +306,40 @@ he_buffer_modified( /* char *name */ );
    * 1:  buffer modified
    */
 
-extern
+int
 he_close_buffer( /* char *name */ );
   /* Close the buffer named `name'. If `name == 0', the current buffer
    * is closed.  The return value is 0 if all goes well, 1 if the named
    * buffer doesn't exist and -1 if the `buffer_list' is empty.
    */
 
-extern void
+void
 he_status_message( /* int verbose */ );
   /* display name and size of the current buffer.  if `verbose' is set,
    * the current position is also displayed.
    */
 
-extern void
+void
 he_select( /* struct he_s *hedit, long begin, long end */ );
 
-extern void
+void
 he_cancel_selection( /* struct he_s *hedit */ );
 
-extern long
+long
 he_search( /* struct he_s *, char *, char *, int, int, int, long,
               char **, long *, long * */ );
 
-extern
+int
 #if USE_STDARG
 he_query_yn( int dfl, char *fmt, ... );
 #else
 he_query_yn( );
 #endif
 
-extern
+int
 he_mainloop( /* struct he_s *hedit */ );
 
-extern
+int
 hexer( /* void */ );
 
 #endif

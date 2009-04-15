@@ -49,50 +49,50 @@ enum s_option_e { S_STRING = 1, S_INTEGER, S_BOOL };
 
 typedef void (*set_fn)();
 
-extern long
+long
 s_get_option_integer( /* const char *option */ );
 
-extern char *
+char *
 s_get_option_string( /* const char *option */ );
 
-extern
+int
 s_get_option_bool( /* const char *option */ );
 
-extern enum s_option_e
+enum s_option_e
 s_get_type( /* const char *option */ );
 
-extern char *
+char *
 s_get_option( /* const char *option */ );
 
-extern
+int
 s_delete_option( /* const char *option */ );
 
-extern void
+void
 s_set_option_string( /* const char *option, const char *value */ );
 
-extern void
+void
 s_set_option_integer( /* const char *option, const long value */ );
 
-extern void
+void
 s_set_option_bool( /* const char *option, const int value */ );
 
-extern void
+void
 s_set_type( /* const char *option, const enum s_option_e type */ );
 
-extern void
+void
 s_set_option( /* const char *option, const char *value_string,
                  int no_action */ );
 
-extern void
+void
 s_set_action( /* const char *option, set_fn action */ );
 
-extern char **
+char **
 s_option_list( /* const char *prefix, int bool_only */ );
 
-extern char **
+char **
 s_option_value_list( /* void */ );
 
-extern void
+void
 s_clear_all( /* void */ );
 
 #endif
