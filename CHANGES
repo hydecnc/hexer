@@ -13,6 +13,7 @@ Change log for hexer, the multi-view binary editor
 	- clean up the Makefile:
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)
+	  - use CFLAGS when building bin2c
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

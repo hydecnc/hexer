@@ -79,7 +79,7 @@ $(MYC): calc.c
 	$(CC) $(LDFLAGS) $(CFLAGS) -DMYCALC=1 -o $@ calc.c -lm
 
 bin2c: bin2c.c
-	$(CC) -o $@ bin2c.c
+	$(CC) $(CFLAGS) -o $@ bin2c.c
 
 helptext.c: help.txt bin2c
 	./bin2c -n helptext -o $@ help.txt
