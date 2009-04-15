@@ -112,22 +112,17 @@ depend: *.c *.h
 	-touch depend
 
 clean:
-	-rm -f $(HEXER)
-	-rm -f $(MYC)
-	-rm -f TESTFILE
-	-rm -f gen_testfile
-	-rm -f $(OBJECTS)
-	-rm -f tags
-	-rm -f core
-	-rm -f *.bak
+	rm -f $(HEXER) $(MYC) gen_testfile $(OBJECTS) bin2c
+	rm -f helptext.c TESTFILE
+	rm -f tags core *.bak
 
 distclean: clean
-	-rm -f Makefile~
+	rm -f Makefile~
 	sed '/\#\#\# DO NOT DELETE THIS LINE \#\#\#/q' \
 	  < Makefile > Makefile~
-	-echo >> Makefile~
+	echo >> Makefile~
 	mv -f Makefile~ Makefile
-	-rm -f depend
+	rm -f depend
 
 install: all
 	@{  echo installing $(HEXER) in $(BINDIR); \
