@@ -75,13 +75,13 @@
  * `readline()' returns strings of characters.  special characters (like
  * cursor-keys) are represented as escape-sequences.  an escape-sequence
  * is made up of an escape character `\E' (0x1b) followed by the internal
- * representation of the key minus 254 (== KEY_BIAS) (we don't use 256 to
+ * representation of the key minus 254 (== HXKEY_BIAS) (we don't use 256 to
  * avoid null-characters).  we'll write down an escape-sequence as
- * `\E(KEY_keyname)'.  all characters will be stored as characters, even if
- * a `KEY_keyname' entry in the keylist exists.  the only two exeptions to
- * that rule are the null-character (represented as `\E(KEY_NULL)') and the
+ * `\E(HXKEY_keyname)'.  all characters will be stored as characters, even if
+ * a `HXKEY_keyname' entry in the keylist exists.  the only two exeptions to
+ * that rule are the null-character (represented as `\E(HXKEY_NULL)') and the
  * escape-character, which is represented as `\E\001' (that's why an offset
- * of 254 (== KEY_BIAS) is used for the other keys).
+ * of 254 (== HXKEY_BIAS) is used for the other keys).
  */
 
 static char *rl_prompt;    /* the prompt */
@@ -308,15 +308,15 @@ rl_query_yn(prompt, dfl)
   for (;;) {
     key = tio_mgetch(0, 0);
     switch (key) {
-      case KEY_ERROR:
+      case HXKEY_ERROR:
         if (window_changed && rl_winch) rl_winch();
         window_changed = 0;
         return rl_query_yn(prompt, dfl);
-      case KEY_ESCAPE:
+      case HXKEY_ESCAPE:
         tio_printf("escape");
         choice = -1;
 	goto exit_rl_query_yn;
-      case KEY_RETURN:
+      case HXKEY_RETURN:
         if (dfl < 0) break;
 	choice = dfl;
 	goto exit_rl_query_yn;
@@ -379,12 +379,12 @@ rl_get_vposition()
       ++i;
       if (rl.line[i] == 1)
         /* ESCAPE-character */
-        vposition += strlen(tio_keyrep(KEY_ESCAPE));
-      else if (rl.line[i] == (int)KEY_NULL - KEY_BIAS)
+        vposition += strlen(tio_keyrep(HXKEY_ESCAPE));
+      else if (rl.line[i] == (int)HXKEY_NULL - HXKEY_BIAS)
         /* null-character */
-        vposition += strlen(tio_keyrep(KEY_NULL));
+        vposition += strlen(tio_keyrep(HXKEY_NULL));
       else {
-        key = rl.line[i] + KEY_BIAS;
+        key = rl.line[i] + HXKEY_BIAS;
         vposition += strlen(tio_keyrep(key));
       }
     }
@@ -433,14 +433,14 @@ rl_make_vline_(rl)
       ++i;
       if (rl->line[i] == 1) {
         /* ESCAPE-character */
-        strcpy(rl->vline + vposition, rep = tio_keyrep(KEY_ESCAPE));
+        strcpy(rl->vline + vposition, rep = tio_keyrep(HXKEY_ESCAPE));
         vposition += strlen(rep);
-      } else if (rl->line[i] == (int)KEY_NULL - KEY_BIAS) {
+      } else if (rl->line[i] == (int)HXKEY_NULL - HXKEY_BIAS) {
         /* null-character */
-        strcpy(rl->vline + vposition, rep = tio_keyrep(KEY_NULL));
+        strcpy(rl->vline + vposition, rep = tio_keyrep(HXKEY_NULL));
         vposition += strlen(rep);
       } else {
-        key = rl->line[i] + KEY_BIAS;
+        key = rl->line[i] + HXKEY_BIAS;
         strcpy(rl->vline + vposition, rep = tio_keyrep(key));
         vposition += strlen(rep);
       }
@@ -518,7 +518,7 @@ rl_insert(x)
   if (special_f && (x == RL_ESC || x > 0xff || !x)) {
     rl.line[position] = RL_ESC;
     rl.line[position + 1] =
-      (char)(x ? x == RL_ESC ? 1 : x - KEY_BIAS : KEY_NULL - KEY_BIAS);
+      (char)(x ? x == RL_ESC ? 1 : x - HXKEY_BIAS : HXKEY_NULL - HXKEY_BIAS);
   } else
     rl.line[position] = (char)x;
   rl_make_vline();
@@ -596,8 +596,8 @@ rl_delete(under_cursor)
     if (!under_cursor) --rl_position;
     position = rl_get_position();
     if (rl.line[position] == RL_ESC) {
-      key = rl.line[position + 1] + KEY_BIAS;
-      if (key == 0xff) key = (int)KEY_ESCAPE;
+      key = rl.line[position + 1] + HXKEY_BIAS;
+      if (key == 0xff) key = (int)HXKEY_ESCAPE;
       replen = strlen(tio_keyrep(key));
       special_f = 1;
     } else
@@ -784,9 +784,9 @@ rl_left()
   --rl_position;
   position = rl_get_position();
   if (rl.line[position] == RL_ESC) {
-    key = rl.line[position + 1] + KEY_BIAS;
-    if (key == 0xff) key = (int)KEY_ESCAPE;
-      /* translate `RL_ESC' to `KEY_ESCAPE' */
+    key = rl.line[position + 1] + HXKEY_BIAS;
+    if (key == 0xff) key = (int)HXKEY_ESCAPE;
+      /* translate `RL_ESC' to `HXKEY_ESCAPE' */
     skip = strlen(tio_keyrep(key));
   } else
     skip = strlen(tio_keyrep(rl.line[position]));
@@ -842,8 +842,8 @@ rl_right()
   if (rl_position == rl_get_length(&rl)) return 0;
   position = rl_get_position();
   if (rl.line[position] == RL_ESC) {
-    key = rl.line[position + 1] + KEY_BIAS;
-    if (key == 0xff) key = (int)KEY_ESCAPE;
+    key = rl.line[position + 1] + HXKEY_BIAS;
+    if (key == 0xff) key = (int)HXKEY_ESCAPE;
     skip = strlen(tio_keyrep(key));
   } else
     skip = strlen(tio_keyrep(rl.line[position]));
@@ -1058,10 +1058,10 @@ rl_verbatim()
   }
   tio_printf("^@m-000-001");
 restart:
-  if ((key = tio_mgetch(MAP_EXH, 0)) == (int)KEY_ERROR) {
+  if ((key = tio_mgetch(MAP_EXH, 0)) == (int)HXKEY_ERROR) {
     if (window_changed) {
       tio_ungetch('v' & 0x1f);
-      tio_ungetch(KEY_ERROR);
+      tio_ungetch(HXKEY_ERROR);
       return;
     } else
       goto restart;
@@ -1129,13 +1129,13 @@ readline(prompt, default_val, context)
     case 'u' & 0x1f: /* C-u */
       rl_cu();
       break;
-    case KEY_LEFT:
+    case HXKEY_LEFT:
       rl_left();
       break;
-    case KEY_RIGHT:
+    case HXKEY_RIGHT:
       rl_right();
       break;
-    case KEY_UP:
+    case HXKEY_UP:
       rl_history_set(rl);
       if (!(hist = rl_history_up())) break;
       strcpy(rl.line, hist->line);
@@ -1144,7 +1144,7 @@ readline(prompt, default_val, context)
         rl_offset = rl_prompt_len + strlen(rl.vline) - columns + 1;
       rl_display_line(1);
       break;
-    case KEY_DOWN:
+    case HXKEY_DOWN:
       rl_history_set(rl);
       if (!(hist = rl_history_down())) break;
       strcpy(rl.line, hist->line);
@@ -1153,15 +1153,15 @@ readline(prompt, default_val, context)
         rl_offset = columns - 2 - rl_prompt_len - strlen(rl.vline);
       rl_display_line(1);
       break;
-    case KEY_ESCAPE:
+    case HXKEY_ESCAPE:
       escape_f = 1;
       /* fall through */
-    case KEY_RETURN:
+    case HXKEY_RETURN:
       tio_return();
       tio_flush();
       goto exit_readline;
-    case KEY_BACKSPACE:
-    case KEY_DELETE:
+    case HXKEY_BACKSPACE:
+    case HXKEY_DELETE:
       if (!*rl.line && rl_cancel_on_bs) {
         escape_f = 1;
         goto exit_readline;
@@ -1177,11 +1177,11 @@ readline(prompt, default_val, context)
     case 'v' & 0x1f: /* C-v */
       rl_verbatim();
       break;
-    case KEY_TAB:
+    case HXKEY_TAB:
       stop_f = rl_complete(context, stop_f);
       if (stop_f) continue;
       break;
-    case KEY_ERROR:
+    case HXKEY_ERROR:
       if (window_changed) {
         rl_winch();
         tio_goto_line(lines - 1);

@@ -148,7 +148,7 @@ util_escape(s, d)
         *(*d)++ = (char)code;
       else {
         *(*d)++ = '\e';
-        *(*d)++ = (char)(KEY_NULL - KEY_BIAS);
+        *(*d)++ = (char)(HXKEY_NULL - HXKEY_BIAS);
       }
   }
   return code;

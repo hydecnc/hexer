@@ -138,7 +138,7 @@ key_strrep(ks)
 
   for (n = 0, i = ks; *i; ++i) {
     if (*i == MAP_ESC)
-      key = *++i + KEY_BIAS;
+      key = *++i + HXKEY_BIAS;
     else
       key = *i;
     n += strlen(tio_keyrep(key));
@@ -146,7 +146,7 @@ key_strrep(ks)
   s = t = (char *)malloc(n + 1);
   for (i = ks; *i; ++i) {
     if (*i == MAP_ESC)
-      key = *++i + KEY_BIAS;
+      key = *++i + HXKEY_BIAS;
     else
       key = *i;
     strcpy(t, tio_keyrep(key)); t += strlen(t);
@@ -204,9 +204,9 @@ string_to_keys(keys, string)
     if (*string == MAP_ESC) {
       ++string;
       if (*string == 1)
-        *keys++ = (int)KEY_ESCAPE;
+        *keys++ = (int)HXKEY_ESCAPE;
       else
-        *keys++ = *string + (int)KEY_BIAS;
+        *keys++ = *string + (int)HXKEY_BIAS;
     } else
       *keys++ = *string;
     ++string;
@@ -226,9 +226,9 @@ scan_keys(keys, string, mode)
     if (*string == MAP_ESC) {
       ++string;
       if (*string == 1)
-        *keys++ = KEY_ESCAPE;
+        *keys++ = HXKEY_ESCAPE;
       else
-        *keys++ = *string + KEY_BIAS;
+        *keys++ = *string + HXKEY_BIAS;
       ++string;
     } else
       string = tio_keyscan(keys++, string, mode);
@@ -277,7 +277,7 @@ tio_mgetch(map, map_string)
 
   if (*tio_interrupt) {
     *tio_interrupt = 0;
-    return (int)KEY_BREAK;
+    return (int)HXKEY_BREAK;
   }
   while (map_max < map) map_first[++map_max] = 0;
   if (map_string) {
@@ -294,9 +294,9 @@ tio_mgetch(map, map_string)
   if (tio_getmore()) return tio_getch();
   if (munget_n) return munget[--munget_n];
   key = tio_getch();
-  if (key == (int)KEY_ERROR) return (int)KEY_ERROR;
-  if (key == (int)KEY_ESCAPE && !keys_n)
-    if (!tio_readmore()) return (int)KEY_ESCAPE;
+  if (key == (int)HXKEY_ERROR) return (int)HXKEY_ERROR;
+  if (key == (int)HXKEY_ESCAPE && !keys_n)
+    if (!tio_readmore()) return (int)HXKEY_ESCAPE;
   if (key <= 0) return key;
   keys[keys_n++] = key;
   keys[keys_n] = 0;
@@ -335,7 +335,7 @@ tio_mgetch(map, map_string)
     s += strlen(s);
   }
   if (munget_n) return munget[--munget_n];
-  return (int)KEY_NONE;
+  return (int)HXKEY_NONE;
 }
 /* tio_mgetch */
 

@@ -51,50 +51,50 @@
 #define TIO_MAX_UNGET 4096
 
 enum t_keys_e {
-  KEY_ERROR      = -1,
-  KEY_NONE       = 0,
-  KEY_BACKSPACE  = 0x08,
-  KEY_TAB        = 0x09,
-  KEY_RETURN     = 0x0d,
-  KEY_ESCAPE     = 0x1b,
-  KEY_DELETE     = 0x7f,
-  KEY_UP         = 0x100,
-  KEY_DOWN,
-  KEY_LEFT,
-  KEY_RIGHT,
-  KEY_F0,
-  KEY_F1,
-  KEY_F2,
-  KEY_F3,
-  KEY_F4,
-  KEY_F5,
-  KEY_F6,
-  KEY_F7,
-  KEY_F8,
-  KEY_F9,
-  KEY_F10,
-  KEY_BACKTAB,
-  KEY_BEGIN,
-  KEY_CANCEL,
-  KEY_CLOSE,
-  KEY_COPY,
-  KEY_CREATE,
-  KEY_END,
-  KEY_ENTER,
-  KEY_EXIT,
-  KEY_UPPER_LEFT,
-  KEY_UPPER_RIGHT,
-  KEY_CENTER,
-  KEY_BOTTOM_LEFT,
-  KEY_BOTTOM_RIGHT,
-  KEY_HOME,
-  KEY_PAGE_UP,
-  KEY_PAGE_DOWN,
-  KEY_BREAK,
-  KEY_NULL
+  HXKEY_ERROR      = -1,
+  HXKEY_NONE       = 0,
+  HXKEY_BACKSPACE  = 0x08,
+  HXKEY_TAB        = 0x09,
+  HXKEY_RETURN     = 0x0d,
+  HXKEY_ESCAPE     = 0x1b,
+  HXKEY_DELETE     = 0x7f,
+  HXKEY_UP         = 0x100,
+  HXKEY_DOWN,
+  HXKEY_LEFT,
+  HXKEY_RIGHT,
+  HXKEY_F0,
+  HXKEY_F1,
+  HXKEY_F2,
+  HXKEY_F3,
+  HXKEY_F4,
+  HXKEY_F5,
+  HXKEY_F6,
+  HXKEY_F7,
+  HXKEY_F8,
+  HXKEY_F9,
+  HXKEY_F10,
+  HXKEY_BACKTAB,
+  HXKEY_BEGIN,
+  HXKEY_CANCEL,
+  HXKEY_CLOSE,
+  HXKEY_COPY,
+  HXKEY_CREATE,
+  HXKEY_END,
+  HXKEY_ENTER,
+  HXKEY_EXIT,
+  HXKEY_UPPER_LEFT,
+  HXKEY_UPPER_RIGHT,
+  HXKEY_CENTER,
+  HXKEY_BOTTOM_LEFT,
+  HXKEY_BOTTOM_RIGHT,
+  HXKEY_HOME,
+  HXKEY_PAGE_UP,
+  HXKEY_PAGE_DOWN,
+  HXKEY_BREAK,
+  HXKEY_NULL
 };
 
-#define KEY_BIAS 254            /* bias used for storing non-character
+#define HXKEY_BIAS 254            /* bias used for storing non-character
                                  * keys in character strings */
 
 extern struct t_keynames_s {
@@ -160,45 +160,45 @@ tio_getch( /* void */ );
   int
 tio_get( /* void */ );
   /* Read a character from the keyboard.  `tio_getch()' waits for input,
-   * `tio_get()' returns `KEY_NONE' (0) if no input is available.
+   * `tio_get()' returns `HXKEY_NONE' (0) if no input is available.
    * The functions return the following special keys:
-   *   KEY_ERROR                an error occured while waiting for input.
+   *   HXKEY_ERROR                an error occured while waiting for input.
    *                            NOTE: Changing the size of the window causes
-   *                              `tio_getch()' to return `KEY_ERROR'.
-   *   KEY_NONE                 no key.
-   *   KEY_BACKSPACE            backspace key.
-   *   KEY_TAB                  TAB key.
-   *   KEY_RETURN               return key.
-   *   KEY_ESCAPE               escape key.
-   *   KEY_DELETE               delete key.
-   *   KEY_UP                   up arrow.
-   *   KEY_DOWN                 down arrow.
-   *   KEY_LEFT                 left arrow.
-   *   KEY_RIGHT                right arrow.
-   *   KEY_BACKTAB              BACKTAB key.
-   *   KEY_F0, ... KEY_F10      function keys F0-F10.
-   *   KEY_BEGIN                begin key.
-   *   KEY_CANCEL               cancel key.
-   *   KEY_CLOSE                close key.
-   *   KEY_COPY                 copy key.
-   *   KEY_CREATE               create key.
-   *   KEY_END                  end key.
-   *   KEY_ENTER                enter key.
-   *   KEY_EXIT                 exit key.
-   *   KEY_UPPER_LEFT           upper left key on keypad.
-   *   KEY_UPPER_RIGHT          upper right key on keypad.
-   *   KEY_CENTER               center key on keypad.
-   *   KEY_BOTTOM_LEFT          bottom left key on keypad.
-   *   KEY_BOTTOM_RIGHT         bottom right key on keypad.
-   *   KEY_HOME                 home key.
-   *   KEY_PAGE_UP              page up key.
-   *   KEY_PAGE_DOWN            page down key.
+   *                              `tio_getch()' to return `HXKEY_ERROR'.
+   *   HXKEY_NONE                 no key.
+   *   HXKEY_BACKSPACE            backspace key.
+   *   HXKEY_TAB                  TAB key.
+   *   HXKEY_RETURN               return key.
+   *   HXKEY_ESCAPE               escape key.
+   *   HXKEY_DELETE               delete key.
+   *   HXKEY_UP                   up arrow.
+   *   HXKEY_DOWN                 down arrow.
+   *   HXKEY_LEFT                 left arrow.
+   *   HXKEY_RIGHT                right arrow.
+   *   HXKEY_BACKTAB              BACKTAB key.
+   *   HXKEY_F0, ... HXKEY_F10      function keys F0-F10.
+   *   HXKEY_BEGIN                begin key.
+   *   HXKEY_CANCEL               cancel key.
+   *   HXKEY_CLOSE                close key.
+   *   HXKEY_COPY                 copy key.
+   *   HXKEY_CREATE               create key.
+   *   HXKEY_END                  end key.
+   *   HXKEY_ENTER                enter key.
+   *   HXKEY_EXIT                 exit key.
+   *   HXKEY_UPPER_LEFT           upper left key on keypad.
+   *   HXKEY_UPPER_RIGHT          upper right key on keypad.
+   *   HXKEY_CENTER               center key on keypad.
+   *   HXKEY_BOTTOM_LEFT          bottom left key on keypad.
+   *   HXKEY_BOTTOM_RIGHT         bottom right key on keypad.
+   *   HXKEY_HOME                 home key.
+   *   HXKEY_PAGE_UP              page up key.
+   *   HXKEY_PAGE_DOWN            page down key.
    */
 
   int
 tio_tget( /* int timeout */ );
   /* Like `tio_get()', but waits `timeout' tenths of a second for input.
-   * `tio_tget()' returns `KEY_NONE' (0) if nothing has been read.
+   * `tio_tget()' returns `HXKEY_NONE' (0) if nothing has been read.
    */
 
   int
@@ -229,8 +229,8 @@ tio_getmore( /* void */ );
   int
 tio_testkey( /* int key */ );
   /* Returns 1, if a termcap entry for the requested key exists, else 0.
-   * The function return always 1 for the keys `KEY_BACKSPACE', `KEY_TAB',
-   * `KEY_RETURN', `KEY_ESCAPE', `KEY_DELETE', `KEY_NONE' and `KEY_ERROR'.
+   * The function return always 1 for the keys `HXKEY_BACKSPACE', `HXKEY_TAB',
+   * `HXKEY_RETURN', `HXKEY_ESCAPE', `HXKEY_DELETE', `HXKEY_NONE' and `HXKEY_ERROR'.
    */
 
   char *

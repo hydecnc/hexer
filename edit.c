@@ -911,29 +911,29 @@ he_motion(hedit, key, count)
   if (count <= 0) count = 1;
   switch (key) {
   case 'k':
-  case KEY_UP:
+  case HXKEY_UP:
     hedit->position -= count << 4;
     if (hedit->position < 0) hedit->position &= 0xf;
     break;
   case 'j':
-  case KEY_DOWN:
+  case HXKEY_DOWN:
     hedit->position += count << 4;
     if (hedit->position > (long)hedit->buffer->size)
       hedit->position = (long)hedit->buffer->size;
     break;
   case 'h':
-  case KEY_LEFT:
+  case HXKEY_LEFT:
     hedit->position -= count;
     if (hedit->position < 0) hedit->position = 0;
     break;
   case 'l':
-  case KEY_RIGHT:
+  case HXKEY_RIGHT:
     hedit->position += count;
     if (hedit->position > hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     break;
   case 'f' & 0x1f: /* C-f */
-  case KEY_PAGE_DOWN:
+  case HXKEY_PAGE_DOWN:
     i = hedit->position;
     hedit->position += (lines - 2) * 16;
     if (hedit->position > hedit->buffer->size)
@@ -942,7 +942,7 @@ he_motion(hedit, key, count)
     if (hedit->position != i) he_refresh_all(hedit);
     break;
   case 'b' & 0x1f: /* C-b */
-  case KEY_PAGE_UP:
+  case HXKEY_PAGE_UP:
     i = hedit->position;
     hedit->position -= (lines - 2) * 16;
     if (hedit->position < 0) hedit->position = 0;
@@ -979,16 +979,16 @@ he_motion(hedit, key, count)
     while (count--) ++hedit->screen_offset;
     he_refresh_part(hedit, 0, -1);
     break;
-  case KEY_TAB:
+  case HXKEY_TAB:
     hedit->text_mode = !hedit->text_mode;
     break;
   }
 }
 /* he_motion */
 
-#define HE_CASE_MOTION case KEY_UP: case KEY_DOWN: case KEY_LEFT:            \
-  case KEY_RIGHT: case 'f' & 0x1f: case 'b' & 0x1f: case 'u' & 0x1f:         \
-  case 'd' & 0x1f: case KEY_PAGE_UP: case KEY_PAGE_DOWN: case KEY_TAB
+#define HE_CASE_MOTION case HXKEY_UP: case HXKEY_DOWN: case HXKEY_LEFT:            \
+  case HXKEY_RIGHT: case 'f' & 0x1f: case 'b' & 0x1f: case 'u' & 0x1f:         \
+  case 'd' & 0x1f: case HXKEY_PAGE_UP: case HXKEY_PAGE_DOWN: case HXKEY_TAB
 #define HE_CASE_MOTION_HJKL case 'h': case 'j': case 'k': case 'l'
 #define HE_CASE_MOTION_SHIFT case '<': case '>'
 
@@ -1275,9 +1275,9 @@ he_visual_mode(hedit)
       hedit->anchor_selection = hedit->begin_selection == hedit->position;
       goto exit_visual_mode2;
     case 'v':
-    case KEY_ESCAPE:
+    case HXKEY_ESCAPE:
       goto exit_visual_mode;
-    case KEY_ERROR:
+    case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
         tio_move(lines, 40);
@@ -1342,7 +1342,7 @@ he_get_counter(hedit)
   for (;;) {
     key = tio_mgetch(0, 0);
     switch (key) {
-    case KEY_ERROR:
+    case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       break;
     HE_CASE_COMMAND_INSERT:
@@ -1351,8 +1351,8 @@ he_get_counter(hedit)
        */
       he_command(hedit, key, 0);
       break;
-    case KEY_BACKSPACE:
-    case KEY_DELETE:
+    case HXKEY_BACKSPACE:
+    case HXKEY_DELETE:
       if (count > 0)
         count /= (long)mode;
       else {
@@ -1364,7 +1364,7 @@ he_get_counter(hedit)
         }
       }
       break;
-    case KEY_RETURN:
+    case HXKEY_RETURN:
       goto exit_get_counter;
     default:
       if (key == '0' && count < 0) {
@@ -1441,15 +1441,15 @@ he_verbatim(hedit)
   tio_printf("verbatim");
   he_set_cursor(hedit);
 restart:
-  if ((key = tio_mgetch(0, 0)) == (int)KEY_ERROR) {
+  if ((key = tio_mgetch(0, 0)) == (int)HXKEY_ERROR) {
     if (window_changed) {
       tio_ungetch('v' & 0x1f);
-      tio_ungetch(KEY_ERROR);
+      tio_ungetch(HXKEY_ERROR);
       tio_goto_line(lines - 1);
       tio_return();
       tio_right(60);
       tio_clear_to_eol();
-      return (int)KEY_NONE;
+      return (int)HXKEY_NONE;
     } else
       goto restart;
   }
@@ -1457,7 +1457,7 @@ restart:
   tio_return();
   tio_right(60);
   tio_clear_to_eol();
-  return key < 0x100 ? key : (int)KEY_NONE;
+  return key < 0x100 ? key : (int)HXKEY_NONE;
 }
 /* he_verbatim */
 
@@ -1488,7 +1488,7 @@ he_insert_mode(hedit, replace_mode, count)
   extern lines;
 
   if (!count) count = 1;
-  if (he_refresh_check(hedit)) tio_ungetch(KEY_NONE);
+  if (he_refresh_check(hedit)) tio_ungetch(HXKEY_NONE);
   for (;;) {
     key = tio_mgetch(MAP_INSERT, map_string);
     switch (key) {
@@ -1519,15 +1519,15 @@ he_insert_mode(hedit, replace_mode, count)
     HE_CASE_COMMAND_INSERT:
       he_command(hedit, key, -1);
       break;
-    case KEY_ERROR:
+    case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
         tio_move(lines, 40);
         tio_raw_printf("%s", map_string);
       }
       break;
-    case KEY_BACKSPACE:
-    case KEY_DELETE:
+    case HXKEY_BACKSPACE:
+    case HXKEY_DELETE:
       if (replace_mode)
         if (hedit->text_mode)
           if (insert->size) {
@@ -1592,19 +1592,19 @@ he_insert_mode(hedit, replace_mode, count)
             } else
               tio_bell();
       break;
-    case KEY_ESCAPE:
+    case HXKEY_ESCAPE:
       goto exit_insert_mode;
         /* The refresh has to be performed by the calling function.
          */
     case 'v' & 0x1f: /* C-v */
       if (hedit->text_mode) key = he_verbatim(hedit);
       goto Default;
-    case KEY_RETURN:
-      if (key == (int)KEY_RETURN) key = 0x0a;
+    case HXKEY_RETURN:
+      if (key == (int)HXKEY_RETURN) key = 0x0a;
       /* fall through */
     default: Default:
       if (!key || key > 0xff) break;
-      if (key == (int)KEY_NULL) key = 0;
+      if (key == (int)HXKEY_NULL) key = 0;
       insert_write = 0;
       if (hedit->text_mode) {
         insert_character = (unsigned char)key;
@@ -2045,7 +2045,7 @@ he_mainloop(hedit)
   tio_echo(0);
   tio_keypad(1);
   he_set_cursor(hedit);
-  if (he_refresh_check(hedit)) tio_ungetch(KEY_NONE);
+  if (he_refresh_check(hedit)) tio_ungetch(HXKEY_NONE);
   if (hedit->begin_selection >= 0
       && hedit->end_selection >= hedit->begin_selection)
     tio_ungetch('v');
@@ -2061,7 +2061,7 @@ he_mainloop(hedit)
     HE_CASE_COMMAND_INSERT:
       if (he_command(hedit, key, count) < 0) goto exit_mainloop;
       break;
-    case KEY_ERROR:
+    case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
         tio_goto_line(lines - 1);

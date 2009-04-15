@@ -579,18 +579,18 @@ restart:
   for (;;) {
     key = tio_getch();
     switch (key) {
-    case KEY_NONE:
+    case HXKEY_NONE:
       if (window_changed) he_refresh_screen(current_buffer->hedit);
       goto restart;
     case 'q': case 'Q':
       tio_printf("quit");
       choice = -1;
       goto exit_he_query_yn;
-    case KEY_ESCAPE:
+    case HXKEY_ESCAPE:
       tio_printf("escape");
       choice = -1;
       goto exit_he_query_yn;
-    case KEY_RETURN:
+    case HXKEY_RETURN:
       if (dfl < 0) break;
       choice = dfl;
       switch (choice) {

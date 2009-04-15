@@ -466,49 +466,49 @@ static struct t_keys_s {
   char *name;        /* Name of key. */
   char *srep;        /* String representation of the key (i.e. ~1F for F1) */
 } t_keys[] = {
-  { KEY_DELETE, &t_key_delete, "delete", "~DEL" },
-  { KEY_BACKSPACE, &t_key_backspace, "backspace", "~BS" },
-  { KEY_TAB, &t_key_tab, "tab", "~TAB" },
-  { KEY_RETURN, &t_key_return, "return", "~RET" },
-  { KEY_UP, &t_key_up, "up", "~UP" },
-  { KEY_DOWN, &t_key_down, "down", "~DOWN" },
-  { KEY_LEFT, &t_key_left, "left", "~LEFT" },
-  { KEY_RIGHT, &t_key_right, "right", "~RIGHT" },
-  { KEY_F0, &t_key_f0, "f0", "~0F" },
-  { KEY_F1, &t_key_f1, "f1", "~1F" },
-  { KEY_F2, &t_key_f2, "f2", "~2F" },
-  { KEY_F3, &t_key_f3, "f3", "~3F" },
-  { KEY_F4, &t_key_f4, "f4", "~4F" },
-  { KEY_F5, &t_key_f5, "f5", "~5F" },
-  { KEY_F6, &t_key_f6, "f6", "~6F" },
-  { KEY_F7, &t_key_f7, "f7", "~7F" },
-  { KEY_F8, &t_key_f8, "f8", "~8F" },
-  { KEY_F9, &t_key_f9, "f9", "~9F" },
-  { KEY_F10, &t_key_f10, "f10", "~10F" },
-  { KEY_BACKTAB, &t_key_backtab, "backtab", "~BT" },
-  { KEY_BEGIN, &t_key_begin, "begin", "~BEGIN" },
-  { KEY_CANCEL, &t_key_cancel, "cancel", "~CANCEL" },
-  { KEY_CLOSE, &t_key_close, "close", "~CLOSE" },
-  { KEY_COPY, &t_key_copy, "copy", "~COPY" },
-  { KEY_CREATE, &t_key_create, "create", "~CREATE" },
-  { KEY_END, &t_key_end, "end", "~END" },
-  { KEY_ENTER, &t_key_enter, "enter", "~ENTER" },
-  { KEY_EXIT, &t_key_exit, "exit", "~EXIT" },
-  { KEY_UPPER_LEFT, &t_key_upper_left, "upper left", "~UL" },
-  { KEY_UPPER_RIGHT, &t_key_upper_right, "upper right", "~UR" },
-  { KEY_CENTER, &t_key_center, "center", "~CENTER" },
-  { KEY_BOTTOM_LEFT, &t_key_bottom_left, "bottom left", "~BL" },
-  { KEY_BOTTOM_RIGHT, &t_key_bottom_right, "bottom right", "~BR" },
-  { KEY_HOME, &t_key_home, "home", "~HOME" },
-  { KEY_PAGE_UP, &t_key_page_up, "page up", "~PGUP" },
-  { KEY_PAGE_DOWN, &t_key_page_down, "page down", "~PGDOWN" },
+  { HXKEY_DELETE, &t_key_delete, "delete", "~DEL" },
+  { HXKEY_BACKSPACE, &t_key_backspace, "backspace", "~BS" },
+  { HXKEY_TAB, &t_key_tab, "tab", "~TAB" },
+  { HXKEY_RETURN, &t_key_return, "return", "~RET" },
+  { HXKEY_UP, &t_key_up, "up", "~UP" },
+  { HXKEY_DOWN, &t_key_down, "down", "~DOWN" },
+  { HXKEY_LEFT, &t_key_left, "left", "~LEFT" },
+  { HXKEY_RIGHT, &t_key_right, "right", "~RIGHT" },
+  { HXKEY_F0, &t_key_f0, "f0", "~0F" },
+  { HXKEY_F1, &t_key_f1, "f1", "~1F" },
+  { HXKEY_F2, &t_key_f2, "f2", "~2F" },
+  { HXKEY_F3, &t_key_f3, "f3", "~3F" },
+  { HXKEY_F4, &t_key_f4, "f4", "~4F" },
+  { HXKEY_F5, &t_key_f5, "f5", "~5F" },
+  { HXKEY_F6, &t_key_f6, "f6", "~6F" },
+  { HXKEY_F7, &t_key_f7, "f7", "~7F" },
+  { HXKEY_F8, &t_key_f8, "f8", "~8F" },
+  { HXKEY_F9, &t_key_f9, "f9", "~9F" },
+  { HXKEY_F10, &t_key_f10, "f10", "~10F" },
+  { HXKEY_BACKTAB, &t_key_backtab, "backtab", "~BT" },
+  { HXKEY_BEGIN, &t_key_begin, "begin", "~BEGIN" },
+  { HXKEY_CANCEL, &t_key_cancel, "cancel", "~CANCEL" },
+  { HXKEY_CLOSE, &t_key_close, "close", "~CLOSE" },
+  { HXKEY_COPY, &t_key_copy, "copy", "~COPY" },
+  { HXKEY_CREATE, &t_key_create, "create", "~CREATE" },
+  { HXKEY_END, &t_key_end, "end", "~END" },
+  { HXKEY_ENTER, &t_key_enter, "enter", "~ENTER" },
+  { HXKEY_EXIT, &t_key_exit, "exit", "~EXIT" },
+  { HXKEY_UPPER_LEFT, &t_key_upper_left, "upper left", "~UL" },
+  { HXKEY_UPPER_RIGHT, &t_key_upper_right, "upper right", "~UR" },
+  { HXKEY_CENTER, &t_key_center, "center", "~CENTER" },
+  { HXKEY_BOTTOM_LEFT, &t_key_bottom_left, "bottom left", "~BL" },
+  { HXKEY_BOTTOM_RIGHT, &t_key_bottom_right, "bottom right", "~BR" },
+  { HXKEY_HOME, &t_key_home, "home", "~HOME" },
+  { HXKEY_PAGE_UP, &t_key_page_up, "page up", "~PGUP" },
+  { HXKEY_PAGE_DOWN, &t_key_page_down, "page down", "~PGDOWN" },
   { (enum t_keys_e)'~', &t_key_tilde, "tilde", "~TILDE" },
   { (enum t_keys_e)'^', &t_key_hat, "hat", "~HAT" },
-  { KEY_NULL, &t_key_null, "null", "^@" },
-  { KEY_BREAK, &t_key_break, "break", "~BREAK" },
+  { HXKEY_NULL, &t_key_null, "null", "^@" },
+  { HXKEY_BREAK, &t_key_break, "break", "~BREAK" },
   { (enum t_keys_e)0, 0 }
 };
-#define KEY_ESCAPE_NAME "escape"
+#define HXKEY_ESCAPE_NAME "escape"
 
 extern vfprintf();
 extern vsprintf();
@@ -1075,7 +1075,7 @@ tio_getch_()
    */
   if (*tio_interrupt) {
     *tio_interrupt = 0;
-    return (int)KEY_BREAK;
+    return (int)HXKEY_BREAK;
   }
 
   /* See if there is something in the unget buffer.
@@ -1088,19 +1088,19 @@ tio_getch_()
    */
   switch (tio_read(cbuf, 1)) {
   case -1:
-    return (int)KEY_ERROR;
+    return (int)HXKEY_ERROR;
       /* The occurence of an error in `tio_read()' is likely to be caused by
        * the signal `SIGWINCH', indicating that the size of the window has
        * changed.
        */
   case 0:
-    return (int)KEY_NONE;
+    return (int)HXKEY_NONE;
   default:
     if (!t_keypad_transmit)
       if (*cbuf == '\n' || *cbuf == '\r')
-        return (int)KEY_RETURN;
+        return (int)HXKEY_RETURN;
       else
-        return *cbuf ? (int)(unsigned char)*cbuf : (int)KEY_NULL;
+        return *cbuf ? (int)(unsigned char)*cbuf : (int)HXKEY_NULL;
   }
 
   /* Check if the character read is the first character of a known key
@@ -1116,9 +1116,9 @@ tio_getch_()
         break;
   if (!t_keys[i].key) {
     if (*cbuf == '\n' || *cbuf == '\r')
-      return (int)KEY_RETURN;
+      return (int)HXKEY_RETURN;
     else
-      return *cbuf ? (int)(unsigned char)*cbuf : (int)KEY_NULL;
+      return *cbuf ? (int)(unsigned char)*cbuf : (int)HXKEY_NULL;
   }
 
   /* If the read character is a prefix of a known key string, characters
@@ -1133,14 +1133,14 @@ tio_getch_()
   tcsetattr(0, TCSANOW, &ts);
   for (j = 0;;) {
     j += i = tio_read(cbuf + j + 1, 1);
-    if (i < 0) return (int)KEY_ERROR;
+    if (i < 0) return (int)HXKEY_ERROR;
     cbuf[j + 1] = 0;
     if (!i) {
       /* On timeout return the first character of the read string and put
        * the rest of the read string back to the input stream.
        */
       if (j) tio_unread(cbuf + 1, j);
-      return *cbuf ? (int)(unsigned char)*cbuf : (int)KEY_NULL;
+      return *cbuf ? (int)(unsigned char)*cbuf : (int)HXKEY_NULL;
     } else {
       int prefix_f = 0;
       for (i = 0; t_keys[i].key; ++i)
@@ -1154,7 +1154,7 @@ tio_getch_()
         }
       if (!prefix_f) {
         tio_unread(cbuf + 1, j);
-        return *cbuf ? (int)(unsigned char)*cbuf : (int)KEY_NULL;
+        return *cbuf ? (int)(unsigned char)*cbuf : (int)HXKEY_NULL;
       }
     }
   } /* for */
@@ -1164,7 +1164,7 @@ tio_getch_()
   int
 tio_getch()
   /* Read a character or keypad key from the keyboard.  `tio_getch()' waits
-   * for input and returns the key pressed or `KEY_ERROR' (-1) on error.
+   * for input and returns the key pressed or `HXKEY_ERROR' (-1) on error.
    * This function calls `tio_getch_()' to read the character.
    */
 {
@@ -1202,7 +1202,7 @@ tio_getch()
   int
 tio_get()
   /* Like `tio_getch()', but doesn't wait input.  `tio_get()' returns
-   * `KEY_NONE' (0) if no input is available.
+   * `HXKEY_NONE' (0) if no input is available.
    */
 {
   struct termios ts, ts_rec;
@@ -1223,7 +1223,7 @@ tio_get()
   int
 tio_tget(timeout)
   /* Like `tio_get()', but waits `timeout' tenths of a second for input.
-   * `tio_tget()' returns `KEY_NONE' (0) if nothing has been read.
+   * `tio_tget()' returns `HXKEY_NONE' (0) if nothing has been read.
    */
   int timeout;
 {
@@ -1245,7 +1245,7 @@ tio_tget(timeout)
 #endif
       return -1;
     case 0:
-      if (window_changed) return (int)KEY_ERROR; else return (int)KEY_NONE;
+      if (window_changed) return (int)HXKEY_ERROR; else return (int)HXKEY_NONE;
     default:
       break;
   }
@@ -1287,8 +1287,8 @@ tio_ungets(x)
   int
 tio_testkey(key)
   /* Returns 1, if a termcap entry for the requested key exists, else 0.
-   * The function return always 1 for the keys `KEY_BACKSPACE', `KEY_TAB',
-   * `KEY_RETURN', `KEY_ESCAPE', `KEY_DELETE', `KEY_NONE' and `KEY_ERROR'.
+   * The function return always 1 for the keys `HXKEY_BACKSPACE', `HXKEY_TAB',
+   * `HXKEY_RETURN', `HXKEY_ESCAPE', `HXKEY_DELETE', `HXKEY_NONE' and `HXKEY_ERROR'.
    */
   int key;
 {
@@ -1321,7 +1321,7 @@ tio_keyname(key)
     return name;
   }
   if (key > 0xff) return "??";
-  if (key == (int)KEY_ESCAPE) return KEY_ESCAPE_NAME;
+  if (key == (int)HXKEY_ESCAPE) return HXKEY_ESCAPE_NAME;
   sprintf(name, "\\x%02x", (unsigned char)key);
   return name;
 }
@@ -1382,8 +1382,8 @@ tio_keyscan(key, s, mode)
 
   if (!mode) mode = ~0;
   if ((mode & 1) && *s == '^' && s[1]) {
-    if (s[1] == '?') *key = (int)KEY_DELETE;
-    if (!(*key = s[1] & 0x1f)) *key = (int)KEY_NULL;
+    if (s[1] == '?') *key = (int)HXKEY_DELETE;
+    if (!(*key = s[1] & 0x1f)) *key = (int)HXKEY_NULL;
     return s + 2;
   }
   if ((mode & 2) && *s == '~')
@@ -2032,7 +2032,7 @@ tio_message(message, indent)
       /* tio_printf(" @Ar -- more -- @~@r"); */
       tio_raw_printf(" [ more ]\r");
       switch (tio_getch()) {
-        case KEY_DOWN:
+        case HXKEY_DOWN:
         case 'd':
         case 'd' & 0x1f:
           i -= lines / 2;
@@ -2041,12 +2041,12 @@ tio_message(message, indent)
         case 'f' & 0x1f:
           i = 0;
           break;
-        case KEY_ERROR:
+        case HXKEY_ERROR:
           if (i > lines - 2) i = lines - 2;
           tio_goto_line(i);
           window_changed = 0;
           break;
-        case KEY_RETURN:
+        case HXKEY_RETURN:
         default:
           --i;
           break;
