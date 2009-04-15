@@ -6,6 +6,8 @@ Change log for hexer, the multi-view binary editor
 	  make them actually acceptable to today's Vim
 	- add a config.posix file to reflect a modern POSIX-like system
 	- bring config.linux up to date
+	- add a HAVE_STRERROR definition to the config files and roll out
+	  our own strerror() function if needed
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

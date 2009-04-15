@@ -67,11 +67,8 @@
 
 extern int errno;
 
-#ifndef BSD
-extern char *sys_errlist[];
-#endif
-extern int sys_nerr;
 extern mkstemp();
+extern char *strerror();
 
 const struct buffer_s NO_BUFFER = { 0, 0, 0, 0, 0, 0 };
 
@@ -221,10 +218,7 @@ he_open_buffer(name, path)
         no_file_f = 1;
         break;
       default:
-        if (errno >= sys_nerr) /* unknown error */
-          he_message(1, "`%s': @Abunknown error@~", path);
-        else
-          he_message(1, "`%s': @Ab%s@~", path, sys_errlist[errno]);
+        he_message(1, "`%s': @Ab%s@~", path, strerror(errno));
         return -1;
       }
     if (!no_file_f ? access(path, W_OK) : 0)
@@ -233,10 +227,7 @@ he_open_buffer(name, path)
         read_only = 1;
         break;
       default:
-        if (errno >= sys_nerr) /* unknown error */
-          he_message(1, "`%s': @Abunknown error@~", path);
-        else
-          he_message(1, "`%s': @Ab%s@~", path, sys_errlist[errno]);
+        he_message(1, "`%s': @Ab%s@~", path, strerror(errno));
         return -1;
       }
   }
@@ -249,10 +240,7 @@ he_open_buffer(name, path)
   buffer->hedit->buffer_name = strdup(name);
   if (path && !no_file_f) {
     if (!(fp = fopen(path, "r"))) {
-      if (errno >= sys_nerr) /* unknown error */
-        he_message(1, "`%s': @Abunknown error@~", path);
-      else
-        he_message(1, "`%s': @Ab%s@~", path, sys_errlist[errno]);
+      he_message(1, "`%s': @Ab%s@~", path, strerror(errno));
       free((char *)buffer->hedit->buffer_name);
       free((char *)buffer->hedit);
       free((char *)buffer);
@@ -267,10 +255,7 @@ he_open_buffer(name, path)
   if (path) {
     buffer->path = strdup(path);
     if (!getcwd(cwd, PATH_MAX)) {
-      if (errno >= sys_nerr)
-        he_message(0, "@Abcan't get cwd: unknown error");
-      else
-        he_message(0, "@Abcan't get cwd: %s@~", sys_errlist[errno]);
+      he_message(0, "@Abcan't get cwd: %s@~", strerror(errno));
       buffer->fullpath = strdup(path);
     } else {
       buffer->fullpath =

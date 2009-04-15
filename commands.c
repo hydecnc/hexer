@@ -70,6 +70,9 @@ char *alloca();
 #endif
 
   extern char *
+strerror();
+
+  extern char *
 exh_skip_expression();
 
   extern char *
@@ -1246,10 +1249,6 @@ exhcmd_exit(hedit, args)
   int cant_write_f = 0;
   long k;
   char *errormsg;
-  extern int sys_nerr;
-#ifndef BSD
-  extern char *sys_errlist[];
-#endif
   extern int errno;
   char *skip, *p;
 
@@ -1264,11 +1263,8 @@ exhcmd_exit(hedit, args)
       } else {
         k = b_write_buffer_to_file(i->hedit->buffer, i->path);
         if (k < 0) {
-          if (!errno || errno >= sys_nerr)
-            errormsg = "unknown error";
-          else
-            errormsg = sys_errlist[errno];
-          he_message(0, "@Aberror writing file@~ `%s': %s", i->path, errormsg);
+          he_message(0, "@Aberror writing file@~ `%s': %s", i->path,
+              strerror(errno));
           cant_write_f = 1;
         } else {
           he_message(0, "wrote `%s' - 0x%lx (%li) bytes", i->path, k, k);

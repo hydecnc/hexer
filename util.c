@@ -45,6 +45,8 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "tio.h"
 
@@ -214,6 +216,30 @@ util_strsort(list)
   return 0;
 }
 /* util_strsort */
+
+#if !HAVE_STRERROR
+#ifndef BSD
+extern const char * const sys_errlist[];
+#endif
+extern const int sys_nerr;
+
+/*
+ * We are using an error buffer instead of just returning the result from
+ * strerror(3) to avoid constness warnings.  Yes, this makes this function
+ * not-thread-safe.  Well, strerror(3) isn't.
+ */
+static char errbuf[512];
+
+  char *
+strerror(int errnum)
+{
+  if (errnum >= sys_nerr)
+    strcpy(errbuf, "Unknown error");
+  else
+    snprintf(errbuf, sizeof(errbuf), "%s", sys_errlist[errnum]);
+  return (errbuf);
+}
+#endif /* HAVE_STRERROR */
 
 /* end of util.c */
 
