@@ -1478,7 +1478,7 @@ he_insert_mode(hedit, replace_mode, count)
   char *data;
   int insert_state = 0;
   int insert_write = 0;
-  unsigned char insert_character;
+  unsigned char hx_insert_character;
   long position = hedit->position;
   long size = hedit->buffer->size;
   long i;
@@ -1555,10 +1555,10 @@ he_insert_mode(hedit, replace_mode, count)
           } else
             if (insert->size) {
               insert_state = 1;
-              b_read(insert, &insert_character, insert->size - 1, 1);
-              insert_character &= (char)0xf0;
-              x = (unsigned char)insert_character;
-              key = (unsigned char)insert_character >> 4;
+              b_read(insert, &hx_insert_character, insert->size - 1, 1);
+              hx_insert_character &= (char)0xf0;
+              x = (unsigned char)hx_insert_character;
+              key = (unsigned char)hx_insert_character >> 4;
               --hedit->position;
               hedit->insert_position = hedit->position;
               he_refresh_part(hedit, hedit->position, hedit->position);
@@ -1583,9 +1583,9 @@ he_insert_mode(hedit, replace_mode, count)
           } else
             if (insert->size) {
               insert_state = 1;
-              b_read(insert, &insert_character, insert->size - 1, 1);
-              insert_character &= (char)0xf0;
-              x = (unsigned char)insert_character >> 4;
+              b_read(insert, &hx_insert_character, insert->size - 1, 1);
+              hx_insert_character &= (char)0xf0;
+              x = (unsigned char)hx_insert_character >> 4;
               --hedit->position;
               hedit->insert_position = hedit->position;
               he_refresh_part(hedit, hedit->position, hedit->position);
@@ -1607,7 +1607,7 @@ he_insert_mode(hedit, replace_mode, count)
       if (key == (int)HXKEY_NULL) key = 0;
       insert_write = 0;
       if (hedit->text_mode) {
-        insert_character = (unsigned char)key;
+        hx_insert_character = (unsigned char)key;
         if (!replace_mode) {
           b_insert(hedit->buffer, hedit->position, 1);
           he_refresh_part(hedit, hedit->position, hedit->buffer->size - 1);
@@ -1619,7 +1619,7 @@ he_insert_mode(hedit, replace_mode, count)
         if (isdigit(x) || (x >= 'a' && x <= 'f')) {
           x -= isdigit(x) ? '0' : ('a' - 0xa);
           if (!insert_state) {
-            insert_character = (unsigned char)x << 4;
+            hx_insert_character = (unsigned char)x << 4;
             if (!replace_mode) {
               b_insert(hedit->buffer, hedit->position, 1);
               hedit->insert_position = hedit->position;
@@ -1627,7 +1627,7 @@ he_insert_mode(hedit, replace_mode, count)
             } else
               he_refresh_part(hedit, hedit->position, hedit->position);
           } else {
-            insert_character |= (unsigned char)x;
+            hx_insert_character |= (unsigned char)x;
             insert_write = 1;
             hedit->insert_position = -1;
             he_refresh_part(hedit, hedit->position, hedit->position);
@@ -1644,8 +1644,8 @@ he_insert_mode(hedit, replace_mode, count)
             b_append(replace, &c, 1);
           }
         }
-        b_write_append(hedit->buffer, &insert_character, hedit->position, 1);
-        b_append(insert, &insert_character, 1);
+        b_write_append(hedit->buffer, &hx_insert_character, hedit->position, 1);
+        b_append(insert, &hx_insert_character, 1);
         if (replace_mode == 2) goto exit_insert_mode;
         ++hedit->position;
       }

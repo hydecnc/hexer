@@ -14,9 +14,10 @@ Change log for hexer, the multi-view binary editor
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)
 	  - use CFLAGS when building bin2c
-	- rename the KEY_* constants to HXKEY_* and the "lines" and "columns"
-	  variables to "hx_lines" and "hx_columns" to avoid conflicts with
+	- rename the KEY_* constants to HXKEY_* to avoid conflicts with
 	  the curses header files
+	- add an "hx_" prefix to the "lines", "columns", and
+	  "insert_character" variables for the same reason
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>
