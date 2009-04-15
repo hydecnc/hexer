@@ -9,7 +9,7 @@
 #define HAVE_USLEEP          1
 #define HAVE_FLOAT_H         1
 #define HAVE_ALLOCA          1
-#define NEED_ALLOCA_H        0
+#define NEED_ALLOCA_H        1
 
-#define USE_STDARG           0
+#define USE_STDARG           1
 

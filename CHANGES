@@ -5,6 +5,7 @@ Change log for hexer, the multi-view binary editor
 	- remove the "bdir" and "ef" settings from the Vim modelines to
 	  make them actually acceptable to today's Vim
 	- add a config.posix file to reflect a modern POSIX-like system
+	- bring config.linux up to date
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>
