@@ -152,7 +152,7 @@ static int rl_history_c[RL_MAX_CONTEXTS];
   /* current size of the history buffer for each context.
    */
 
-extern lines, columns;
+extern hx_lines, columns;
   /* height and width of the screen.
    * these variables are maintained by "tio.c".
    */
@@ -296,7 +296,7 @@ rl_query_yn(prompt, dfl)
   extern int window_changed;
 
   tio_keypad(0);
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   if (dfl < 0) /* no default answer */
@@ -1086,7 +1086,7 @@ readline(prompt, default_val, context)
   static int history_initialized = 0;
   int stop_f = 0;
 
-  extern lines, columns;
+  extern hx_lines, columns;
   extern window_changed;
 
   rl_redisplay = 0;
@@ -1184,7 +1184,7 @@ readline(prompt, default_val, context)
     case HXKEY_ERROR:
       if (window_changed) {
         rl_winch();
-        tio_goto_line(lines - 1);
+        tio_goto_line(hx_lines - 1);
         tio_return();
         tio_clear_to_eol();
         rl_display_line(1);

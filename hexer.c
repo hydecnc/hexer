@@ -533,9 +533,9 @@ he_query_command(prompt, dfl, context)
    * `context == 3': calculator.
    */
 {
-  extern int lines;
+  extern int hx_lines;
 
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   return readline(prompt, dfl, context);
 }
@@ -553,7 +553,7 @@ he_query_yn(dfl, fmt, va_alist)
 #endif
 {
   va_list ap;
-  extern int lines;
+  extern int hx_lines;
   int key;
   int choice;
   extern window_changed;
@@ -565,7 +565,7 @@ he_query_yn(dfl, fmt, va_alist)
 #endif
   tio_keypad(0);
 restart:
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   if (dfl < 0) { /* no default answer */

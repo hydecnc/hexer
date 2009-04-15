@@ -192,7 +192,7 @@ void (*warning_msg)( /* const char *, ... */ ) = tio_warning_msg;
 #endif
 void (*tio_winch)( /* void */ );
 
-int lines; /* Number of lines. */
+int hx_lines; /* Number of lines. */
 int columns; /* Number of columns. */
 int window_changed;
   /* A non-zero value indicates, that the window size has changed.
@@ -794,32 +794,32 @@ tio_init(prog)
 #ifdef TIOCGSIZE
     struct ttysize size2;
     if (!ioctl(0, TIOCGSIZE, &size2)) {
-      lines = size2.ts_lines;
+      hx_lines = size2.ts_lines;
       columns = size2.ts_cols;
-      if (lines > 0 && columns > 0) break;
+      if (hx_lines > 0 && columns > 0) break;
     }
 #endif
 #ifdef TIOCGWINSZ
     if (!ioctl(0, TIOCGWINSZ, &size1)) {
-      lines = size1.ws_row;
+      hx_lines = size1.ws_row;
       columns = size1.ws_col;
-      if (lines > 0 && columns > 0) break;
+      if (hx_lines > 0 && columns > 0) break;
     }
 #endif
     /* `ioctl()' didn't work. See if we can get the screen size form the
      * the environment variables `LINES' ans `COLUMNS'.
      */
-    if ((p = getenv("LINES"))) lines = atoi(p);
+    if ((p = getenv("LINES"))) hx_lines = atoi(p);
     if ((p = getenv("COLUMNS"))) columns = atoi(p);
-    if (lines > 0 && columns > 0) break;
+    if (hx_lines > 0 && columns > 0) break;
     /* Hmm... didn't work... we gotta believe what termcap tells us :-|
      */
-    lines = tgetnum("li");
+    hx_lines = tgetnum("li");
     columns = tgetnum("co");
-    if (lines > 0 && columns > 0) break;
+    if (hx_lines > 0 && columns > 0) break;
     /* Yuck!  Default the screen size to 80x24.
      */
-    lines = 24;
+    hx_lines = 24;
     columns = 80;
     break;
   }
@@ -914,7 +914,7 @@ tio_down(count)
     tio_goto_line(0);
     tio_down(count);
   } else {
-    if (t_line + count > lines - 1) count = lines - t_line;
+    if (t_line + count > hx_lines - 1) count = hx_lines - t_line;
     if (!count) return;
     t_line += count;
     if (t_DOwn)
@@ -1447,7 +1447,7 @@ tio_last_line()
 {
   if (t_last_line) {
     tio_command(t_last_line, 1);
-    t_line = lines - 1;
+    t_line = hx_lines - 1;
     t_column = 0;
   } else
     tio_move(-1, 0);
@@ -1460,10 +1460,10 @@ tio_goto_line(line)
   /* Move cursor to line `line'.
    */
 {
-  extern int lines;
+  extern int hx_lines;
   char *cmd;
 
-  if (line > lines - 1) line = lines - 1;
+  if (line > hx_lines - 1) line = hx_lines - 1;
   if (t_goto_line)
     tio_command(t_goto_line, 1, line);
   else {
@@ -1505,10 +1505,10 @@ tio_move(lin, col)
   /* Move the cursor to position `line'/`column'.
    */
 {
-  extern int lines, columns;
+  extern int hx_lines, columns;
   char *cmd;
 
-  if (lin > lines - 1 || lin < 0) lin = lines - 1;
+  if (lin > hx_lines - 1 || lin < 0) lin = hx_lines - 1;
   if (col > columns - 1 || col < 0) col = columns - 1;
   cmd = tgoto(t_cm, col, lin);
   tio_command(cmd, 1);
@@ -1533,7 +1533,7 @@ tio_set_scrolling_region(first, last)
   int first, last;
 {
   if (t_change_scroll) {
-    if (last < 0) last = lines - 1;
+    if (last < 0) last = hx_lines - 1;
     tio_command(t_change_scroll, 1, first, last);
     return 0;
   }
@@ -1544,7 +1544,7 @@ tio_set_scrolling_region(first, last)
   void
 tio_reset_scrolling_region()
 {
-  if (t_change_scroll) tio_command(t_change_scroll, 1, 0, lines - 1);
+  if (t_change_scroll) tio_command(t_change_scroll, 1, 0, hx_lines - 1);
 }
 /* tio_reset_scrolling_region */
 
@@ -1559,8 +1559,8 @@ tio_scroll_up(count, first, last)
   int c;
 
   assert(count);
-  if (last < 0 || last == lines - 1) {
-    last = lines - 1;
+  if (last < 0 || last == hx_lines - 1) {
+    last = hx_lines - 1;
     goto scroll_all;
   }
   if (tio_set_scrolling_region(first, last)) {
@@ -1569,15 +1569,15 @@ tio_scroll_up(count, first, last)
       return -1;
     tio_goto_line(first);
     if (!(count == 1 && t_delete_line) && t_delete_lines)
-      tio_command(t_delete_lines, lines, count);
+      tio_command(t_delete_lines, hx_lines, count);
     else {
-      for (c = count; c--;) tio_command(t_delete_line, lines);
+      for (c = count; c--;) tio_command(t_delete_line, hx_lines);
     }
     tio_goto_line(last - count + 1);
     if (!(count == 1 && t_insert_line) && t_insert_lines)
-      tio_command(t_insert_lines, lines, count);
+      tio_command(t_insert_lines, hx_lines, count);
     else {
-      for (c = count; c--;) tio_command(t_insert_line, lines);
+      for (c = count; c--;) tio_command(t_insert_line, hx_lines);
     }
   } else {
     if (t_scroll_fwd || t_scroll_fwd_n) {
@@ -1591,9 +1591,9 @@ scroll_all:
       if (t_delete_line || t_delete_lines) {
         tio_goto_line(first);
         if (!(count == 1 && t_delete_line) && t_delete_lines)
-          tio_command(t_delete_lines, lines, count);
+          tio_command(t_delete_lines, hx_lines, count);
         else
-          for (c = count; c--;) tio_command(t_delete_line, lines);
+          for (c = count; c--;) tio_command(t_delete_line, hx_lines);
       } else {
         tio_goto_line(last);
         tio_putchar('\n');
@@ -1616,7 +1616,7 @@ tio_scroll_down(count, first, last)
   int c;
 
   assert(count);
-  if (last < 0) last = lines - 1;
+  if (last < 0) last = hx_lines - 1;
   if (!t_insert_line && !t_insert_lines
       && !t_scroll_backwd &&!t_scroll_backwd_n) return -1;
   if (tio_set_scrolling_region(first, last)) {
@@ -1625,15 +1625,15 @@ tio_scroll_down(count, first, last)
       return -1;
     tio_goto_line(last);
     if (!(count == 1 && t_delete_line) && t_delete_lines)
-      tio_command(t_delete_lines, lines, count);
+      tio_command(t_delete_lines, hx_lines, count);
     else {
-      for (c = count; c--;) tio_command(t_delete_line, lines);
+      for (c = count; c--;) tio_command(t_delete_line, hx_lines);
     }
     tio_goto_line(first);
     if (!(count == 1 && t_insert_line) && t_insert_lines)
-      tio_command(t_insert_lines, lines, count);
+      tio_command(t_insert_lines, hx_lines, count);
     else
-      for (c = count; c--;) tio_command(t_insert_line, lines);
+      for (c = count; c--;) tio_command(t_insert_line, hx_lines);
   } else {
     if (!(count == 1 && t_scroll_backwd) && t_scroll_backwd_n)
       tio_command(t_scroll_backwd_n, count, count);
@@ -1642,9 +1642,9 @@ tio_scroll_down(count, first, last)
     else {
       tio_goto_line(first);
       if (!(count == 1 && t_insert_line) && t_insert_lines)
-        tio_command(t_insert_lines, lines, count);
+        tio_command(t_insert_lines, hx_lines, count);
       else
-        for (c = count; c--;) tio_command(t_insert_line, lines);
+        for (c = count; c--;) tio_command(t_insert_line, hx_lines);
     }
     tio_reset_scrolling_region();
   }
@@ -1670,7 +1670,7 @@ tio_puts(s)
     mask_f = 0;
     switch (*c1) {
     case '\n':
-      if (++t_line >= lines) t_line = lines - 1;
+      if (++t_line >= hx_lines) t_line = hx_lines - 1;
       t_column = 0;
       break;
     case '\r':
@@ -2028,21 +2028,21 @@ tio_message(message, indent)
   for (i = 1; *message; ++message, ++i) {
     tio_display(*message, indent);
     indent = -1;
-    if (i > lines - 2) {
+    if (i > hx_lines - 2) {
       /* tio_printf(" @Ar -- more -- @~@r"); */
       tio_raw_printf(" [ more ]\r");
       switch (tio_getch()) {
         case HXKEY_DOWN:
         case 'd':
         case 'd' & 0x1f:
-          i -= lines / 2;
+          i -= hx_lines / 2;
           break;
         case ' ':
         case 'f' & 0x1f:
           i = 0;
           break;
         case HXKEY_ERROR:
-          if (i > lines - 2) i = lines - 2;
+          if (i > hx_lines - 2) i = hx_lines - 2;
           tio_goto_line(i);
           window_changed = 0;
           break;
@@ -2193,9 +2193,9 @@ sigwinch_handler()
 {
   /* signal(SIGWINCH, sigwinch_handler); */
   tio_init(0);
-  if (t_line > lines - 1) {
+  if (t_line > hx_lines - 1) {
     t_line = -1;
-    tio_goto_line(lines - 1);
+    tio_goto_line(hx_lines - 1);
   }
   if (t_column > columns) {
     t_column = -1;

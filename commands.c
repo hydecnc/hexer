@@ -1123,15 +1123,15 @@ exhcmd_zz(hedit, args)
 {
   extern he_scroll_up( /* struct he_s *, int */ );
   extern he_scroll_down( /* struct he_s *, int */ );
-  extern lines;
+  extern hx_lines;
   int k;
   char *skip;
 
   skip = exh_skipcmd(args, 0);
-  if ((k = HE_LINE(hedit->position - hedit->screen_offset)) < lines / 2 - 1)
-    he_scroll_down(hedit, (lines / 2 - 1) - k);
-  if ((k = HE_LINE(hedit->position - hedit->screen_offset)) > lines / 2 - 1)
-    he_scroll_up(hedit, k - (lines / 2 - 1));
+  if ((k = HE_LINE(hedit->position - hedit->screen_offset)) < hx_lines / 2 - 1)
+    he_scroll_down(hedit, (hx_lines / 2 - 1) - k);
+  if ((k = HE_LINE(hedit->position - hedit->screen_offset)) > hx_lines / 2 - 1)
+    he_scroll_up(hedit, k - (hx_lines / 2 - 1));
   he_update_screen(hedit);
   return skip;
 }
@@ -1157,13 +1157,13 @@ exhcmd_zb(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern lines;
+  extern hx_lines;
   extern he_scroll_down( /* struct he_s *, int */ );
   char *skip;
 
   skip = exh_skipcmd(args, 0);
   he_scroll_down(hedit,
-                 lines - 2 - HE_LINE(hedit->position - hedit->screen_offset));
+                 hx_lines - 2 - HE_LINE(hedit->position - hedit->screen_offset));
   he_update_screen(hedit);
   return skip;
 }

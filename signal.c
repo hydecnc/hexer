@@ -78,11 +78,11 @@ sigint_handler()
   static sigtype_t
 sigtstp_handler()
 {
-  extern lines;
+  extern hx_lines;
 
   signal(SIGTSTP, sigtstp_handler);
   tio_suspend();
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   tio_printf("@AbStopped@~.  Type `fg' to restart @Abhexer@~.\n");

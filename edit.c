@@ -144,7 +144,7 @@ he_refresh_part(hedit, pos1, pos2)
   long i, j, k;
   int update_f = 0;
   int lastline_f = 0;
-  extern int lines;
+  extern int hx_lines;
 
   if (pos2 < 0) {
     pos2 = hedit->buffer->size - 1;
@@ -152,17 +152,17 @@ he_refresh_part(hedit, pos1, pos2)
   }
   if (pos1 > pos2) i = pos1, pos1 = pos2, pos2 = i;
   j = HE_LINE(pos1 - hedit->screen_offset);
-  k = lastline_f ? lines - 2 : HE_LINE(pos2 - hedit->screen_offset);
+  k = lastline_f ? hx_lines - 2 : HE_LINE(pos2 - hedit->screen_offset);
   if (j < 0) {
     j = 0;
     if (k >= 0) {
       ++update_f;
-      if (k > lines - 2) k = lines - 2;
+      if (k > hx_lines - 2) k = hx_lines - 2;
     }
   } else {
-    if (j <= lines - 2) {
+    if (j <= hx_lines - 2) {
       ++update_f;
-      if (k > lines - 2) k = lines - 2;
+      if (k > hx_lines - 2) k = hx_lines - 2;
     }
   }
   if (update_f) he_refresh_lines(hedit, j, k);
@@ -181,13 +181,13 @@ he_refresh_check(hedit)
 he_refresh_screen(hedit)
   struct he_s *hedit;
 {
-  extern lines;
+  extern hx_lines;
   extern window_changed;
   extern void he_set_cursor( /* const struct he_s * */ );
 
   he_refresh_all(current_buffer->hedit);
   he_update_screen(current_buffer->hedit);
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   he_set_cursor(hedit);
@@ -864,12 +864,12 @@ he_line(hedit, position)
 he_set_cursor(hedit)
   const struct he_s *hedit;
 {
-  extern int lines;
+  extern int hx_lines;
   int l, c, i;
 
   l = HE_LINE(hedit->position - hedit->screen_offset);
-  if (l > lines - 2) {
-    tio_goto_line(lines - 1);
+  if (l > hx_lines - 2) {
+    tio_goto_line(hx_lines - 1);
     tio_return();
     return;
   }
@@ -884,10 +884,10 @@ he_display(hedit, start, end)
   const struct he_s *hedit;
   int start, end;
 {
-  extern int lines;
+  extern int hx_lines;
   int i;
 
-  if (end < 0) end = lines - 2;
+  if (end < 0) end = hx_lines - 2;
   if (start > end) return;
   for (i = start; i <= end; ++i) {
     tio_goto_line(i);
@@ -905,7 +905,7 @@ he_motion(hedit, key, count)
   int key;
   long count;
 {
-  extern int lines;
+  extern int hx_lines;
   int i;
 
   if (count <= 0) count = 1;
@@ -935,7 +935,7 @@ he_motion(hedit, key, count)
   case 'f' & 0x1f: /* C-f */
   case HXKEY_PAGE_DOWN:
     i = hedit->position;
-    hedit->position += (lines - 2) * 16;
+    hedit->position += (hx_lines - 2) * 16;
     if (hedit->position > hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     hedit->screen_offset += ((hedit->position - i) / 16) * 16;
@@ -944,7 +944,7 @@ he_motion(hedit, key, count)
   case 'b' & 0x1f: /* C-b */
   case HXKEY_PAGE_UP:
     i = hedit->position;
-    hedit->position -= (lines - 2) * 16;
+    hedit->position -= (hx_lines - 2) * 16;
     if (hedit->position < 0) hedit->position = 0;
     hedit->screen_offset -= ((i - hedit->position) / 16) * 16;
     while (hedit->screen_offset < -15) hedit->screen_offset += 16;
@@ -952,7 +952,7 @@ he_motion(hedit, key, count)
     break;
   case 'd' & 0x1f: /* C-d */
     i = hedit->position;
-    hedit->position += ((lines - 1) / 2) * 16;
+    hedit->position += ((hx_lines - 1) / 2) * 16;
     if (hedit->position > hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     hedit->screen_offset += ((hedit->position - i) / 16) * 16;
@@ -960,7 +960,7 @@ he_motion(hedit, key, count)
     break;
   case 'u' & 0x1f: /* C-u */
     i = hedit->position;
-    hedit->position -= ((lines - 1) / 2) * 16;
+    hedit->position -= ((hx_lines - 1) / 2) * 16;
     if (hedit->position < 0) hedit->position = 0;
     hedit->screen_offset -= ((i - hedit->position) / 16) * 16;
     while (hedit->screen_offset < -15) hedit->screen_offset += 16;
@@ -1202,7 +1202,7 @@ he_visual_mode(hedit)
   char map_string[256];
   int motion_f = 0;
 
-  extern int lines;
+  extern int hx_lines;
   extern window_changed;
 
   if (!hedit->buffer->size) {
@@ -1280,7 +1280,7 @@ he_visual_mode(hedit)
     case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
-        tio_move(lines, 40);
+        tio_move(hx_lines, 40);
         tio_raw_printf("%s", map_string);
       }
       break;
@@ -1295,7 +1295,7 @@ he_visual_mode(hedit)
     he_clear_get(1);
     count = -1;
     he_update_screen(hedit);
-    tio_goto_line(lines - 1);
+    tio_goto_line(hx_lines - 1);
     tio_return();
     if (motion_f) {
       motion_f = 0;
@@ -1327,16 +1327,16 @@ he_get_counter(hedit)
    * terminated by pressing <return>.
    */
 {
-  extern int lines;
+  extern int hx_lines;
   extern int columns;
   long count = -1;
   int key, digit;
   enum mode_e { OCT = 8, DEC = 10, HEX = 16 } mode = DEC;
   char *fmt = 0, *prefix = 0;
   extern window_changed;
-  extern lines;
+  extern hx_lines;
 
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   for (;;) {
@@ -1395,7 +1395,7 @@ he_get_counter(hedit)
       char arg[256];
       int indent = 60;
       sprintf(arg, fmt, count);
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       if (indent + strlen(arg) > columns - 1)
         indent = columns - 1 - strlen(arg);
       if (indent < 0) indent = 0;
@@ -1405,7 +1405,7 @@ he_get_counter(hedit)
       tio_clear_to_eol();
     } else {
       int indent = 60;
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       if (indent + strlen(prefix) > columns - 1)
         indent = columns - 1 - strlen(prefix);
       if (indent < 0) indent = 0;
@@ -1418,7 +1418,7 @@ he_get_counter(hedit)
   }
 
 exit_get_counter:
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
   he_set_cursor(hedit);
@@ -1432,9 +1432,9 @@ he_verbatim(hedit)
 {
   int key;
   extern window_changed;
-  extern lines;
+  extern hx_lines;
 
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_right(60);
   tio_clear_to_eol();
@@ -1445,7 +1445,7 @@ restart:
     if (window_changed) {
       tio_ungetch('v' & 0x1f);
       tio_ungetch(HXKEY_ERROR);
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       tio_return();
       tio_right(60);
       tio_clear_to_eol();
@@ -1453,7 +1453,7 @@ restart:
     } else
       goto restart;
   }
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_right(60);
   tio_clear_to_eol();
@@ -1472,7 +1472,7 @@ he_insert_mode(hedit, replace_mode, count)
    * `replace_mode == 2':  Replace a single character.
    */
 {
-  extern int lines;
+  extern int hx_lines;
   Buffer *insert = new_buffer(0);
   Buffer *replace = new_buffer(0);
   char *data;
@@ -1485,7 +1485,7 @@ he_insert_mode(hedit, replace_mode, count)
   int key, x = 0;
   char map_string[256];
   extern window_changed;
-  extern lines;
+  extern hx_lines;
 
   if (!count) count = 1;
   if (he_refresh_check(hedit)) tio_ungetch(HXKEY_NONE);
@@ -1522,7 +1522,7 @@ he_insert_mode(hedit, replace_mode, count)
     case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
-        tio_move(lines, 40);
+        tio_move(hx_lines, 40);
         tio_raw_printf("%s", map_string);
       }
       break;
@@ -1720,7 +1720,7 @@ exit_insert_mode:
   }
   delete_buffer(insert);
   delete_buffer(replace);
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_clear_to_eol();
 }
@@ -1731,16 +1731,16 @@ he_scroll_down(hedit, count)
   struct he_s *hedit;
   int count;
 {
-  extern lines;
+  extern hx_lines;
 
   if (!count) return;
   assert(count > 0);
   while (count--) {
-    if (hedit->position >= hedit->screen_offset + (lines - 2) * 16) break;
+    if (hedit->position >= hedit->screen_offset + (hx_lines - 2) * 16) break;
     if (hedit->screen_offset < 16) break;
     hedit->screen_offset -= 16;
     if (!hedit->refresh.flag) {
-      if (tio_scroll_down(1, 0, lines - 2)) {
+      if (tio_scroll_down(1, 0, hx_lines - 2)) {
         /* Hmm... the terminal can't scroll backwards.  We'll have to
          * update the whole screen.
          */
@@ -1766,7 +1766,7 @@ he_scroll_up(hedit, count)
   struct he_s *hedit;
   int count;
 {
-  extern lines;
+  extern hx_lines;
 
   if (!count) return;
   assert(count > 0);
@@ -1774,16 +1774,16 @@ he_scroll_up(hedit, count)
     if (hedit->position < hedit->screen_offset + 16) break;
     hedit->screen_offset += 16;
     if (!hedit->refresh.flag) {
-      if (tio_scroll_up(1, 0, lines - 2)) {
+      if (tio_scroll_up(1, 0, hx_lines - 2)) {
         /* The terminal can't scroll forward... */
         hedit->refresh.flag = 1;
         hedit->refresh.first[0] = 0;
         hedit->refresh.last[0] = -1;
         hedit->refresh.parts = 1;
       }
-      tio_goto_line(lines - 2);
+      tio_goto_line(hx_lines - 2);
       tio_return();
-      tio_display(he_line(hedit, hedit->screen_offset + (lines - 2) * 16), 0);
+      tio_display(he_line(hedit, hedit->screen_offset + (hx_lines - 2) * 16), 0);
     } else {
       hedit->refresh.first[0] = 0;
       hedit->refresh.last[0] = -1;
@@ -1805,7 +1805,7 @@ he_update_screen(hedit)
    * The return value is 1 if a message was displayed, 0 else.
    */
 {
-  extern int lines;
+  extern int hx_lines;
   extern int window_changed;
   int rval = 0;
   struct he_message_s *m, *n;
@@ -1825,16 +1825,16 @@ he_update_screen(hedit)
    * height of the window.
    */
   if (hedit->position < hedit->screen_offset)
-    if (-HE_LINE(hedit->position - hedit->screen_offset) > lines / 2 + 2) {
+    if (-HE_LINE(hedit->position - hedit->screen_offset) > hx_lines / 2 + 2) {
       hedit->refresh.flag = 1;
       hedit->refresh.first[0] = 0;
       hedit->refresh.last[0] = -1;
       hedit->refresh.parts = 1;
     }
-  if (hedit->position >= hedit->screen_offset + (lines - 2) * 16) {
+  if (hedit->position >= hedit->screen_offset + (hx_lines - 2) * 16) {
     long k;
-    k = HE_LINE(hedit->position - hedit->screen_offset) - lines + 2;
-    if (k > lines / 2 + 2) {
+    k = HE_LINE(hedit->position - hedit->screen_offset) - hx_lines + 2;
+    if (k > hx_lines / 2 + 2) {
       hedit->refresh.flag = 1;
       hedit->refresh.first[0] = 0;
       hedit->refresh.last[0] = -1;
@@ -1845,7 +1845,7 @@ he_update_screen(hedit)
   while (hedit->position < hedit->screen_offset) {
     hedit->screen_offset -= 16;
     if (!hedit->refresh.flag) {
-      if (tio_scroll_down(1, 0, lines - 2)) {
+      if (tio_scroll_down(1, 0, hx_lines - 2)) {
         /* Hmm... the terminal can't scroll backwards.  We'll have to
          * update the whole screen.
          */
@@ -1863,19 +1863,19 @@ he_update_screen(hedit)
       hedit->refresh.parts = 1;
     }
   }
-  while (hedit->position >= hedit->screen_offset + (lines - 1) * 16) {
+  while (hedit->position >= hedit->screen_offset + (hx_lines - 1) * 16) {
     hedit->screen_offset += 16;
     if (!hedit->refresh.flag) {
-      if (tio_scroll_up(1, 0, lines - 2)) {
+      if (tio_scroll_up(1, 0, hx_lines - 2)) {
         /* The terminal can't scroll forward... */
         hedit->refresh.flag = 1;
         hedit->refresh.first[0] = 0;
         hedit->refresh.last[0] = -1;
         hedit->refresh.parts = 1;
       }
-      tio_goto_line(lines - 2);
+      tio_goto_line(hx_lines - 2);
       tio_return();
-      tio_display(he_line(hedit, hedit->screen_offset + (lines - 2) * 16), 0);
+      tio_display(he_line(hedit, hedit->screen_offset + (hx_lines - 2) * 16), 0);
     } else {
       hedit->refresh.first[0] = 0;
       hedit->refresh.last[0] = -1;
@@ -1890,7 +1890,7 @@ he_update_screen(hedit)
     int i, j;
     hedit->refresh.parts += !hedit->refresh.parts;
     for (i = 0; i < hedit->refresh.parts; ++i)
-      if (hedit->refresh.last[i] < 0) hedit->refresh.last[i] = lines - 2;
+      if (hedit->refresh.last[i] < 0) hedit->refresh.last[i] = hx_lines - 2;
     for (i = 0; i < hedit->refresh.parts - 1; ++i) {
       if (hedit->refresh.first[i] < 0) continue;
       for (j = i + 1; j < hedit->refresh.parts; ++j) {
@@ -1931,7 +1931,7 @@ he_update_screen(hedit)
   /*
   if (hedit->refresh.messages) {
     int i, key;
-    tio_goto_line(lines - 1);
+    tio_goto_line(hx_lines - 1);
     tio_return();
     tio_clear_to_eol();
     tio_display(hedit->refresh.message[0], 1);
@@ -1940,7 +1940,7 @@ he_update_screen(hedit)
       key = tio_tget(he_message_wait);
       if (key) /+ display the last message only. +/
         i = hedit->refresh.messages - 1;
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       tio_return();
       tio_clear_to_eol();
       tio_display(hedit->refresh.message[i], 1);
@@ -1952,7 +1952,7 @@ he_update_screen(hedit)
   */
   if (he_messages) {
     int key;
-    tio_goto_line(lines - 1);
+    tio_goto_line(hx_lines - 1);
     tio_return();
     tio_clear_to_eol();
     for (m = he_messages, n = 0; m->next; n = m, m = m->next);
@@ -1973,7 +1973,7 @@ he_update_screen(hedit)
           }
           he_messages->next = 0;
         }
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       tio_return();
       tio_clear_to_eol();
       for (m = he_messages, n = 0; m->next; n = m, m = m->next);
@@ -2034,7 +2034,7 @@ he_clear_get(command_mode)
 he_mainloop(hedit)
   struct he_s *hedit;
 {
-  extern int lines;
+  extern int hx_lines;
   extern window_changed;
   long count = -1;
   int key;
@@ -2064,7 +2064,7 @@ he_mainloop(hedit)
     case HXKEY_ERROR:
       if (window_changed) he_refresh_screen(hedit);
       if (strlen(map_string)) {
-        tio_goto_line(lines - 1);
+        tio_goto_line(hx_lines - 1);
         tio_return();
         tio_clear_to_eol();
         tio_right(40);
@@ -2084,7 +2084,7 @@ he_mainloop(hedit)
         goto exit_mainloop;
     }
     if (map_string_f) {
-      tio_goto_line(lines - 1);
+      tio_goto_line(hx_lines - 1);
       tio_return();
       tio_clear_to_eol();
       map_string_f = 0;

@@ -217,7 +217,7 @@ main(argc, argv)
   int argc;
   char **argv;
 {
-  extern int lines;
+  extern int hx_lines;
 
   extern int rl_backspace_jump;
   extern int rl_cancel_on_bs;
@@ -250,7 +250,7 @@ main(argc, argv)
   setup_screen();
   hexer();
   tio_echo(1);
-  tio_goto_line(lines - 1);
+  tio_goto_line(hx_lines - 1);
   tio_return();
   tio_end_application();
   tio_reset();
