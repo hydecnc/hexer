@@ -39,6 +39,7 @@ Change log for hexer, the multi-view binary editor
 	- fix the manual page syntax:
 	  - fix the comment markers
 	  - mark the hyphens as such where needed
+	- remove some hyphenation in the help text
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

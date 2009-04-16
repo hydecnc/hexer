@@ -55,8 +55,8 @@ CCUUSSTTOOMMIIZZIINNGG
        ~~//..hheexxeerrrrcc  (another startup file may be specified by set-
        ting the environment variable HHEEXXEERRRRCC).  Empty  lines  and
        lines  starting  with  a  `"'-character (double quote) are
-       ignored.  It is not possible to have a command and a  com-
-       ment in the same line.
+       ignored.  It is not possible to have a command and a  comment
+       in the same line.
 
 
 
@@ -74,8 +74,8 @@ EEDDIITTOORR CCOOMMMMAANNDDSS
        As in vvii, there are several editing modes:
 
        CCoommmmaanndd MMooddee
-           Some commands in CCoommmmaanndd MMooddee can take a numeric argu-
-           ment.  To enter a numeric argument just type the (dec-
+           Some commands in CCoommmmaanndd MMooddee can take a numeric argument.
+           To enter a numeric argument just type the (dec-
            imal) number.  The number will be echoed at the bottom
            line of the screen as you type.   To  enter  an  octal
            number,  type  a  `0'  as the first digit.  To enter a
@@ -144,8 +144,8 @@ HEXER(1)                                                 HEXER(1)
 
            rr      Replace a single byte using the  RReeppllaaccee  MMooddee.
                   If  an  area  is  selected,  all  bytes  in the
-                  selected area are replaced.  If a numeric argu-
-                  ment is given, the specified number of bytes is
+                  selected area are replaced.  If a numeric argument
+                  is given, the specified number of bytes is
                   replaced.
 
            RR      Enter RReeppllaaccee MMooddee (see below).  If  a  numeric
@@ -297,11 +297,10 @@ HEXER(1)                                                 HEXER(1)
        RReeppllaaccee MMooddee
            In RReeppllaaccee MMooddee you replace the bytes under the cursor
            as  you type.  Hitting BBaacckkSSppaaccee restores the original
-           contents of the buffer.  The effect of a numeric argu-
-           ment  is  similar  to the IInnsseerrtt MMooddee: the typed bytes
+           contents of the buffer.  The effect of a numeric argument
+           is  similar  to the IInnsseerrtt MMooddee: the typed bytes
            are replaced nn times.  As in IInnsseerrtt MMooddee,  moving  the
-           cursor using the arrow keys discards the numeric argu-
-           ment.
+           cursor using the arrow keys discards the numeric argument.
 
        EExxhh MMooddee
            The EExxhh MMooddee in hheexxeerr is kept similar to  the  eexx-mode
