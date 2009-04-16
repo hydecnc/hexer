@@ -64,8 +64,7 @@
 #endif
 
 #include "hexer.h"
-
-extern char *strerror();
+#include "util.h"
 
 const struct buffer_s NO_BUFFER = { 0, 0, 0, 0, 0, 0 };
 

@@ -65,6 +65,7 @@
 char *alloca();
 #endif
 
+#include "exh.h"
 #include "hexer.h"
 
 extern char *alternate_buffer;

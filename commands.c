@@ -62,22 +62,15 @@
 char *alloca();
 #endif
 
+#include "exh.h"
 #include "hexer.h"
+#include "util.h"
 
 #define EXIT_EXEC_FAILED 27
 
 #ifndef ERESTARTSYS
 #define ERESTARTSYS EINTR
 #endif
-
-  extern char *
-strerror();
-
-  extern char *
-exh_skip_expression();
-
-  extern char *
-exh_skip_replace();
 
   extern
 util_trunc();

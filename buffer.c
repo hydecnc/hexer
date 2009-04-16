@@ -63,6 +63,24 @@ struct BufferOptions b_default_options = {
   BUFFER_MAX_BLOCKS
 };
 
+long last_position = 0;
+  /* `last_position' is the position of the first byte in line `last_number'.
+   */
+long last_number = 1;
+  /* `last_number' is the number of the line most recently accessed using one
+   * of the following functions.
+   */
+long last_length = -1;
+  /* `last_length' is the length of the line `last_number'.  A value of -1
+   * means that the length of that line hasn't been evaluated yet.
+   */
+Buffer *last_buffer = 0;
+  /* `last_buffer' is a pointer to the buffer that the above counters are
+   * talking about.
+   * NOTE:  If `last_buffer' is modified, the variables `last_position',
+    *  `last_number' and `last_length' are set to 0, 1, -1 (respectively).
+   */
+
 #if !HAVE_MEMMOVE
   static void
 b_memmove(t, s, count)
@@ -86,10 +104,6 @@ b_memmove(t, s, count)
  * Purpose: 1. The buffer is marked modified;  2. Discard all information
  *   line numbers that could have become invalid by the modification.
  */
-extern long last_position;
-extern long last_number;
-extern long last_length;
-extern Buffer* last_buffer;
 #define BUFFER_CHANGED(buffer) {                                              \
   if (buffer == last_buffer)                                                  \
     last_position = 0, last_number = 1, last_length = -1;                     \
@@ -680,24 +694,6 @@ b_paste_from_file(buffer, filename, position)
 
 /* The following set of functions is for dealing with text-buffers.
  */
-
-long last_position = 0;
-  /* `last_position' is the position of the first byte in line `last_number'.
-   */
-long last_number = 1;
-  /* `last_number' is the number of the line most recently accessed using one
-   * of the following functions.
-   */
-long last_length = -1;
-  /* `last_length' is the length of the line `last_number'.  A value of -1
-   * means that the length of that line hasn't been evaluated yet.
-   */
-Buffer *last_buffer = 0;
-  /* `last_buffer' is a pointer to the buffer that the above counters are
-   * talking about.
-   * NOTE:  If `last_buffer' is modified, the variables `last_position',
-    *  `last_number' and `last_length' are set to 0, 1, -1 (respectively).
-   */
 
   long
 b_no_lines(buffer)
