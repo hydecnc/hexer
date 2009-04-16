@@ -34,6 +34,7 @@ Change log for hexer, the multi-view binary editor
 	  the curses header files
 	- add an "hx_" prefix to the "lines", "columns", and
 	  "insert_character" variables for the same reason
+	- garbage-collect some unused functions
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

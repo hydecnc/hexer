@@ -261,44 +261,6 @@ static long buffer_base;
   }                                                                           \
 }
 
-#if 0
-
-#undef REGEX_ADVANCE
-#define REGEX_ADVANCE regex_advance(position)
-
-static void
-regex_advance(position)
-  long position;
-{
-  long i;
-
-  if (bp >= buffer + REGEX_BLOCKSIZE) {
-    rx_memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);
-    buffer_base += REGEX_BLOCKSIZE;
-    rx_seek(buffer_base + REGEX_BLOCKSIZE);
-    i = rx_read(buffer + REGEX_BLOCKSIZE, REGEX_BLOCKSIZE);
-    if (i < REGEX_BLOCKSIZE) {
-      rx_size = buffer_base + REGEX_BLOCKSIZE + i;
-      memset(buffer + REGEX_BLOCKSIZE + i, 0, REGEX_BLOCKSIZE - i);
-    }
-    bp -= REGEX_BLOCKSIZE;
-  } else if (bp < buffer) {
-    rx_memmove(buffer + REGEX_BLOCKSIZE, buffer, REGEX_BLOCKSIZE);
-    buffer_base -= REGEX_BLOCKSIZE;
-    if (position >= REGEX_BLOCKSIZE) {
-      rx_seek(buffer_base - REGEX_BLOCKSIZE);
-      rx_read(buffer - REGEX_BLOCKSIZE, 2 * REGEX_BLOCKSIZE);
-    } else {
-      rx_seek(buffer_base);
-      rx_read(buffer, REGEX_BLOCKSIZE);
-    }
-    bp += REGEX_BLOCKSIZE;
-  }
-}
-/* regex_advance */
-
-#endif /* 0 */
-
 #if !HAVE_MEMMOVE
   static void
 rx_memmove(t, s, count)
@@ -1794,24 +1756,6 @@ regex_list_(regex, count, indent, base)
   }
 }
 /* regex_list_ */
-
-  static void
-regex_list(regex)
-  unsigned long *regex;
-{
-  regex_list_(*regex ? regex : regex + 1, 1 << 30, 0, !*regex);
-}
-/* regex_list */
-
-  static void
-regex_interrupt(void)
-  /* interrupt whatever is currently done.  this function could be called
-   * by the signal-handler for `SIGINT'.
-   */
-{
-  *rx_interrupt = 1;
-}
-/* regex_interrupt */
 
 /* end of regex.c */
 
