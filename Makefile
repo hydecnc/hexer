@@ -127,17 +127,10 @@ distclean: clean
 	rm -f depend
 
 install: all
-	@{  echo installing $(HEXER) in $(BINDIR); \
-	    $(INSTALLBIN) $(HEXER) $(BINDIR); \
-	    echo installing $(HEXER).1 in $(MANDIR); \
-	    $(INSTALLMAN) $(HEXER).1 $(MANDIR); \
-	    if [ -f $(MYC) ]; then \
-	      echo installing $(MYC) in $(BINDIR); \
-	      $(INSTALLBIN) $(MYC) $(BINDIR); \
-	      echo installing $(MYC).1 in $(MANDIR); \
-	      $(INSTALLMAN) $(MYC).1 $(MANDIR); \
-	    fi; }
-
+	$(INSTALLBIN) $(HEXER) $(BINDIR)
+	$(INSTALLMAN) $(HEXER).1 $(MANDIR)
+	[ ! -f $(MYC) ] || $(INSTALLBIN) $(MYC) $(BINDIR)
+	[ ! -f $(MYC) ] || $(INSTALLMAN) $(MYC).1 $(MANDIR)
 
 ### DO NOT DELETE THIS LINE ###
 
