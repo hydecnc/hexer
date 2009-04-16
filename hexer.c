@@ -64,8 +64,11 @@
 #endif
 
 #include "hexer.h"
-
-extern char *strerror();
+#include "commands.h"
+#include "exh.h"
+#include "readline.h"
+#include "tio.h"
+#include "util.h"
 
 const struct buffer_s NO_BUFFER = { 0, 0, 0, 0, 0, 0 };
 
@@ -141,8 +144,6 @@ action_iso(current_value)
 action_maxmatch(current_value)
   long current_value;
 {
-  extern long rx_maxmatch;
-
   rx_maxmatch = current_value;
 }
 /* action_maxmatch */
@@ -159,8 +160,6 @@ action_TERM()
 action_specialnl(current_value)
   int current_value;
 {
-  extern rx_special_nl;
-
   rx_special_nl = current_value;
 }
 /* action_specialnl */
@@ -169,8 +168,6 @@ action_specialnl(current_value)
 action_mapmagic(current_value)
   int current_value;
 {
-  extern he_map_special;
-
   he_map_special = current_value;
 }
 /* action_mapmagic */
@@ -530,8 +527,6 @@ he_query_command(prompt, dfl, context)
    * `context == 3': calculator.
    */
 {
-  extern int hx_lines;
-
   tio_goto_line(hx_lines - 1);
   tio_return();
   return readline(prompt, dfl, context);
@@ -550,10 +545,8 @@ he_query_yn(dfl, fmt, va_alist)
 #endif
 {
   va_list ap;
-  extern int hx_lines;
   int key;
   int choice;
-  extern window_changed;
 
 #if USE_STDARG
   va_start(ap, fmt);
@@ -777,9 +770,6 @@ exit:
 }
 /* he_search_command */
 
-  extern int
-exh_command( /* struct he_s *hedit, char *cmd */ );
-
   static void
 he_refresh()
 {
@@ -802,12 +792,9 @@ hexer_init()
    */
 {
   int i;
-  extern he_map_special;
-  extern char *terminal_name;
   char *hexerinit, *home;
   char path[1024];
   char line[1024];
-  extern char *exh_initialize[];
   FILE *fp;
 
   he_pagerprg = getenv("PAGER");
@@ -855,9 +842,6 @@ hexer()
   char dfl[256], buf[256];
   long begin, end;
   int anchor, anchor_f = 0;
-  extern int rl_redisplay;
-  extern void (*rl_winch)( /* void */ );
-  extern void (*tio_winch)( /* void */ );
   int redisplay;
 
   tio_winch = rl_winch = he_refresh;

@@ -71,8 +71,9 @@
 char *alloca();
 #endif
 
-#include "tio.h"
+#include "calc.h"
 #include "readline.h"
+#include "tio.h"
 
 #define CALC_STACKSIZE 1024
 

@@ -47,9 +47,10 @@
 
 extern char *rx_error_msg[];
 extern rx_error;
-extern int *rx_interrupt;
+extern volatile int *rx_interrupt;
 extern rx_nomagic;
 extern rx_allmagic;
+extern int rx_special_nl;
 extern long rx_maxmatch;
 
   long

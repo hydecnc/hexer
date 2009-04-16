@@ -97,6 +97,14 @@ enum t_keys_e {
 #define HXKEY_BIAS 254            /* bias used for storing non-character
                                  * keys in character strings */
 
+extern int               hx_columns;
+extern int               hx_lines;
+extern char             *terminal_name;
+extern volatile int     *tio_interrupt;
+extern int               tio_tite_f;
+extern void             (*tio_winch)( /* void */ );
+extern int               window_changed;
+
 extern struct t_keynames_s {
   enum t_keys_e key;
   char *name;

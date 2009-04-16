@@ -106,7 +106,7 @@
 
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
-int *tio_interrupt;
+volatile int *tio_interrupt;
 
   static int
 outc(c)
@@ -1456,7 +1456,6 @@ tio_goto_line(line)
   /* Move cursor to line `line'.
    */
 {
-  extern int hx_lines;
   char *cmd;
 
   if (line > hx_lines - 1) line = hx_lines - 1;
@@ -1477,8 +1476,6 @@ tio_goto_column(column)
   /* Move cursor to column `column'.
    */
 {
-  extern int hx_columns;
-
   if (column > hx_columns - 1) column = column - 1;
   if (t_column >= 0)
     if (abs(t_column - column) <= column) {
@@ -1501,7 +1498,6 @@ tio_move(lin, col)
   /* Move the cursor to position `line'/`column'.
    */
 {
-  extern int hx_lines, hx_columns;
   char *cmd;
 
   if (lin > hx_lines - 1 || lin < 0) lin = hx_lines - 1;

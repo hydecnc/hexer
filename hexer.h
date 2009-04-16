@@ -247,8 +247,10 @@ struct buffer_s {
   int visited_f;
 };
 
-extern const struct buffer_s NO_BUFFER;
-extern struct buffer_s *current_buffer;
+extern const struct buffer_s     NO_BUFFER;
+extern char             *alternate_buffer;
+extern struct buffer_s  *current_buffer;
+extern char             *he_pagerprg;
 
 
 /* exh commands
@@ -322,12 +324,21 @@ he_status_message( /* int verbose */ );
 void
 he_select( /* struct he_s *hedit, long begin, long end */ );
 
+int
+he_select_buffer_();
+
 void
 he_cancel_selection( /* struct he_s *hedit */ );
 
 long
 he_search( /* struct he_s *, char *, char *, int, int, int, long,
               char **, long *, long * */ );
+
+void
+he_search_command( /* struct he_s *, char *, int */ );
+
+char *
+he_query_command( /* char *, char *, int */ );
 
 int
 #if USE_STDARG
@@ -341,6 +352,9 @@ he_mainloop( /* struct he_s *hedit */ );
 
 int
 hexer( /* void */ );
+
+void             hexer_init( /* void */ );
+void             hexer_version();
 
 #endif
 

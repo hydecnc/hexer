@@ -140,6 +140,8 @@ typedef struct Buffer
 } 
 Buffer;
 
+extern struct buffer_s  *buffer_list;
+
   long
 count_lines( /* char *source, long count */ );
   /* Liest 'count' Zeichen aus 'source' und liefert die Anzahl der

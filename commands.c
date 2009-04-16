@@ -62,28 +62,21 @@
 char *alloca();
 #endif
 
+#include "buffer.h"
 #include "hexer.h"
+#include "commands.h"
+#include "edit.h"
+#include "exh.h"
+#include "helptext.h"
+#include "regex.h"
+#include "tio.h"
+#include "util.h"
 
 #define EXIT_EXEC_FAILED 27
 
 #ifndef ERESTARTSYS
 #define ERESTARTSYS EINTR
 #endif
-
-  extern char *
-strerror();
-
-  extern char *
-exh_skip_expression();
-
-  extern char *
-exh_skip_replace();
-
-  extern
-util_trunc();
-
-extern rx_error;
-extern char *rx_error_msg[];
 
 int he_map_special;
 
@@ -118,7 +111,6 @@ exh_skipcmd(cmd, dest)
    */
 {
   char *p, *q;
-  extern util_translate();
 
   if (!dest) dest = (char *)alloca(strlen(cmd) + 1);
   for (p = cmd, q = dest; *p && *p != ';';)
@@ -198,7 +190,6 @@ exh_save_buffer(hedit, name, begin, end, error)
   int *error;
 {
   struct buffer_s *i;
-  extern struct buffer_s *buffer_list;
   char *p;
   char *skip;
   int force_f = 0;
@@ -505,9 +496,6 @@ exhcmd_skip(hedit, args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
-  extern he_select_buffer_();
-  extern struct buffer_s *buffer_list;
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   char *skip;
 
@@ -537,9 +525,6 @@ exhcmd_next(hedit, args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
-  extern he_select_buffer_();
-  extern struct buffer_s *current_buffer;
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   char *skip;
 
@@ -567,9 +552,6 @@ exhcmd_previous(hedit, args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
-  extern he_select_buffer_();
-  extern struct buffer_s *buffer_list;
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   char *skip;
 
@@ -597,9 +579,6 @@ exhcmd_rewind(hedit, args)
   char *args;
   /* ARGSUSED */
 {
-  extern he_select_buffer_();
-  extern struct buffer_s *buffer_list;
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   char *skip;
 
@@ -669,7 +648,6 @@ exhcmd_edit(hedit, name)
   char *name;
   /* ARGSUSED */
 {
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   struct passwd *pe;
   int new_buffer_f = 0;
@@ -736,11 +714,9 @@ exhcmd_buffer(hedit, name)
   struct he_s *hedit;
   char *name;
 {
-  extern char *alternate_buffer;
   char *ab = alternate_buffer;
   long j, k;
   struct buffer_s *i;
-  extern struct buffer_s *buffer_list;
   char **list;
   char *c;
   char *skip, *p;
@@ -817,7 +793,6 @@ exhcmd_wall(hedit, args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
-  extern struct buffer_s *buffer_list;
   char *skip;
 
   skip = exh_skipcmd(args, 0);
@@ -844,7 +819,6 @@ exhcmd_quit(hedit, args)
   /* ARGSUSED */
 {
   struct buffer_s *i, *j;
-  extern struct buffer_s *buffer_list;
   char *skip, *p;
   int n;
   static int warn_more_files = 1;
@@ -1054,7 +1028,6 @@ exhcmd_delete(hedit, args, begin, end)
 {
   long count = end - begin;
   char *data;
-  extern Buffer *kill_buffer;
   char *skip, *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
@@ -1088,7 +1061,6 @@ exhcmd_yank(hedit, args, begin, end)
   /* ARGSUSED */
 {
   long count = end - begin;
-  extern Buffer *kill_buffer;
   char *skip, *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
@@ -1109,8 +1081,6 @@ exhcmd_version(hedit, args)
   char *args;
   /* ARGSUSED */
 {
-  extern hexer_version();
-
   char *skip = exh_skipcmd(args, 0);
   hexer_version();
   return skip;
@@ -1122,9 +1092,6 @@ exhcmd_zz(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern he_scroll_up( /* struct he_s *, int */ );
-  extern he_scroll_down( /* struct he_s *, int */ );
-  extern hx_lines;
   int k;
   char *skip;
 
@@ -1143,7 +1110,6 @@ exhcmd_zt(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern he_scroll_up( /* struct he_s *, int */ );
   char *skip;
 
   skip = exh_skipcmd(args, 0);
@@ -1158,8 +1124,6 @@ exhcmd_zb(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern hx_lines;
-  extern he_scroll_down( /* struct he_s *, int */ );
   char *skip;
 
   skip = exh_skipcmd(args, 0);
@@ -1175,8 +1139,6 @@ exhcmd_help(hedit, args)
   struct he_s *hedit;
   char *args;
 {
-  extern char helptext[];
-  extern char *he_pagerprg;
   int pid1, pid2, status, x = 0;
   int pipefd[2];
   char *vp[64], *p;
@@ -1245,7 +1207,6 @@ exhcmd_exit(hedit, args)
   char *args;
 {
   struct buffer_s *i;
-  extern struct buffer_s *buffer_list;
   int cant_write_f = 0;
   long k;
   char *errormsg;

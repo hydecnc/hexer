@@ -10,9 +10,15 @@ Change log for hexer, the multi-view binary editor
 	  our own strerror() function if needed
 	- clean up the header files:
 	  - remove "extern" before the function prototypes
+	  - declare all the hexer functions and variables used by
+	    other modules
+	  - add several header files so that all hexer functions and
+	    variables are declared
 	- clean up the source files:
 	  - remove the "extern" definitions for the standard C library
 	    functions - just include the header files instead
+	  - replace the "extern" definitions for hexer functions and
+	    variables with the appropriate includes
 	- clean up the Makefile:
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)

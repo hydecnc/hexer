@@ -63,7 +63,12 @@
 #define HEXER_MAX_STARTUP_COMMANDS 256
 #endif
 
+#include "exh.h"
 #include "hexer.h"
+#include "readline.h"
+#include "regex.h"
+#include "signal.h"
+#include "tio.h"
 
 extern char *optarg;
 extern int optind;
@@ -113,12 +118,9 @@ process_args(argc, argv)
   int argc;
   char **argv;
 {
-  extern tio_tite_f;
   int c, i;
   int exit_f = 0;
   char *first_buffer = 0;
-  extern void exh_command( /* struct he_s *hedit, char *cmd, int *kcmd */ );
-  extern void hexer_init( /* void */ );
   int open_f = 0;
 #if HEXER_LONG_OPTIONS
   int longopt_idx;
@@ -210,25 +212,11 @@ setup_screen()
 }
 /* setup_screen */
 
-  extern char **
-exh_completer( /* char *, char *, char *, int */ );
-
   int
 main(argc, argv)
   int argc;
   char **argv;
 {
-  extern int hx_lines;
-
-  extern int rl_backspace_jump;
-  extern int rl_cancel_on_bs;
-  extern char **(*completer)( /* char *, char *, char *, int */ );
-  extern int *rx_interrupt;
-  extern int *tio_interrupt;
-  extern caught_sigint;
-  extern int setup_signal_handlers();
-  extern void hexer_version();
-
   int exit_f;
 
   /* configure readline */

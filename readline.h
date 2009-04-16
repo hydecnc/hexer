@@ -48,6 +48,11 @@
 extern char **(*completer)( /* char *prefix, char *command,
                                char *line, int context */ );
 
+extern int rl_backspace_jump;
+extern int rl_cancel_on_bs;
+extern int rl_redisplay;
+extern void (*rl_winch)( /* void */ );
+
 char *
 readline( /* char *prompt, char *default_val, int context */ );
 

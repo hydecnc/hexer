@@ -170,7 +170,7 @@ char *rx_error_msg[] = {
 
 int rx_error;
 static int interrupt = 0;
-int *rx_interrupt = &interrupt;
+volatile int *rx_interrupt = &interrupt;
 
 #undef isoct
 #undef ishex

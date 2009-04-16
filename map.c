@@ -273,7 +273,6 @@ tio_mgetch(map, map_string)
   int ungets[MAP_MAXLEN], ungets_n = 0;
   int k;
   int prefix;
-  extern int *tio_interrupt;
 
   if (*tio_interrupt) {
     *tio_interrupt = 0;

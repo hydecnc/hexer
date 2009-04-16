@@ -53,6 +53,8 @@
 #include <assert.h>
 
 #include "hexer.h"
+#include "tio.h"
+#include "util.h"
 
 #ifndef USE_PROTOTYPES
 #define USE_PROTOTYPES 0
@@ -150,11 +152,6 @@ static int rl_history_max;
    */
 static int rl_history_c[RL_MAX_CONTEXTS];
   /* current size of the history buffer for each context.
-   */
-
-extern hx_lines, hx_columns;
-  /* height and width of the screen.
-   * these variables are maintained by "tio.c".
    */
 
   static int
@@ -293,7 +290,6 @@ rl_query_yn(prompt, dfl)
 {
   int key;
   int choice;
-  extern int window_changed;
 
   tio_keypad(0);
   tio_goto_line(hx_lines - 1);
@@ -898,9 +894,6 @@ rl_complete(context, again)
   int i, j;
   int prefix_len;
   int stop_f = 0;
-  extern util_strsort();
-
-  extern int hx_columns;
 
   if (!completer) return 0;
   strcpy(line, rl.line);
@@ -1034,7 +1027,6 @@ rl_verbatim()
   int append = (position == strlen(rl.line));
   int vposition = rl_get_vposition();
   int last_col;
-  extern int window_changed;
 
   if (vposition - rl_offset + 2 >= hx_columns - rl_prompt_len + append) {
     ++rl_offset;
@@ -1085,9 +1077,6 @@ readline(prompt, default_val, context)
   struct rl_line_s *hist;
   static int history_initialized = 0;
   int stop_f = 0;
-
-  extern hx_lines, hx_columns;
-  extern window_changed;
 
   rl_redisplay = 0;
   if (!history_initialized) rl_history_init(16), history_initialized = 1;

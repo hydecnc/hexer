@@ -1,10 +1,4 @@
-/* signal.c	8/19/1995
- * Signal handlers for HEXER
- *
- * NOTE:  the signal handler for SIGWINCH is defined in `tio.c'.
- */
-
-/* Copyright (c) 1995,1996 Sascha Demetrio
+/* Copyright (c) 2009  Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,104 +39,11 @@
  * SUCH DAMAGE.
  */
 
-#include "config.h"
+#ifndef _SIGNAL_H_
+#define _SIGNAL_H_
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
+extern volatile int	 caught_sigint;
 
-#include "hexer.h"
-#include "tio.h"
+int		 setup_signal_handlers();
 
-#if HAVE_SIGTYPE_INT
-#define SIG_RVAL 0
-typedef int sigtype_t;
-#else
-#define SIG_RVAL
-typedef void sigtype_t;
-#endif
-
-volatile int caught_sigint;
-
-#ifdef SIGINT
-  static sigtype_t
-sigint_handler()
-{
-  signal(SIGINT, sigint_handler);
-  caught_sigint = 1;
-  return SIG_RVAL;
-}
-/* sigint_handler */
-#endif
-
-#ifdef SIGTSTP
-  static sigtype_t
-sigtstp_handler()
-{
-  signal(SIGTSTP, sigtstp_handler);
-  tio_suspend();
-  tio_goto_line(hx_lines - 1);
-  tio_return();
-  tio_clear_to_eol();
-  tio_printf("@AbStopped@~.  Type `fg' to restart @Abhexer@~.\n");
-  tio_flush();
-  kill(0, SIGSTOP);
-  return SIG_RVAL;
-}
-/* sigtstp_handler */
-#endif
-
-#ifdef SIGCONT
-  static sigtype_t
-sigcont_handler()
-{
-  signal(SIGCONT, sigcont_handler);
-  tio_restart();
-  he_refresh_all(current_buffer->hedit);
-  return SIG_RVAL;
-}
-/* sigcont_handler */
-#endif
-
-#ifdef SIGPIPE
-  static sigtype_t
-sigpipe_handler()
-{
-  signal(SIGPIPE, sigpipe_handler);
-#if 0
-  he_message(0, "broken pipe");
-#endif
-  return SIG_RVAL;
-}
-/* sigpipe_handler */
-#endif
-
-  void
-setup_signal_handlers()
-{
-  caught_sigint = 0;
-#ifdef SIGINT
-  signal(SIGINT, sigint_handler);
-#endif
-#ifdef SIGTSTP
-  /* if the shell can't do job control, we'll ignore the signal `SIGTSTP' */
-  if ((sigtype_t (*)())signal(SIGTSTP, SIG_IGN) != (sigtype_t (*)())SIG_IGN)
-    signal(SIGTSTP, sigtstp_handler);
-#endif
-#ifdef SIGCONT
-  signal(SIGCONT, sigcont_handler);
-#endif
-#ifdef SIGPIPE
-  signal(SIGPIPE, sigpipe_handler);
-#endif
-}
-/* setup_signal_handlers */
-
-/* end of signal.c */
-
-
-/* VIM configuration: (do not delete this line)
- *
- * vim:aw:bk:ch=2:nodg:efm=%f\:%l\:%m:et:hid:icon:
- * vim:sw=2:sc:sm:si:textwidth=79:to:ul=1024:wh=12:wrap:wb:
- */
+#endif /* _SIGNAL_H_ */

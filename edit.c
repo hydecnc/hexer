@@ -59,7 +59,11 @@
 #include <varargs.h>
 #endif
 
+#include "buffer.h"
+#include "calc.h"
+#include "edit.h"
 #include "hexer.h"
+#include "tio.h"
 
 int he_hex_column[] = { 12, 15, 18, 21, 24, 27, 30, 33,
                         37, 40, 43, 46, 49, 52, 55, 58 };
@@ -72,6 +76,7 @@ enum seek_e { SEEK_SET, SEEK_CUR, SEEK_END };
 
 static void he_insert_mode( /* struct he_s *, int, long */ );
 static int he_clear_get( /* int */ );
+static void he_set_cursor( /* const struct he_s * */ );
 static void he_visual_mode( /* struct he_s *hedit */ );
 static long he_get_counter( /* struct he_s *hedit */ );
 
@@ -143,7 +148,6 @@ he_refresh_part(hedit, pos1, pos2)
   long i, j, k;
   int update_f = 0;
   int lastline_f = 0;
-  extern int hx_lines;
 
   if (pos2 < 0) {
     pos2 = hedit->buffer->size - 1;
@@ -180,10 +184,6 @@ he_refresh_check(hedit)
 he_refresh_screen(hedit)
   struct he_s *hedit;
 {
-  extern hx_lines;
-  extern window_changed;
-  extern void he_set_cursor( /* const struct he_s * */ );
-
   he_refresh_all(current_buffer->hedit);
   he_update_screen(current_buffer->hedit);
   tio_goto_line(hx_lines - 1);
@@ -859,11 +859,10 @@ he_line(hedit, position)
 }
 /* he_line */
 
-  void
+  static void
 he_set_cursor(hedit)
   const struct he_s *hedit;
 {
-  extern int hx_lines;
   int l, c, i;
 
   l = HE_LINE(hedit->position - hedit->screen_offset);
@@ -883,7 +882,6 @@ he_display(hedit, start, end)
   const struct he_s *hedit;
   int start, end;
 {
-  extern int hx_lines;
   int i;
 
   if (end < 0) end = hx_lines - 2;
@@ -904,7 +902,6 @@ he_motion(hedit, key, count)
   int key;
   long count;
 {
-  extern int hx_lines;
   int i;
 
   if (count <= 0) count = 1;
@@ -1066,10 +1063,6 @@ he_command(hedit, key, count)
   int rval = 1;
   int redisplay = 0;
   char *cmd;
-  extern char *he_query_command( /* char *, char *, int */ );
-  extern void he_search_command( /* struct he_s *, char *, int */ );
-  extern char *calculator( /* char * */ );
-  extern rl_redisplay;
 
   he_update_screen(hedit);
   switch (key) {
@@ -1201,9 +1194,6 @@ he_visual_mode(hedit)
   char map_string[256];
   int motion_f = 0;
 
-  extern int hx_lines;
-  extern window_changed;
-
   if (!hedit->buffer->size) {
     he_message(1, "@Abthe buffer is empty@~");
     return;
@@ -1326,14 +1316,10 @@ he_get_counter(hedit)
    * terminated by pressing <return>.
    */
 {
-  extern int hx_lines;
-  extern int hx_columns;
   long count = -1;
   int key, digit;
   enum mode_e { OCT = 8, DEC = 10, HEX = 16 } mode = DEC;
   char *fmt = 0, *prefix = 0;
-  extern window_changed;
-  extern hx_lines;
 
   tio_goto_line(hx_lines - 1);
   tio_return();
@@ -1430,8 +1416,6 @@ he_verbatim(hedit)
   struct he_s *hedit;
 {
   int key;
-  extern window_changed;
-  extern hx_lines;
 
   tio_goto_line(hx_lines - 1);
   tio_return();
@@ -1471,7 +1455,6 @@ he_insert_mode(hedit, replace_mode, count)
    * `replace_mode == 2':  Replace a single character.
    */
 {
-  extern int hx_lines;
   Buffer *insert = new_buffer(0);
   Buffer *replace = new_buffer(0);
   char *data;
@@ -1483,8 +1466,6 @@ he_insert_mode(hedit, replace_mode, count)
   long i;
   int key, x = 0;
   char map_string[256];
-  extern window_changed;
-  extern hx_lines;
 
   if (!count) count = 1;
   if (he_refresh_check(hedit)) tio_ungetch(HXKEY_NONE);
@@ -1730,8 +1711,6 @@ he_scroll_down(hedit, count)
   struct he_s *hedit;
   int count;
 {
-  extern hx_lines;
-
   if (!count) return;
   assert(count > 0);
   while (count--) {
@@ -1765,8 +1744,6 @@ he_scroll_up(hedit, count)
   struct he_s *hedit;
   int count;
 {
-  extern hx_lines;
-
   if (!count) return;
   assert(count > 0);
   while (count--) {
@@ -1804,8 +1781,6 @@ he_update_screen(hedit)
    * The return value is 1 if a message was displayed, 0 else.
    */
 {
-  extern int hx_lines;
-  extern int window_changed;
   int rval = 0;
   struct he_message_s *m, *n;
 
@@ -2033,8 +2008,6 @@ he_clear_get(command_mode)
 he_mainloop(hedit)
   struct he_s *hedit;
 {
-  extern int hx_lines;
-  extern window_changed;
   long count = -1;
   int key;
   int display_status_f = 0;

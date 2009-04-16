@@ -65,14 +65,10 @@
 char *alloca();
 #endif
 
+#include "buffer.h"
 #include "hexer.h"
-
-extern char *alternate_buffer;
-
-extern int key_strlen( /* const int * */ );
-extern char *key_strrep_simple( /* const int * */ );
-
-extern const struct exh_cmd_s exh_commands[];
+#include "commands.h"
+#include "exh.h"
 
 #define EXH_DEFAULT_SHELL "/bin/sh"
 #define EXH_DEFAULT_PAGER "more"
@@ -794,7 +790,6 @@ exh_cpl_command_list(prefix)
 exh_cpl_buffer_list(prefix)
   char *prefix;
 {
-  extern struct buffer_s *buffer_list; 
   struct buffer_s *i;
   char **list;
   int j;
