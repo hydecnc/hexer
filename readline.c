@@ -1198,6 +1198,6 @@ exit_readline:
 
 /* VIM configuration: (do not delete this line)
  *
- * vim:aw:bk:ch=2:nodg:efm=%f\:%l\:%m:et:hid:icon:
- * vim:sw=2:sc:sm:si:textwidth=79:to:ul=1024:wh=12:wrap:wb:
+ * vim:bk:nodg:efm=%f\:%l\:%m:hid:icon:
+ * vim:sw=2:sm:textwidth=79:ul=1024:wrap:
  */
