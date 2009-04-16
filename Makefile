@@ -104,8 +104,10 @@ depend: *.c *.h
 	-echo '#' Dependencies: >> Makefile~
 	-echo >> Makefile~
 	@{ for i in *.c; do \
+	      if [ "$$i" != 'termlib.c' ]; then \
 	      echo $(CC) -MM $(CINCLUDE) $(CFLAGS) $$i '>>' Makefile~; \
 	      $(CC) -MM $(CINCLUDE) $(CFLAGS) $$i >> Makefile~; \
+	      fi \
 	    done; }
 	-echo >> Makefile~
 	mv -f Makefile~ Makefile

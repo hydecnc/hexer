@@ -17,6 +17,7 @@ Change log for hexer, the multi-view binary editor
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)
 	  - use CFLAGS when building bin2c
+	  - do not try to follow dependencies for termlib.c
 	- rename the KEY_* constants to HXKEY_* to avoid conflicts with
 	  the curses header files
 	- add an "hx_" prefix to the "lines", "columns", and
