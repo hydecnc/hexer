@@ -127,10 +127,10 @@ distclean: clean
 	rm -f depend
 
 install: all
-	$(INSTALLBIN) $(HEXER) $(BINDIR)
-	$(INSTALLMAN) $(HEXER).1 $(MANDIR)
-	[ ! -f $(MYC) ] || $(INSTALLBIN) $(MYC) $(BINDIR)
-	[ ! -f $(MYC) ] || $(INSTALLMAN) $(MYC).1 $(MANDIR)
+	$(INSTALLBIN) $(HEXER) $(DESTDIR)$(BINDIR)
+	$(INSTALLMAN) $(HEXER).1 $(DESTDIR)$(MANDIR)
+	[ ! -f $(MYC) ] || $(INSTALLBIN) $(MYC) $(DESTDIR)$(BINDIR)
+	[ ! -f $(MYC) ] || $(INSTALLMAN) $(MYC).1 $(DESTDIR)$(MANDIR)
 
 ### DO NOT DELETE THIS LINE ###
 
