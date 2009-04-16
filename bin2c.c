@@ -72,7 +72,7 @@ main(argc, argv)
   FILE *in = stdin, *out = stdout;
   int text_f = 0;
   char *outfile = 0;
-  char c;
+  int c;
   int i;
 
   while ((c = getopt(argc, argv, "htn:o:")) != -1)
