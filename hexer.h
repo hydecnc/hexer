@@ -45,18 +45,17 @@
 #ifndef _HEXER_H_
 #define _HEXER_H_
 
-#include <stdio.h>
-
-#include "defs.h"
 #include "config.h"
-#include "buffer.h"
-#include "readline.h"
-#include "regex.h"
-#include "set.h"
+#include "defs.h"
+
+#include <stdio.h>
+#ifdef USE_STDARG
+#include <stdarg.h>
+#else
+#include <varargs.h>
+#endif
 
 #define TIO_MAP 1
-#include "tio.h"
-
 
 #define HE_REFRESH_MAX_PARTS 64
 

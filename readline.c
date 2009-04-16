@@ -52,7 +52,9 @@
 #include <ctype.h>
 #include <assert.h>
 
+#include "buffer.h"
 #include "hexer.h"
+#include "readline.h"
 #include "tio.h"
 #include "util.h"
 

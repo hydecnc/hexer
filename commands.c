@@ -69,6 +69,7 @@ char *alloca();
 #include "exh.h"
 #include "helptext.h"
 #include "regex.h"
+#include "set.h"
 #include "tio.h"
 #include "util.h"
 

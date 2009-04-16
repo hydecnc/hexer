@@ -63,10 +63,13 @@
 #define PATH_MAX 63
 #endif
 
+#include "buffer.h"
 #include "hexer.h"
 #include "commands.h"
 #include "exh.h"
 #include "readline.h"
+#include "regex.h"
+#include "set.h"
 #include "tio.h"
 #include "util.h"
 

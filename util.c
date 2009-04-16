@@ -49,6 +49,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "buffer.h"
+#include "hexer.h"
 #include "util.h"
 #include "tio.h"
 

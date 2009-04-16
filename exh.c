@@ -69,6 +69,9 @@ char *alloca();
 #include "hexer.h"
 #include "commands.h"
 #include "exh.h"
+#include "regex.h"
+#include "set.h"
+#include "tio.h"
 
 #define EXH_DEFAULT_SHELL "/bin/sh"
 #define EXH_DEFAULT_PAGER "more"

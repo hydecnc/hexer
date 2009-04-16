@@ -51,6 +51,7 @@
 #include <unistd.h>
 #include <signal.h>
 
+#include "buffer.h"
 #include "hexer.h"
 #include "signal.h"
 #include "tio.h"

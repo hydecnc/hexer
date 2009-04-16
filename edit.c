@@ -60,9 +60,10 @@
 #endif
 
 #include "buffer.h"
-#include "calc.h"
 #include "hexer.h"
+#include "calc.h"
 #include "edit.h"
+#include "readline.h"
 #include "tio.h"
 
 int he_hex_column[] = { 12, 15, 18, 21, 24, 27, 30, 33,

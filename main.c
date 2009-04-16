@@ -63,10 +63,12 @@
 #define HEXER_MAX_STARTUP_COMMANDS 256
 #endif
 
+#include "buffer.h"
 #include "hexer.h"
 #include "exh.h"
 #include "readline.h"
 #include "regex.h"
+#include "set.h"
 #include "signal.h"
 #include "tio.h"
 
