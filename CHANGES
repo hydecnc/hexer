@@ -41,6 +41,7 @@ Change log for hexer, the multi-view binary editor
 	  - mark the hyphens as such where needed
 	- remove some hyphenation in the help text
 	- switch the Makefile to use curses by default
+	- link with the math library for pow(3) used in the calculator
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>

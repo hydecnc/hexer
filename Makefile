@@ -14,7 +14,7 @@ MANDIR ?= $(PREFIX)/man/man1
 #
 #  Use the following two lines, if you want to use the termcap-library.
 #TERMLIB ?=
-#TERMCAP ?= -ltermcap -lm
+#TERMCAP ?= -ltermcap
 #
 #  Uncomment these if you want to use curses.
 TERMLIB ?=
@@ -34,7 +34,7 @@ CC ?= cc
 CFLAGS ?= -O
 CFLAGS += $(DEFINES)
 LDFLAGS ?=
-LDLIBS = $(TERMCAP)
+LDLIBS = $(TERMCAP) -lm
 #
 #  Uncomment the following lines if you want to use the GNU compiler.
 #CC = gcc
