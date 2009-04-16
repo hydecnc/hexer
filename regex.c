@@ -1644,6 +1644,7 @@ exit_regex_compile:
 }
 /* regex_compile */
 
+#if 0
   static void
 regex_list_(regex, count, indent, base)
   unsigned long *regex;
@@ -1756,6 +1757,7 @@ regex_list_(regex, count, indent, base)
   }
 }
 /* regex_list_ */
+#endif
 
 /* end of regex.c */
 
