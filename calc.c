@@ -276,40 +276,6 @@ calc_set_stack(position, object)
 }
 /* calc_set_stack */
 
-  static int
-calc_print(object, verbose)
-  struct calc_object_s object;
-  int verbose;
-{
-  if (verbose) printf("(%s) ", calc_object_names[(int)object.type]);
-  switch(object.type) {
-  case CO_BINARY_OPERATOR:
-    printf("%s", calc_binary_operator_names[(int)object.u.bo] + 3);
-    break;
-  case CO_UNARY_OPERATOR:
-    printf("%s", calc_unary_operator_names[(int)object.u.uo] + 3);
-    break;
-  case CO_INTEGER:
-    printf("%li 0%lo 0x%lx", object.u.i, object.u.i, object.u.i);
-    break;
-  case CO_FLOAT:
-    printf("%g", object.u.f);
-    break;
-  case CO_BOOLEAN:
-    printf("%s", object.u.i ? "true" : "false");
-    break;
-  case CO_ERROR:
-  case CO_VARIABLE:
-    printf("%s", object.u.s);
-    break;
-  default:
-    printf("INVALID OBJECT");
-    return -1;
-  }
-  return 0;
-}
-/* calc_print */
-
   static char *
 calc_sprint(s, object)
   char *s;
@@ -341,20 +307,6 @@ calc_sprint(s, object)
   return s;
 }
 /* calc_print */
-
-  static int
-calc_stack()
-{
-  int i;
-
-  for (i = 0; i < sp; ++i) {
-    printf("%i: ", i);
-    calc_print(stack[i], 1);
-    putchar('\n');
-  }
-  return 0;
-}
-/* calc_stack */
 
   static int
 #if USE_STDARG
@@ -1043,7 +995,7 @@ istrue(s, endptr)
     "yes", "y", "YES", "Yes", "on", "ON", "On", 0 };
   int i, l;
 
-  for (i = 0; l = (true_strings[i] ? strlen(true_strings[i]) : 0); ++i)
+  for (i = 0; (l = (true_strings[i] ? strlen(true_strings[i]) : 0)); ++i)
     if (!strncmp(true_strings[i], s, l)) {
       *endptr = s + l;
       return 1;
@@ -1062,7 +1014,7 @@ isfalse(s, endptr)
     "no", "n", "NO", "No", "off", "OFF", "Off", 0 };
   int i, l;
 
-  for (i = 0; l = (false_strings[i] ? strlen(false_strings[i]) : 0); ++i)
+  for (i = 0; (l = (false_strings[i] ? strlen(false_strings[i]) : 0)); ++i)
     if (!strncmp(false_strings[i], s, l)) {
       *endptr = s + l;
       return 1;

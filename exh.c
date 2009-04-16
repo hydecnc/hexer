@@ -152,7 +152,7 @@ exh_shell_command(command, pager_f)
           while (errno == ERESTARTSYS);
         do if (waitpid(pager_pid, &pager_status, 0) >= 0) break;
           while (errno == ERESTARTSYS);
-        if ((pager_x = WEXITSTATUS(pager_status)))
+        if ((pager_x = WEXITSTATUS(pager_status))) {
           if (pager_x == EXIT_EXEC_FAILED) {
             he_message(1, "couldn't start pager program `%s'", *pager);
             close(pipe2[0]);
@@ -161,11 +161,13 @@ exh_shell_command(command, pager_f)
                            * "press any key"-requester gets displayed. */
           } else
             he_message(1, "%s exited with code %i", *pager, pager_x);
-        if ((shell_x = WEXITSTATUS(shell_status)))
+        }
+        if ((shell_x = WEXITSTATUS(shell_status))) {
           if (shell_x == EXIT_EXEC_FAILED)
             he_message(1, "couldn't start shell `%s'", *shell);
           else
             he_message(1, "%s exited with code %i", *shell, shell_x);
+        }
         if (!shell_x && !pager_x)
           he_message(0, "shell command done");
       } else if (pager_pid < 0) { /* `fork()' failed */
@@ -194,11 +196,12 @@ exh_shell_command(command, pager_f)
       close(pipe1[1]);
       do if (waitpid(shell_pid, &shell_status, 0) >= 0) break;
         while (errno == ERESTARTSYS);
-      if ((shell_x = WEXITSTATUS(shell_status)))
+      if ((shell_x = WEXITSTATUS(shell_status))) {
         if (shell_x == EXIT_EXEC_FAILED)
           he_message(1, "couldn't start shell `%s'", *shell);
         else
           he_message(1, "%s exited with code %i", *shell, shell_x);
+      }
       if (!shell_x) he_message(0, "shell command done");
     }
   } else { /* child: shell */
@@ -261,11 +264,12 @@ exh_subshell()
   /* execute the shell */
   if ((pid = fork()) > 0) {
     do if (waitpid(pid, &status, 0) >= 0) break; while (errno == ERESTARTSYS);
-    if ((x = WEXITSTATUS(status)))
+    if ((x = WEXITSTATUS(status))) {
       if (x == EXIT_EXEC_FAILED)
         he_message(1, "couldn't start shell `%s'", *shell);
       else
         he_message(1, "%s exited with code %i", *shell, x);
+    }
   } else if (!pid) { /* child: shell */
     tio_printf("@Absubshell@~.  type `@Uexit@u' to return to @Abhexer@~.\n");
     tio_flush();
@@ -905,7 +909,7 @@ exh_completer(prefix, command, line, context)
     } else {
       /* check if `command' is a unique prefix of a known command */
       for (i = 0, j = strlen(command), k = 0; exh_commands[i].cmd_name; ++i)
-	if (!strncmp(command, exh_commands[i].cmd_name, j))
+	if (!strncmp(command, exh_commands[i].cmd_name, j)) {
 	  if (!k)
 	    k = i;
 	  else {
@@ -913,6 +917,7 @@ exh_completer(prefix, command, line, context)
 	    expect = -1;
 	    break;
 	  }
+        }
       if (!k)
 	/* unknown command - no completion */
 	expect = -1;

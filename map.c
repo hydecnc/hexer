@@ -116,17 +116,6 @@ key_strncmp(ks1, ks2, n)
 }
 /* key_strncmp */
 
-  static int
-key_strlen(ks)
-  const int *ks;
-{
-  int n = 0;
-
-  for (; *ks++; ++n);
-  return n;
-}
-/* key_strlen */
-
   static char *
 key_strrep(ks)
   const int *ks;

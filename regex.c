@@ -1700,40 +1700,40 @@ regex_list_(regex, count, indent, base)
       printf("ANY_CHAR\n");
       break;
     case ANY_OF: 
-      printf("ANY_OF <%i> [", *pp);
+      printf("ANY_OF <%lu> [", *pp);
       for (j = 0; j < *pp; ++j)
         if (isprint(pp[j + 1]))
-          printf("%c", pp[j + 1]);
+          printf("%lu", pp[j + 1]);
         else
-          printf("\\x%02x", pp[j + 1]);
+          printf("\\x%02lx", pp[j + 1]);
       printf("]\n");
       pp += *pp + 1;
       break;
     case ANY_BUT:
-      printf("ANY_BUT <%i> [", *pp);
+      printf("ANY_BUT <%lu> [", *pp);
       for (j = 0; j < *pp; ++j)
         if (isprint(pp[j + 1]))
-          printf("%c", pp[j + 1]);
+          printf("%lu", pp[j + 1]);
         else
-          printf("\\x%02x", pp[j + 1]);
+          printf("\\x%02lx", pp[j + 1]);
       printf("]\n");
       pp += *pp + 1;
       break;
     case CHAR:
       printf("CHAR ");
       if (isprint(*pp))
-        printf("'%c'\n", *pp);
+        printf("'%lu'\n", *pp);
       else
-        printf("'\\x%02x'\n", *pp);
+        printf("'\\x%02lx'\n", *pp);
       ++pp;
       break;
     case STRING:
-      printf("STRING <%i> \"", *pp);
+      printf("STRING <%lu> \"", *pp);
       for (j = 0; j < *pp; ++j)
         if (isprint(pp[j + 1]))
-          printf("%c", pp[j + 1]);
+          printf("%lu", pp[j + 1]);
         else
-          printf("\\x%02x", pp[j + 1]);
+          printf("\\x%02lx", pp[j + 1]);
       pp += *pp + 1;
       printf("\"\n");
       break;
@@ -1741,27 +1741,27 @@ regex_list_(regex, count, indent, base)
       printf("PAR_OPEN\n");
       break;
     case PAR_CLOSE:
-      printf("PAR_CLOSE <slot=%i>\n", *pp);
+      printf("PAR_CLOSE <slot=%lu>\n", *pp);
       ++pp;
       break;
     case BACKREF:
-      printf("BACKREF <slot=%i>\n", *pp);
+      printf("BACKREF <slot=%lu>\n", *pp);
       ++pp;
       break;
     case BRANCH:
-      printf("BRANCH <%i> <%i>\n", pp[0], pp[1]);
+      printf("BRANCH <%lu> <%lu>\n", pp[0], pp[1]);
       regex_list_(pp + 2, pp[1], indent + 2, base + (pp - regex) + 2);
       regex_list_(pp + 2 + pp[1], pp[0] - pp[1], indent + 2,
                   base + (pp - regex) + 2 + pp[1]);
       pp += 2 + pp[0];
       break;
     case REPEAT:
-      printf("REPEAT <min=%i> <max=%i> <%i>\n", pp[0], pp[1], pp[2]);
+      printf("REPEAT <min=%lu> <max=%lu> <%lu>\n", pp[0], pp[1], pp[2]);
       regex_list_(pp + 3, pp[2], indent + 2, base + (pp - regex) + 3);
       pp += 3 + pp[2];
       break;
     case FIXREPEAT:
-      printf("FIXREPEAT <min=%i> <max=%i> <len=%i> <%i>\n",
+      printf("FIXREPEAT <min=%lu> <max=%lu> <len=%lu> <%lu>\n",
              pp[0], pp[1], pp[2], pp[3]);
       regex_list_(pp + 4, pp[3], indent + 2, base + (pp - regex) + 4);
       pp += 4 + pp[3];
@@ -1788,7 +1788,7 @@ regex_list_(regex, count, indent, base)
       printf("--\n");
       return;
     default:
-      printf("illegal opcode 0x%x\n", pp[-1]);
+      printf("illegal opcode 0x%lx\n", pp[-1]);
       return;
     }
   }

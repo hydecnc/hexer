@@ -298,12 +298,13 @@ he_select_buffer_(buffer)
     strcat(i->hedit->swapfile, hexer_ext);
     if (access(i->hedit->swapfile, R_OK)) {
       if (errno == ENOENT) /* swapfile doesn't exist -- fine */
-        if (access(i->hedit->swapfile, W_OK))
+        if (access(i->hedit->swapfile, W_OK)) {
           if (errno == ENOENT) {
             if ((i->hedit->undo.swapfile = fopen(i->hedit->swapfile, "w+")))
               i->hedit->swapping = 1;
           } else
             he_message(0, "@Abno swapfile@~");
+        }
     } else {
       /* a swapfile does exist */
       int swapfd;
@@ -492,8 +493,8 @@ he_status_message(verbose)
 {
   struct he_s *hedit = current_buffer->hedit;
 
-  if (hedit->buffer->size)
-    if (verbose)
+  if (hedit->buffer->size) {
+    if (verbose) {
       he_message(0, "\"%s\" %s%sat 0x%lx (%li) of 0x%lx (%li) bytes  (%li %%)",
                  hedit->buffer_name,
                  hedit->buffer->modified ? "[modified] " : "",
@@ -501,7 +502,7 @@ he_status_message(verbose)
                  hedit->position, hedit->position,
                  hedit->buffer->size, hedit->buffer->size,
                  (hedit->position * 100) / hedit->buffer->size);
-    else
+    } else {
     if (hedit->buffer->size)
       he_message(0, "\"%s\" %s%s0x%lx (%li) bytes",
                  hedit->buffer_name,
@@ -512,6 +513,8 @@ he_status_message(verbose)
     he_message(0, "\"%s\" %s%s(empty)", hedit->buffer_name,
                hedit->buffer->modified ? "[modified] " : "",
                hedit->read_only ? "[readonly] " : "");
+    }
+  }
 }
 /* he_status_message */
 
@@ -741,12 +744,13 @@ he_search_command(hedit, exp, dir)
   long rl, ml;
   static char last_exp[4096] = "";
 
-  if (!*exp)
+  if (!*exp) {
     if (!*last_exp) {
       he_message(0, "@Abno previous expression@~");
       goto exit;
     } else
       exp = last_exp;
+  }
   switch ((position = he_search(hedit, exp, "", dir, 1, 1, -1,
                                 &rs, &rl, &ml))) {
   case -2:  /* invalid expression */

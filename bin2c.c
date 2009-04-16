@@ -47,9 +47,10 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 extern char *optarg;
-extern optind;
+extern int optind;
 
 static char *usage = "\
 usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\

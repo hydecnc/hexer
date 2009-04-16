@@ -1092,11 +1092,12 @@ tio_getch_()
   case 0:
     return (int)HXKEY_NONE;
   default:
-    if (!t_keypad_transmit)
+    if (!t_keypad_transmit) {
       if (*cbuf == '\n' || *cbuf == '\r')
         return (int)HXKEY_RETURN;
       else
         return *cbuf ? (int)(unsigned char)*cbuf : (int)HXKEY_NULL;
+    }
   }
 
   /* Check if the character read is the first character of a known key
@@ -1104,12 +1105,13 @@ tio_getch_()
    * (escape).
    */
   for (i = 0; t_keys[i].key; ++i)
-    if (*t_keys[i].string ? *cbuf == **t_keys[i].string : 0)
+    if (*t_keys[i].string ? *cbuf == **t_keys[i].string : 0) {
       if (strlen(*t_keys[i].string) == 1)
         return (int)t_keys[i].key;
           /* The read character is a known key string. */
       else
         break;
+    }
   if (!t_keys[i].key) {
     if (*cbuf == '\n' || *cbuf == '\r')
       return (int)HXKEY_RETURN;
@@ -1515,8 +1517,8 @@ tio_rel_move(lin, col)
   /* Move the cursor relative to the cursor position.
    */
 {
-  if (lin) if (lin < 0) tio_up(-lin); else tio_down(lin);
-  if (col) if (col < 0) tio_left(-col); else tio_right(col);
+  if (lin) { if (lin < 0) tio_up(-lin); else tio_down(lin); }
+  if (col) { if (col < 0) tio_left(-col); else tio_right(col); }
 }
 /* tio_rel_move */
 

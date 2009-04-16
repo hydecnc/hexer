@@ -19,6 +19,7 @@ Change log for hexer, the multi-view binary editor
 	    functions - just include the header files instead
 	  - replace the "extern" definitions for hexer functions and
 	    variables with the appropriate includes
+	  - fix various C compiler warnings
 	- clean up the Makefile:
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)

@@ -1026,11 +1026,12 @@ he_cancel_selection(hedit)
   /* Cancel the current selection.
    */
 {
-  if (hedit->begin_selection >= 0)
+  if (hedit->begin_selection >= 0) {
     if (hedit->end_selection >= hedit->begin_selection)
       he_refresh_part(hedit, hedit->begin_selection, hedit->end_selection);
     else
       he_refresh_part(hedit, hedit->begin_selection, hedit->begin_selection);
+  }
   hedit->begin_selection = -1;
   hedit->end_selection = -1;
   hedit->anchor_selection = 0;

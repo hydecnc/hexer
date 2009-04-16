@@ -46,10 +46,10 @@
 #define _REGEX_H_
 
 extern char *rx_error_msg[];
-extern rx_error;
+extern int rx_error;
 extern volatile int *rx_interrupt;
-extern rx_nomagic;
-extern rx_allmagic;
+extern int rx_nomagic;
+extern int rx_allmagic;
 extern int rx_special_nl;
 extern long rx_maxmatch;
 

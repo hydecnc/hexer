@@ -1189,11 +1189,12 @@ exhcmd_help(hedit, args)
   kill(pid2, SIGKILL);
   do if (waitpid(pid2, 0, 0) >= 0) break; while (errno == ERESTARTSYS);
   close(pipefd[0]);
-  if ((x = WEXITSTATUS(status)))
+  if ((x = WEXITSTATUS(status))) {
     if (x == EXIT_EXEC_FAILED)
       he_message(1, "couldn't start pager program `%s'", he_pagerprg);
     else
       he_message(1, "%s exited with code %i", he_pagerprg, x);
+  }
 exit_exhcmd_help:
   tio_restart();
   he_refresh_all(hedit);
@@ -1209,7 +1210,6 @@ exhcmd_exit(hedit, args)
   struct buffer_s *i;
   int cant_write_f = 0;
   long k;
-  char *errormsg;
   char *skip, *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));

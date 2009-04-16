@@ -46,6 +46,7 @@
 
 #include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "tio.h"
@@ -143,13 +144,14 @@ util_escape(s, d)
 	code = (unsigned char)(*s)[-1];
       break;
     }
-    if (d)
+    if (d) {
       if (code)
         *(*d)++ = (char)code;
       else {
         *(*d)++ = '\e';
         *(*d)++ = (char)(HXKEY_NULL - HXKEY_BIAS);
       }
+    }
   }
   return code;
 }
