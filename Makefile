@@ -13,12 +13,12 @@ MANDIR ?= $(PREFIX)/man/man1
 #  (It's probably save to leave the following lines unchanged.)
 #
 #  Use the following two lines, if you want to use the termcap-library.
-TERMLIB ?=
-TERMCAP ?= -ltermcap -lm
+#TERMLIB ?=
+#TERMCAP ?= -ltermcap -lm
 #
 #  Uncomment these if you want to use curses.
-#TERMLIB =
-#TERMCAP = -lcurses
+TERMLIB ?=
+TERMCAP ?= -lcurses
 #
 #  Uncomment the following two lines if you want to use the termlib code
 #  supplied with the package (not recommended).
