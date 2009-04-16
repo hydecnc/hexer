@@ -61,8 +61,8 @@
 
 #include "buffer.h"
 #include "calc.h"
-#include "edit.h"
 #include "hexer.h"
+#include "edit.h"
 #include "tio.h"
 
 int he_hex_column[] = { 12, 15, 18, 21, 24, 27, 30, 33,
@@ -74,11 +74,11 @@ int he_text_column[] = { 62, 63, 64, 65, 66, 67, 68, 69,
 enum seek_e { SEEK_SET, SEEK_CUR, SEEK_END };
 #endif
 
-static void he_insert_mode( /* struct he_s *, int, long */ );
-static int he_clear_get( /* int */ );
-static void he_set_cursor( /* const struct he_s * */ );
-static void he_visual_mode( /* struct he_s *hedit */ );
-static long he_get_counter( /* struct he_s *hedit */ );
+static void he_insert_mode(struct he_s *, int, long);
+static int he_clear_get(int);
+static void he_set_cursor(const struct he_s *);
+static void he_visual_mode(struct he_s *hedit);
+static long he_get_counter(struct he_s *hedit);
 
 Buffer *kill_buffer = 0;
 
@@ -182,7 +182,7 @@ he_refresh_check(hedit)
 
   void
 he_refresh_screen(hedit)
-  struct he_s *hedit;
+  const struct he_s *hedit;
 {
   he_refresh_all(current_buffer->hedit);
   he_update_screen(current_buffer->hedit);
@@ -435,7 +435,7 @@ he_read_command(hedit)
 }
 /* he_read_command */
 
-  void
+  static void
 he_undo(hedit)
   struct he_s *hedit;
   /* Undo the last command.
@@ -479,7 +479,7 @@ fail:
 }
 /* he_undo */
 
-  void
+  static void
 he_redo(hedit)
   struct he_s *hedit;
   /* Redo the last undo.
@@ -515,7 +515,7 @@ fail:
 }
 /* he_redo */
 
-  void
+  static void
 he_again(hedit, position)
   struct he_s *hedit;
   long position;
@@ -599,7 +599,7 @@ he_again(hedit, position)
 }
 /* he_again */
 
-  void
+  static void
 he_delete(hedit, count, dont_save)
   struct he_s *hedit;
   long count;
@@ -645,7 +645,7 @@ he_delete(hedit, count, dont_save)
 }
 /* he_delete */
 
-  void
+  static void
 he_paste(hedit, count)
   struct he_s *hedit;
   long count;
@@ -669,7 +669,7 @@ he_paste(hedit, count)
 }
 /* he_paste */
 
-  void
+  static void
 he_paste_over(hedit, count)
   struct he_s *hedit;
   long count;
@@ -701,7 +701,7 @@ he_paste_over(hedit, count)
 }
 /* he_paste_over */
 
-  void
+  static void
 he_yank(hedit, count)
   struct he_s *hedit;
   long count;
@@ -725,7 +725,7 @@ he_yank(hedit, count)
 }
 /* he_yank */
 
-  char *
+  static char *
 he_line(hedit, position)
   const struct he_s *hedit;
   long position;
@@ -877,7 +877,7 @@ he_set_cursor(hedit)
 }
 /* he_set_cursor */
 
-  void
+  static void
 he_display(hedit, start, end)
   const struct he_s *hedit;
   int start, end;
@@ -896,7 +896,7 @@ he_display(hedit, start, end)
 }
 /* he_display */
 
-  void
+  static void
 he_motion(hedit, key, count)
   struct he_s *hedit;
   int key;
@@ -988,7 +988,7 @@ he_motion(hedit, key, count)
 #define HE_CASE_MOTION_HJKL case 'h': case 'j': case 'k': case 'l'
 #define HE_CASE_MOTION_SHIFT case '<': case '>'
 
-  void
+  static void
 he_begin_selection(hedit)
   struct he_s *hedit;
   /* Set the beginning of the selected text to the current position in the
@@ -1004,7 +1004,7 @@ he_begin_selection(hedit)
 }
 /* he_begin_selection */
 
-  void
+  static void
 he_end_selection(hedit)
   struct he_s *hedit;
   /* Set the end of the selected text to the current position in the

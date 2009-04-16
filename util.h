@@ -43,10 +43,10 @@
 #define _UTIL_H_
 
 #if !HAVE_STRERROR
-char		*strerror();
+char		*strerror(int);
 #endif
 
-int		 util_strsort();
-int		 util_trunc();
+int		 util_strsort(char **);
+int		 util_trunc(char *);
 
 #endif /* _UTIL_H_ */

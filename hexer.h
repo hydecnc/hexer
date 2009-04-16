@@ -125,21 +125,21 @@ he_message( );
 #endif
 
 void
-he_refresh_part( /* struct he_s *hedit, long pos1, long pos2 */ );
+he_refresh_part(struct he_s *hedit, long pos1, long pos2);
 
 void
-he_refresh_lines( /* struct he_s *hedit, int first, int last */ );
+he_refresh_lines(struct he_s *hedit, int first, int last);
 
 int
-he_refresh_check( /* struct he_s *hedit */ );
+he_refresh_check(struct he_s *hedit);
 
 #define he_refresh_all(hedit) ((void)he_refresh_part((hedit), 0, -1))
 
 void
-he_refresh_screen( /* const struct he_s *hedit */ );
+he_refresh_screen(const struct he_s *hedit);
 
 int
-he_update_screen( /* struct he_s *hedit */ );
+he_update_screen(struct he_s *hedit);
 
 
 struct he_command_s {
@@ -209,17 +209,17 @@ struct he_command_s {
  */
 
   void
-he_free_command( /* struct he_command_s *command */ );
+he_free_command(struct he_command_s *command);
   /* Free the memory allocated by command and all the following commands
    * in the list.
    */
 
   void
-he_compound_comand( /* struct he_s *hedit, struct he_command_s *command */ );
+he_compound_comand(struct he_s *hedit, struct he_command_s *command);
 
   void
-he_subcommand( /* struct he_s *hedit,
-                  int type, long position, long count, char *data */ );
+he_subcommand(struct he_s *hedit,
+                  int type, long position, long count, char *data);
   /* Update the undo-list of `hedit' by inserting the given subcommand.
    * The command is *not* performed by calling `he_subcommand()'.
    * A sequence of subcommands must be terminated by calling
@@ -229,7 +229,7 @@ he_subcommand( /* struct he_s *hedit,
    */
 
   long
-he_do_command( /* struct he_s *hedit, struct he_command_s *command */ );
+he_do_command(struct he_s *hedit, struct he_command_s *command);
   /* Perform the compound command `command'.  The return value is the
    * position of the last change made.
    */
@@ -256,7 +256,7 @@ extern char             *he_pagerprg;
 /* exh commands
  */
 
-typedef char *(*exh_fn)( /* struct he_s *, char *, long, long */ );
+typedef char *(*exh_fn)(struct he_s *, char *, long, long);
 
 struct exh_cmd_s {
   char *cmd_name;
@@ -277,23 +277,23 @@ struct exh_cmd_s {
 #define HE_LINE(x) ((long)(x) >> 4)
 
 int
-he_open_buffer( /* char *name, char *path */ );
+he_open_buffer(char *name, char *path);
 
 int
-he_select_buffer( /* char *name */ );
+he_select_buffer(char *name);
 
 int
-he_alternate_buffer( /* void */ );
+he_alternate_buffer(void);
 
 int
-he_set_buffer_readonly( /* char *name */ );
+he_set_buffer_readonly(char *name);
   /* Return values:
    * -1: no buffer named `name'
    * 0:  ok
    */
 
 int
-he_buffer_readonly( /* char *name */ );
+he_buffer_readonly(char *name);
   /* Return values:
    * -1: no buffer named `name'
    * 0:  buffer is readwrite
@@ -301,7 +301,7 @@ he_buffer_readonly( /* char *name */ );
    */
 
 int
-he_buffer_modified( /* char *name */ );
+he_buffer_modified(char *name);
   /* Return values:
    * -1: no buffer named `name'
    * 0:  buffer saved
@@ -309,36 +309,36 @@ he_buffer_modified( /* char *name */ );
    */
 
 int
-he_close_buffer( /* char *name */ );
+he_close_buffer(char *name);
   /* Close the buffer named `name'. If `name == 0', the current buffer
    * is closed.  The return value is 0 if all goes well, 1 if the named
    * buffer doesn't exist and -1 if the `buffer_list' is empty.
    */
 
 void
-he_status_message( /* int verbose */ );
+he_status_message(int verbose);
   /* display name and size of the current buffer.  if `verbose' is set,
    * the current position is also displayed.
    */
 
 void
-he_select( /* struct he_s *hedit, long begin, long end */ );
+he_select(struct he_s *hedit, long begin, long end);
 
 int
-he_select_buffer_();
+he_select_buffer_(struct buffer_s *);
 
 void
-he_cancel_selection( /* struct he_s *hedit */ );
+he_cancel_selection(struct he_s *hedit);
 
 long
-he_search( /* struct he_s *, char *, char *, int, int, int, long,
-              char **, long *, long * */ );
+he_search(struct he_s *, char *, char *, int, int, int, long,
+              char **, long *, long *);
 
 void
-he_search_command( /* struct he_s *, char *, int */ );
+he_search_command(struct he_s *, char *, int);
 
 char *
-he_query_command( /* char *, char *, int */ );
+he_query_command(char *, char *, int);
 
 int
 #if USE_STDARG
@@ -348,13 +348,13 @@ he_query_yn( );
 #endif
 
 int
-he_mainloop( /* struct he_s *hedit */ );
+he_mainloop(struct he_s *hedit);
 
 int
-hexer( /* void */ );
+hexer(void);
 
-void             hexer_init( /* void */ );
-void             hexer_version();
+void             hexer_init(void);
+void             hexer_version(void);
 
 #endif
 

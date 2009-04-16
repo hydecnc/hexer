@@ -49,6 +49,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "util.h"
 #include "tio.h"
 
 #undef isoct
@@ -56,7 +57,7 @@
 #define isoct(x) ((x) >= '0' && (x) < '8')
 #define ishex(x) (isdigit(x) || (tolower(x) >= 'a' && tolower(x) <= 'f'))
 
-  int
+  static int
 util_oct(s, max_digits)
   /* read an octal number from `*s'.  at most `max_digits' are read.  the
    * return values is the octal number on success and -1 on error.
@@ -73,7 +74,7 @@ util_oct(s, max_digits)
 }
 /* util_oct */
 
-  int
+  static int
 util_dec(s, max_digits)
   /* read a decimal number from `*s'.  at most `max_digits' are read.  the
    * return values is the decimal number on success and -1 on error.
@@ -90,7 +91,7 @@ util_dec(s, max_digits)
 }
 /* util_dec */
 
-  int
+  static int
 util_hex(s, max_digits)
   /* read an hex number from `*s'.  at most `max_digits' are read.  the
    * return values is the hex number on success and -1 on error.
@@ -110,7 +111,7 @@ util_hex(s, max_digits)
 }
 /* util_hex */
 
-  int
+  static int
 util_escape(s, d)
   /* read an escape sequence from `*s' (without the escape character).
    * if `d' is non-zero, the result is written to `*d'.  the return value
@@ -157,7 +158,7 @@ util_escape(s, d)
 }
 /* util_escape */
 
-  int
+  static int
 util_translate(s, d)
   /* translate one character of the string `*s' and write it to `*d'.
    * C-style escape sequences in `*s' are translated to ASCII-codes in `*d'.

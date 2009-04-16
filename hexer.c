@@ -825,7 +825,7 @@ hexer_init()
       if (!*line) break;
       line[strlen(line) - 1] = 0; /* discard the trailing newline */
       if (*line && *line != '"')
-        exh_command(current_buffer->hedit, line, 0);
+        exh_command(current_buffer->hedit, line);
       /* the command might have quit the editor, so we gotta check */
       if (!current_buffer) {
         fprintf(stderr,

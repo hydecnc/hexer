@@ -44,10 +44,10 @@
 
 extern char	 *exh_initialize[];
 
-int		 exh_command( /* struct he_s *hedit, char *cmd, int *kcmd */ );
-char		**exh_completer( /* char *, char *, char *, int */ );
+int		 exh_command(struct he_s *hedit, char *cmd);
+char		**exh_completer(char *, char *, char *, int);
 
-char		*exh_skip_expression();
-char		*exh_skip_replace();
+char		*exh_skip_expression(char *, char);
+char		*exh_skip_replace(char *, char);
 
 #endif /* _EXH_H_ */

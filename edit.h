@@ -44,7 +44,7 @@
 
 extern Buffer	*kill_buffer;
 
-void		 he_scroll_up( /* struct he_s *, int */ );
-void		 he_scroll_down( /* struct he_s *, int */ );
+void		 he_scroll_up(struct he_s *, int);
+void		 he_scroll_down(struct he_s *, int);
 
 #endif /* _EDIT_H_ */

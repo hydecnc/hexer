@@ -91,7 +91,7 @@ char *exh_initialize[] = {
   0
 };
 
-  int
+  static int
 exh_shell_command(command, pager_f)
   char *command;    /* command to be executed by the shell specified by
                      * the "SHELL" environment variable.  the default shell
@@ -240,7 +240,7 @@ exit_exh_shell_command:
 }
 /* exh_shell_command */
 
-  int
+  static int
 exh_subshell()
   /* start a subshell session.
    */
@@ -346,7 +346,7 @@ exh_skip_replace(exp, separator)
 }
 /* exh_skip_replace */
 
-  char *
+  static char *
 exh_get_number(exp, number)
   char *exp;
   long *number;
@@ -402,7 +402,7 @@ exh_get_number(exp, number)
 }
 /* exh_get_number */
 
-  char *
+  static char *
 exh_get_address(hedit, exp, address)
   struct he_s *hedit;
   char *exp;

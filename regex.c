@@ -1795,7 +1795,7 @@ regex_list_(regex, count, indent, base)
 }
 /* regex_list_ */
 
-  void
+  static void
 regex_list(regex)
   unsigned long *regex;
 {
@@ -1803,8 +1803,8 @@ regex_list(regex)
 }
 /* regex_list */
 
-  void
-regex_interrupt()
+  static void
+regex_interrupt(void)
   /* interrupt whatever is currently done.  this function could be called
    * by the signal-handler for `SIGINT'.
    */

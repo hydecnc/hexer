@@ -46,6 +46,11 @@
 
 #include "config.h"
 
+#if USE_STDARG
+#include <stdarg.h>
+#else
+#include <varargs.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>

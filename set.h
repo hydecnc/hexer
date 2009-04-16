@@ -50,50 +50,50 @@ enum s_option_e { S_STRING = 1, S_INTEGER, S_BOOL };
 typedef void (*set_fn)();
 
 long
-s_get_option_integer( /* const char *option */ );
+s_get_option_integer(const char *option);
 
 char *
-s_get_option_string( /* const char *option */ );
+s_get_option_string(const char *option);
 
 int
-s_get_option_bool( /* const char *option */ );
+s_get_option_bool(const char *option);
 
 enum s_option_e
-s_get_type( /* const char *option */ );
+s_get_type(const char *option);
 
 char *
-s_get_option( /* const char *option */ );
+s_get_option(const char *option);
 
 int
-s_delete_option( /* const char *option */ );
+s_delete_option(const char *option);
 
 void
-s_set_option_string( /* const char *option, const char *value */ );
+s_set_option_string(const char *option, const char *value);
 
 void
-s_set_option_integer( /* const char *option, const long value */ );
+s_set_option_integer(const char *option, const long value);
 
 void
-s_set_option_bool( /* const char *option, const int value */ );
+s_set_option_bool(const char *option, const int value);
 
 void
-s_set_type( /* const char *option, const enum s_option_e type */ );
+s_set_type(const char *option, const enum s_option_e type);
 
 void
-s_set_option( /* const char *option, const char *value_string,
-                 int no_action */ );
+s_set_option(const char *option, const char *value_string,
+                 int no_action);
 
 void
-s_set_action( /* const char *option, set_fn action */ );
+s_set_action(const char *option, set_fn action);
 
 char **
-s_option_list( /* const char *prefix, int bool_only */ );
+s_option_list(const char *prefix, int bool_only);
 
 char **
-s_option_value_list( /* void */ );
+s_option_value_list(void);
 
 void
-s_clear_all( /* void */ );
+s_clear_all(void);
 
 #endif
 

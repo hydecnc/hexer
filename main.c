@@ -63,8 +63,8 @@
 #define HEXER_MAX_STARTUP_COMMANDS 256
 #endif
 
-#include "exh.h"
 #include "hexer.h"
+#include "exh.h"
 #include "readline.h"
 #include "regex.h"
 #include "signal.h"
@@ -189,7 +189,7 @@ process_args(argc, argv)
     hexer_init();
     if (startup_commands_n && current_buffer)
       for (i = 0; i < startup_commands_n; ++i) {
-        exh_command(current_buffer->hedit, startup_commands[i], 0, 0);
+        exh_command(current_buffer->hedit, startup_commands[i]);
         if (!current_buffer) break;
       }
     if (current_buffer) he_status_message(0);

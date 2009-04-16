@@ -54,19 +54,19 @@ extern int rx_special_nl;
 extern long rx_maxmatch;
 
   long
-regex_search( /* unisgned char *, long, long, int, char *, long * */ );
+regex_search(long *, long, long, long, int, char **, long *, long *);
 
   int
-regex_match( /* unisgned char *, long, int, char *, long * */ );
+regex_match(long *, long, char **, long *, long *);
 
   long *
-regex_compile( /* char *, char * */ );
+regex_compile(char *, char *);
 
   int
-regex_init( /* long (*)(char *, long), long (*)(long), long (*)() */ );
+regex_init(long (*)(char *, long), long (*)(long), long (*)());
 
   int
-regex_reset();
+regex_reset(void);
 
 #endif
 

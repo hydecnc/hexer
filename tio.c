@@ -165,6 +165,15 @@ typedef int sigtype_t;
 typedef void sigtype_t;
 #endif
 
+#ifdef SIGWINCH
+static sigtype_t	 sigwinch_handler(void);
+#endif
+#if 0
+static void		 tio_listcaps(void);
+#endif
+static void		 tio_reset_scrolling_region(void);
+static int		 tio_set_scrolling_region(int first, int last);
+
 #define T_REQ_MAX_CAPS 32
   /* The maximum length of a list of requirements.
    */
@@ -625,11 +634,6 @@ tio_warning_msg(fmt, va_alist)
 }
 /* tio_warning_msg */
 
-#ifdef SIGWINCH
-  static sigtype_t
-sigwinch_handler();
-#endif
-
   static char *
 tio_cap(id)
   const char *id;
@@ -644,8 +648,9 @@ tio_cap(id)
 }
 /* tio_cap */
 
-  void
-tio_listcaps()
+#if 0
+  static void
+tio_listcaps(void)
   /* Prints all capabilities found in termcap to stdout.
    */
 {
@@ -662,6 +667,7 @@ tio_listcaps()
   tio_flush();
 }
 /* tio_listcaps */
+#endif
 
 #if USE_STDARG
   static int
@@ -844,7 +850,7 @@ tio_init(prog)
   {
 #ifdef SV_INTERRUPT
     static struct sigvec vec;
-    vec.sv_handler = sigwinch_handler;
+    vec.sv_handler = (void (*)())sigwinch_handler;
     vec.sv_mask = 0;
     vec.sv_flags = SV_INTERRUPT;
     sigvec(SIGWINCH, &vec, 0);
@@ -1522,7 +1528,7 @@ tio_rel_move(lin, col)
 }
 /* tio_rel_move */
 
-  int
+  static int
 tio_set_scrolling_region(first, last)
   int first, last;
 {
@@ -1535,8 +1541,8 @@ tio_set_scrolling_region(first, last)
 }
 /* tio_set_scrolling_region */
 
-  void
-tio_reset_scrolling_region()
+  static void
+tio_reset_scrolling_region(void)
 {
   if (t_change_scroll) tio_command(t_change_scroll, 1, 0, hx_lines - 1);
 }
@@ -2077,7 +2083,7 @@ tio_printf(fmt, va_alist)
 
   int
 tio_vprintf(fmt, ap)
-  char *fmt;
+  const char *fmt;
   va_list ap;
   /* Similar to `printf()'.  `tio_printf()' understands the same @-commands
    * as `tio_display()'.  Note that @-commands in strings inserted via %s
@@ -2181,7 +2187,7 @@ tio_delete_character()
 
 #ifdef SIGWINCH
   static sigtype_t
-sigwinch_handler()
+sigwinch_handler(void)
   /* Signal handler for signal `SIGWINCH'.
    */
 {

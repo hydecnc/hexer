@@ -52,6 +52,7 @@
 #include <signal.h>
 
 #include "hexer.h"
+#include "signal.h"
 #include "tio.h"
 
 #if HAVE_SIGTYPE_INT
@@ -118,7 +119,7 @@ sigpipe_handler()
 #endif
 
   void
-setup_signal_handlers()
+setup_signal_handlers(void)
 {
   caught_sigint = 0;
 #ifdef SIGINT

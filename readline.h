@@ -54,7 +54,7 @@ extern int rl_redisplay;
 extern void (*rl_winch)( /* void */ );
 
 char *
-readline( /* char *prompt, char *default_val, int context */ );
+readline(char *prompt, char *default_val, int context);
 
 int
 keys_length();

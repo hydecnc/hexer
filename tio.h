@@ -102,7 +102,7 @@ extern int               hx_lines;
 extern char             *terminal_name;
 extern volatile int     *tio_interrupt;
 extern int               tio_tite_f;
-extern void             (*tio_winch)( /* void */ );
+extern void             (*tio_winch)(void);
 extern int               window_changed;
 
 extern struct t_keynames_s {
@@ -113,29 +113,29 @@ extern struct t_keynames_s {
 #if USE_STDARG
 void (*error_msg)( const char *, ... );
 #else
-void (*error_msg)( /* const char *, ... */ );
+void (*error_msg)(const char *, ...);
 #endif
   /* Pointer to the error message function.
    */
 
   int
-tio_isprint( /* int x */ );
+tio_isprint(int x);
 
   int
 #if USE_STDARG
 nprintf( const char *fmt, ... );
 #else
-nprintf( /* const char *fmt, ... */ );
+nprintf(const char *fmt, ...);
 #endif
 
   int
-vnprintf( /* const char *fmt, va_list ap */ );
+vnprintf(const char *fmt, va_list ap);
   /* Returns the number of output characters a call to a printf-like function
    * would pruduce.
    */
 
   int
-tio_init( /* char *program_name */ );
+tio_init(char *program_name);
   /* Initialize.  This function should be called before any other
    * `tio_*'-function.  `program_name' should be the name of the application.
    */
@@ -145,17 +145,17 @@ tio_init( /* char *program_name */ );
    */
 
   void
-tio_start_application( /* void */ );
+tio_start_application(void);
   /* Send the start-application string to the terminal.
    */
 
   void
-tio_end_application( /* void */ );
+tio_end_application(void);
   /* Send the end-application string to the terminal.
    */
 
   void
-tio_keypad( /* int on */ );
+tio_keypad(int on);
   /* Set the keypad mode.
    * on=0: numeric keypad.
    * on=1: application keypad.  Select this mode if you want to use the
@@ -163,10 +163,10 @@ tio_keypad( /* int on */ );
    */
 
   int
-tio_getch( /* void */ );
+tio_getch(void);
 
   int
-tio_get( /* void */ );
+tio_get(void);
   /* Read a character from the keyboard.  `tio_getch()' waits for input,
    * `tio_get()' returns `HXKEY_NONE' (0) if no input is available.
    * The functions return the following special keys:
@@ -204,45 +204,45 @@ tio_get( /* void */ );
    */
 
   int
-tio_tget( /* int timeout */ );
+tio_tget(int timeout);
   /* Like `tio_get()', but waits `timeout' tenths of a second for input.
    * `tio_tget()' returns `HXKEY_NONE' (0) if nothing has been read.
    */
 
   int
-tio_ungetch( /* int x */ );
+tio_ungetch(int x);
   /* Put the character `x' back into the input stream.  At most
    * `IO_MAX_UNGET' characters can be ungetch.  The return value is `x'
    * or -1 on error.
    */
 
   int
-tio_ungets( /* int *x */ );
+tio_ungets(int *x);
   /* Put the character string `x' back into the input stream using
    * `tio_ungetch()'.  The return value is 0 and -1 on error.
    */
 
   int
-tio_readmore( /* void */ );
+tio_readmore(void);
   /* Returns a non-zero value iff there are pending input characters.
    * NOTE:  Keys put into the unput-queue (via `tio_ungetch()' or
    *   `tio_ungets()') are not counted.
    */
 
   int
-tio_getmore( /* void */ );
+tio_getmore(void);
   /* Returns a non-zero value iff there are any keys in the unget-queue.
    */
 
   int
-tio_testkey( /* int key */ );
+tio_testkey(int key);
   /* Returns 1, if a termcap entry for the requested key exists, else 0.
    * The function return always 1 for the keys `HXKEY_BACKSPACE', `HXKEY_TAB',
    * `HXKEY_RETURN', `HXKEY_ESCAPE', `HXKEY_DELETE', `HXKEY_NONE' and `HXKEY_ERROR'.
    */
 
   char *
-tio_keyname( /* int key */ );
+tio_keyname(int key);
   /* Returns the name of the key `key'.  If `key' is a printable character,
    * it is returned as a string.  If `key' is a special key, the name of
    * that key is returned.  If `key' is unknown and greater than 0xff "??"
@@ -250,7 +250,7 @@ tio_keyname( /* int key */ );
    */
 
   char *
-tio_keyrep( /* int key */ );
+tio_keyrep(int key);
   /* Returs a string representation of `key'.  If `key' is not a printable
    * character an escape sequence is generated:
    *   key > 0xff      if key is a known special key, a unique sequence
@@ -263,13 +263,13 @@ tio_keyrep( /* int key */ );
    */
 
   char *
-tio_vkeyrep( /* int key */ );
+tio_vkeyrep(int key);
   /* Similar to `tio_keyrep', but returns a long string representation
    * whenever available.
    */
 
   char *
-tio_keyscan( /* int *key, char *s, int mode */ );
+tio_keyscan(int *key, char *s, int mode);
   /* Check if `s' is a sting representation of a key.  on success,
    * the keycode is written to `*key' and a pointer to the first
    * character after the srep is returned, else `*key' is set to 0
@@ -280,52 +280,52 @@ tio_keyscan( /* int *key, char *s, int mode */ );
    */
 
   int
-tio_echo( /* int on */ );
+tio_echo(int on);
   /* on=1:  characters are echoed as they are typed.
    * on=0:  characters are not echoed.
    * RETURN VALUE:  Previous echo-state.
    */
 
   void
-tio_return( /* void */ );
+tio_return(void);
   /* Move cursor to column 0.
    */
 
   void
-tio_home( /* void */ );
+tio_home(void);
   /* Cursor home.
    */
 
   void
-tio_goto_line( /* int line */ );
+tio_goto_line(int line);
   /* Move cursor to line `line'.
    */
 
   void
-tio_goto_column( /* int line */ );
+tio_goto_column(int line);
   /* Move cursor to column `column'.
    */
 
   void
-tio_last_line( /* void */ );
+tio_last_line(void);
   /* Move cursor to the last line, column 0.
    */
 
   int
-tio_scroll_up( /* int count, int first, int last */ );
+tio_scroll_up(int count, int first, int last);
   /* Scroll up `count' lines; insert `count' lines at the bottom of the
    * screen.
    * The function returns -1 if the terminal can't scroll backwards.
    */
 
   int
-tio_scroll_down( /* int count, int first, int last */ );
+tio_scroll_down(int count, int first, int last);
   /* Scroll down `count' lines; insert `count' lines at the top of the screen.
    * The function returns -1 if the terminal can't scroll backwards.
    */
 
   void
-tio_display( /* char *text, int indent */ );
+tio_display(char *text, int indent);
   /* Send the string `text' to the terminal.  The string may contain the
    * following `@*'-commands:
    *
@@ -357,7 +357,7 @@ tio_display( /* char *text, int indent */ );
    */
 
   void
-tio_message( /* char **message, int indent */ );
+tio_message(char **message, int indent);
   /* displays the array of strings `message' via `tio_display()' providing
    * a simple pager.  this function assumes, that every string in
    * `message' displays as a single line.
@@ -371,7 +371,7 @@ tio_printf( );
 #endif
 
   int
-tio_vprintf( /* const char *fmt, va_list */ );
+tio_vprintf(const char *fmt, va_list);
   /* Similar to `printf()'.  `tio_printf()' understands the same @-commands
    * as `tio_display()'.  Note that @-commands in strings inserted via %s
    * are executed.  Use `tio_raw_printf()' if you don't wan't @-commands to
@@ -382,99 +382,99 @@ tio_vprintf( /* const char *fmt, va_list */ );
 #if USE_STDARG
 tio_raw_printf( const char *fmt, ... );
 #else
-tio_raw_printf( /* const char *fmt, ... */ );
+tio_raw_printf(const char *fmt, ...);
 #endif
 
   int
-tio_raw_vprintf( /* const char *fmt, va_list */ );
+tio_raw_vprintf(const char *fmt, va_list);
   /* Like `printf()'.  No @-commands.
    */
 
   int
-tio_puts( /* char *s */ );
+tio_puts(char *s);
   /* Like `fputs(s, stdout)'.
    */
 
   int
-tio_putchar( /* int x */ );
+tio_putchar(int x);
   /* Like `putchar(x)'.
    */
 
   void
-tio_up( /* int count */ );
+tio_up(int count);
   /* Move cursor up `count' lines.
    */
 
   void
-tio_down( /* int count */ );
+tio_down(int count);
   /* Move cursor down `count' lines.
    */
 
   void
-tio_left( /* int count */ );
+tio_left(int count);
   /* Move cursor left `count' lines.
    */
   void
-tio_right( /* int count */ );
+tio_right(int count);
   /* Move cursor right `count' lines.
    */
 
   void
-tio_move( /* int line, int column */ );
+tio_move(int line, int column);
   /* Move the cursor to position `line'/`column'.
    */
 
   void
-tio_rel_move( /* int line, int column */ );
+tio_rel_move(int line, int column);
   /* Move the cursor relative to the cursor position.
    */
 
   void
-tio_last_line( /* void */ );
+tio_last_line(void);
   /* Move the cursor to the last line, first column.
    */
 
   void
-tio_clear( /* void */ );
+tio_clear(void);
   /* Clear screen.
    */
 
   void
-tio_clear_to_eol( /* void */ );
+tio_clear_to_eol(void);
   /* Clear to end of line.
    */
 
   void
-tio_bell( /* void */ );
+tio_bell(void);
 
   void
-tio_visible_bell( /* void */ );
+tio_visible_bell(void);
 
   void
-tio_underscore( /* void */ );
+tio_underscore(void);
 
   void
-tio_underscore_off( /* void */ );
+tio_underscore_off(void);
 
   void
-tio_bold( /* void */ );
+tio_bold(void);
 
   void
-tio_blink( /* void */ );
+tio_blink(void);
 
   void
-tio_half_bright( /* void */ );
+tio_half_bright(void);
 
   void
-tio_reverse( /* void */ );
+tio_reverse(void);
 
   void
-tio_normal( /* void */ );
+tio_normal(void);
   /* End all standout modes.
    */
 
   void
-tio_set_cursor( /* int mode */ );
+tio_set_cursor(int mode);
   /* Set the visibility of the cursor.
    * `mode == 0':  invisible.
    * `mode == 1':  normal.
@@ -482,45 +482,45 @@ tio_set_cursor( /* int mode */ );
    */
 
   int
-tio_have_color( /* void */ );
+tio_have_color(void);
   /* returns a non-zero value if color is available, 0 else.
    */
 
   void
-tio_set_colors( /* int fg_color, int bg_color */ );
+tio_set_colors(int fg_color, int bg_color);
 
   void
-tio_set_fg( /* int color */ );
+tio_set_fg(int color);
   /* set the foreground color to `color'.
    */
 
   void
-tio_set_bg( /* int color */ );
+tio_set_bg(int color);
   /* set the background color to `color'.
    */
 
   int
-tio_get_fg( /* void */ );
+tio_get_fg(void);
   /* return the current foreground color.
    */
 
   int
-tio_get_bg( /* void */ );
+tio_get_bg(void);
   /* return the current background color.
    */
 
   int
-tio_insert_character( /* char x */ );
+tio_insert_character(char x);
   /* Insert the character `x' at the current position.
    */
 
   int
-tio_delete_character( /* void */ );
+tio_delete_character(void);
   /* Delete the character under the cursor.
    */
 
   int
-tio_readwait( /* int timeout */ );
+tio_readwait(int timeout);
   /* Wait until input is availabe on `stdin' using `select()'.
    * The `timeout' is measured in microseconds.  If `timeout' is a negative
    * value, `tio_readwait()' blocks until input is availabe.  If
@@ -535,24 +535,24 @@ tio_readwait( /* int timeout */ );
    */
 
   int
-tio_raw_readwait( /* int timeout */ );
+tio_raw_readwait(int timeout);
   /* Similar to `tio_readwait()', but ignores the unread buffer.
    */
 
   int
-tio_getwait( /* int timeout */ );
+tio_getwait(int timeout);
   /* Similar to `tio_readwait()', but returns also if the unget buffer is
    * not empty.
    */
 
   void
-tio_reset( /* void */ );
+tio_reset(void);
 
   void
-tio_suspend( /* void */ );
+tio_suspend(void);
 
   void
-tio_restart( /* void */ );
+tio_restart(void);
 
 #ifndef TIO_MAP
 #define TIO_MAP 0
@@ -561,16 +561,16 @@ tio_restart( /* void */ );
 #if TIO_MAP
 
   int
-tio_mgetch( /* int map, char *map_string */ );
+tio_mgetch(int map, char *map_string);
 
   int
-tio_map( /* int map, int *from, int *to */ );
+tio_map(int map, char *from, char *to, int special);
 
   int
-tio_unmap( /* int map, int *from */ );
+tio_unmap(int map, char *from, int special);
 
   char **
-tio_maplist( /* int map */ );
+tio_maplist(int map);
 
 #endif
 #endif

@@ -39,11 +39,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SIGNAL_H_
-#define _SIGNAL_H_
+#ifndef _HEXER_SIGNAL_H_
+#define _HEXER_SIGNAL_H_
 
 extern volatile int	 caught_sigint;
 
-int		 setup_signal_handlers();
+void		 setup_signal_handlers(void);
 
 #endif /* _SIGNAL_H_ */
