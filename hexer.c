@@ -50,11 +50,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <assert.h>
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 
 #include <sys/types.h>
 #include <sys/param.h>

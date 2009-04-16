@@ -55,12 +55,6 @@
 #include <termio.h>
 #endif
 
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-
 static char *t_termcap_entry;
 static char t_PC = 0;  /* padding character */
 static int t_speed;  /* line speed, measured in bps */

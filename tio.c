@@ -63,12 +63,6 @@
 #include <assert.h>
 #include <memory.h>
 
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-
 /* UNIX
  */
 #include <sys/types.h>

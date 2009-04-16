@@ -58,19 +58,9 @@
 #include <float.h>
 #endif
 #include <limits.h>
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-#if HAVE_ALLOCA
-#if NEED_ALLOCA_H
-#include <alloca.h>
-#endif
-#else
-char *alloca();
-#endif
 
+#include "buffer.h"
+#include "hexer.h"
 #include "calc.h"
 #include "readline.h"
 #include "tio.h"

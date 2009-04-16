@@ -51,13 +51,8 @@
 #include <assert.h>
 #include <ctype.h>
 
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-
-#include "defs.h"
+#include "buffer.h"
+#include "hexer.h"
 #include "set.h"
 
 struct option_s {

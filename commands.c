@@ -54,13 +54,6 @@
 #include <sys/wait.h>
 #include <sys/param.h>
 #include <stdlib.h>
-#if HAVE_ALLOCA
-#if NEED_ALLOCA_H
-#include <alloca.h>
-#endif
-#else
-char *alloca();
-#endif
 
 #include "buffer.h"
 #include "hexer.h"

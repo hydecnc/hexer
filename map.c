@@ -46,23 +46,12 @@
 
 #include "config.h"
 
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#if HAVE_ALLOCA
-#if NEED_ALLOCA_H
-#include <alloca.h>
-#endif
-#else
-char *alloca();
-#endif
 
-#include "defs.h"
+#include "buffer.h"
+#include "hexer.h"
 
 #undef TIO_MAP
 #define TIO_MAP 1

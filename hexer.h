@@ -54,6 +54,13 @@
 #else
 #include <varargs.h>
 #endif
+#if HAVE_ALLOCA
+#if NEED_ALLOCA_H
+#include <alloca.h>
+#endif
+#else
+char *alloca();
+#endif
 
 #define TIO_MAP 1
 

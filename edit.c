@@ -53,12 +53,6 @@
 #include <curses.h>
 #include <term.h>
 
-#if USE_STDARG
-#include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
-
 #include "buffer.h"
 #include "hexer.h"
 #include "calc.h"
