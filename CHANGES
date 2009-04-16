@@ -30,7 +30,7 @@ Change log for hexer, the multi-view binary editor
 	  - no need to ignore the result of "rm -f" :)
 	  - use CFLAGS when building bin2c
 	  - do not try to follow dependencies for termlib.c
-	  - simplify the "install" target
+	  - simplify the "install" target and honor DESTDIR if set
 	- rename the KEY_* constants to HXKEY_* to avoid conflicts with
 	  the curses header files
 	- add an "hx_" prefix to the "lines", "columns", and
