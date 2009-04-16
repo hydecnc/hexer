@@ -115,7 +115,7 @@ The editor reads its startup commands from the file
 .B ~/.hexerrc
 (another startup file may be specified by setting the environment variable
 .BR HEXERRC ).
-Empty lines and lines starting with a `"'-character (double quote) are ignored.
+Empty lines and lines starting with a `"'\(hycharacter (double quote) are ignored.
 It is not possible to have a command and a comment in the same line.
 .\"
 .\" --- Section -- EDITOR COMMANDS --------------------------------------------
@@ -941,13 +941,13 @@ the newline character you can set the
 option using the
 .BR :set -command.
 .br
-To enter a special character, you can use the standard C `\\'-escape
-sequences.  To enter a character using its octal code, use a `\\o'-prefix
+To enter a special character, you can use the standard C `\\'\(hyescape
+sequences.  To enter a character using its octal code, use a `\\o'\(hyprefix
 followed by up to three octal digits.
 (C-style octal escapes are not supported, because `\\0', ... `\\9' are
 interpreted as back-references to subexpressions of the RE.)
 To enter a character using it's hex code, type a `\\x'-prefix followed
-by up to two hex digits; decimal codes can be entered using a `\\d'-prefix
+by up to two hex digits; decimal codes can be entered using a `\\d'\(hyprefix
 followed by up to three decimal digits.  It is possible to enter strings
 of codes by doubling the base specifier, e.g. "\\xxfe ff 5a 7e" or
 "\\oo276 277 132 176".  Note that such a string is treated as an atom, i.e.
@@ -956,19 +956,19 @@ the RE "\\xxff fe*" matches any number (<
 of repetitions of
 .BR "ff fe" .
 .br
-It is possible to use all kinds of character `\\'-escapes (escapes
-representing a single character) within `[]'-ranges.  Within a range,
+It is possible to use all kinds of character `\\'\(hyescapes (escapes
+representing a single character) within `[]'\(hyranges.  Within a range,
 the `o' selecting an octal base for the escape may be omitted, since
 back-references within a range don't make sense.  When specifying a
-minimum and/or maximum number of repetitions using the `\\{,}'-operator,
+minimum and/or maximum number of repetitions using the `\\{,}'\(hyoperator,
 the numbers may be given in decimal (no prefix), octal (`0'-prefix) or
 hex (`0x'-prefix).  If no maximum number is specified and the operand is
 not a simple expression, at most
 .B maxmatch
 matches will be found.
-./"
-./" --- Section -- CALCULATOR -------------------------------------------------
-./"
+.\"
+.\" --- Section -- CALCULATOR -------------------------------------------------
+.\"
 .SH CALCULATOR
 .B Hexer
 provides a simple calculator
