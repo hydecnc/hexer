@@ -122,19 +122,6 @@ void (*error_msg)(const char *, ...);
 tio_isprint(int x);
 
   int
-#if USE_STDARG
-nprintf( const char *fmt, ... );
-#else
-nprintf(const char *fmt, ...);
-#endif
-
-  int
-vnprintf(const char *fmt, va_list ap);
-  /* Returns the number of output characters a call to a printf-like function
-   * would pruduce.
-   */
-
-  int
 tio_init(char *program_name);
   /* Initialize.  This function should be called before any other
    * `tio_*'-function.  `program_name' should be the name of the application.

@@ -100,6 +100,10 @@
 
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
+#if !HAVE_VASPRINTF
+static char printfbuf[2048];
+#endif
+
 volatile int *tio_interrupt;
 
   static int
@@ -540,45 +544,6 @@ tio_isprint(x)
   return 1;
 }
 /* tio_isprint */
-
-#if USE_STDARG
-  int
-nprintf(const char *fmt, ...)
-#else
-  int
-nprintf(fmt, va_alist)
-  const char *fmt;
-  va_dcl
-#endif
-  /* Returns the number of output characters a call to a printf-like function
-   * would pruduce.
-   */
-{
-  va_list ap;
-  int length;
-
-#if USE_STDARG
-  va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
-  length = vnprintf(fmt, ap);
-  va_end(ap);
-  return length;
-}
-/* nprintf */
-
-  int
-vnprintf(fmt, ap)
-  const char *fmt;
-  va_list ap;
-{
-  static FILE *null = 0;
-
-  if (!null) if (!(null = fopen("/dev/null", "w"))) return -1;
-  return vfprintf(null, fmt, ap);
-}
-/* vnprintf */
 
 #if USE_STDARG
   static void
@@ -2086,13 +2051,20 @@ tio_vprintf(fmt, ap)
    */
 {
   char *s;
-  int rval, len;
+  int rval;
 
-  len = vnprintf(fmt, ap);
-  rval = vsprintf(s = (char *)malloc(len + 1), fmt, ap);
-  s[len] = 0;
+#if HAVE_VASPRINTF
+  rval = vasprintf(&s, fmt, ap);
+#else
+  rval = vsnprintf(printfbuf, sizeof(printfbuf), fmt, ap);
+  s = printfbuf;
+#endif
+  if (rval == -1)
+    return rval;
   tio_display(s, 0);
+#if HAVE_VASPRINTF
   free((char *)s);
+#endif
   return rval;
 }
 /* tio_vprintf */
@@ -2129,13 +2101,20 @@ tio_raw_vprintf(fmt, ap)
    */
 {
   char *s;
-  int rval, len;
+  int rval;
 
-  len = vnprintf(fmt, ap);
-  rval = vsprintf(s = (char *)malloc(len + 1), fmt, ap);
-  s[len] = 0;
+#if HAVE_VASPRINTF
+  rval = vasprintf(&s, fmt, ap);
+#else
+  rval = snprintf(printfbuf, sizeof(printfbuf), fmt, ap);
+  s = printfbuf;
+#endif
+  if (rval == -1)
+    return rval;
   tio_puts(s);
+#if HAVE_VASPRINTF
   free((char *)s);
+#endif
   return rval;
 }
 /* tio_raw_vprintf */

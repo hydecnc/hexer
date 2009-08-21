@@ -11,6 +11,7 @@
 #define HAVE_ALLOCA          0
 #define NEED_ALLOCA_H        0
 #define HAVE_STRERROR        0
+#define HAVE_VASPRINTF       0
 
 #define USE_STDARG           0
 
