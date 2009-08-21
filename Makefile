@@ -13,17 +13,17 @@ MANDIR ?= $(PREFIX)/man/man1
 #  (It's probably save to leave the following lines unchanged.)
 #
 #  Use the following two lines, if you want to use the termcap-library.
-#TERMLIB ?=
-#TERMCAP ?= -ltermcap
+#LTERMLIB ?=
+#LTERMCAP ?= -ltermcap
 #
 #  Uncomment these if you want to use curses.
-TERMLIB ?=
-TERMCAP ?= -lcurses
+LTERMLIB ?=
+LTERMCAP ?= -lcurses
 #
 #  Uncomment the following two lines if you want to use the termlib code
 #  supplied with the package (not recommended).
-#TERMLIB = termlib.o
-#TERMCAP =
+#LTERMLIB = termlib.o
+#LTERMCAP =
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
@@ -34,13 +34,13 @@ CC ?= cc
 CFLAGS ?= -O
 CFLAGS += $(DEFINES)
 LDFLAGS ?=
-LDLIBS = $(TERMCAP) -lm
+LDLIBS = $(LTERMCAP) -lm
 #
 #  Uncomment the following lines if you want to use the GNU compiler.
 #CC = gcc
 #CFLAGS = -O6 $(DEFINES)
 #LDFALGS =
-#LDLIBS = $(TERMCAP)
+#LDLIBS = $(LTERMCAP)
 
 #  -- Which installer? --
 INSTALL ?= install
@@ -61,7 +61,7 @@ CTAGS = ctags -tawf tags
 
 OBJECTS = buffer.o tio.o edit.o main.o hexer.o readline.o regex.o port.o \
           exh.o set.o map.o signal.o util.o commands.o helptext.o calc.o \
-	  $(TERMLIB)
+	  $(LTERMLIB)
 
 all: config.check $(HEXER)
 

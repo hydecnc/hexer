@@ -42,6 +42,10 @@ Change log for hexer, the multi-view binary editor
 	- remove some hyphenation in the help text
 	- switch the Makefile to use curses by default
 	- link with the math library for pow(3) used in the calculator
+	- rename the TERMCAP and TERMLIB Makefile variables to LTERMCAP
+	  and LTERMLIB; the TERMCAP environment variable is actually
+	  defined in some environments, and it is definitely not
+	  a linker library specification!
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>
