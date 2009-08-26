@@ -59,7 +59,7 @@
 #include "util.h"
 
 #ifndef USE_PROTOTYPES
-#define USE_PROTOTYPES 0
+#define USE_PROTOTYPES 1
 #endif
 
 #define LINE_MAXLEN 8192        /* maximum length of the line */
@@ -136,7 +136,7 @@ int rl_redisplay;
   /* `readline()' will this flag to 1 if the screen has to be rebuilt.
    */
 
-void (*rl_winch)( /* void */ ) = 0;
+void (*rl_winch)(void) = 0;
   /* function to call in case of a changed window size
    */
 
@@ -157,8 +157,7 @@ static int rl_history_c[RL_MAX_CONTEXTS];
    */
 
   static int
-rl_history_init(max)
-  int max;
+rl_history_init(int max)
   /* initialize readline-history.  set the maximum number of lines to
    * `max' (`rl_history_max').
    */
@@ -189,8 +188,7 @@ static int rl_current_context;  /* number of the current context */
 static int rl_index;            /* index of the current line */
 
   static void
-rl_history_add(line)
-  struct rl_line_s line;
+rl_history_add(struct rl_line_s line)
   /* add the line `line' to the history of the current context.
    */
 {
@@ -215,8 +213,7 @@ rl_history_add(line)
 /* rl_history_add */
 
   static void
-rl_history_reset(context)
-  int context;
+rl_history_reset(int context)
   /* set the current context `rl_current_context' to `context'.
    */
 {
@@ -226,7 +223,7 @@ rl_history_reset(context)
 /* rl_history_reset */
 
   static struct rl_line_s *
-rl_history_up()
+rl_history_up(void)
   /* move up one line in the history of the current context.
    * return a pointer to that line.
    */
@@ -240,7 +237,7 @@ rl_history_up()
 /* rl_history_up */
 
   static struct rl_line_s *
-rl_history_down()
+rl_history_down(void)
   /* move down one line in the history of the current context.  
    * return a pointer to that line.
    */
@@ -256,8 +253,7 @@ rl_history_down()
 /* rl_history_down */
 
   static void
-rl_history_set(line)
-  struct rl_line_s line;
+rl_history_set(struct rl_line_s line)
   /* set the current history entry of the current context to `line'.
    */
 {
@@ -273,9 +269,7 @@ rl_history_set(line)
  */
 
   static int
-rl_query_yn(prompt, dfl)
-  char *prompt;
-  int dfl;
+rl_query_yn(char *prompt, int dfl)
   /* query the user with a y/n-requester.  `prompt' is the query-prompt.
    * `dfl' is the default answer offered to the user.  the value of `dfl'
    * means:
@@ -340,7 +334,7 @@ exit_rl_query_yn:
 /* rl_query_yn */
 
   static int
-rl_get_position()
+rl_get_position(void)
   /* return the position of the cursor in `rl.line'.
    */
 {
@@ -356,7 +350,7 @@ rl_get_position()
 /* rl_get_position */
 
   static int
-rl_get_vposition()
+rl_get_vposition(void)
   /* return the position of the cursor in `rl.vline'.
    */
 {
@@ -392,8 +386,7 @@ rl_get_vposition()
 /* rl_get_position */
 
   static int
-rl_get_length(rl)
-  struct rl_line_s *rl;
+rl_get_length(struct rl_line_s *rl)
   /* return the number of logical characters in `rl->line'.  escape sequences
    * are counted as a single character.
    */
@@ -408,8 +401,7 @@ rl_get_length(rl)
 /* rl_get_length */
 
   static char *
-rl_make_vline_(rl)
-  struct rl_line_s *rl;
+rl_make_vline_(struct rl_line_s *rl)
   /* update the visible line `rl->vline' from `rl->line'.
    * the return value is `rl->vline'.
    */
@@ -450,8 +442,7 @@ rl_make_vline_(rl)
 /* rl_make_vline_ */
 
   static int
-rl_get_vlength(rl)
-  struct rl_line_s *rl;
+rl_get_vlength(struct rl_line_s *rl)
   /* return the number of  characters in `rl->vline'.
    */
 {
@@ -461,7 +452,7 @@ rl_get_vlength(rl)
 /* rl_get_vlength */
 
   static char *
-rl_make_vline()
+rl_make_vline(void)
   /* update the visible line `rl.vline' from `rl.line'.
    * the return value is `rl.vline'.
    */
@@ -471,8 +462,7 @@ rl_make_vline()
 /* rl_display_line */
 
   static int
-rl_display_line(clear_to_eol)
-  int clear_to_eol;
+rl_display_line(int clear_to_eol)
 {
   char line[1024];
 
@@ -497,8 +487,7 @@ rl_display_line(clear_to_eol)
 /* rl_display_line */
 
   static int
-rl_insert(x)
-  int x;
+rl_insert(int x)
 {
   int i;
   int last_col;
@@ -578,8 +567,7 @@ rl_insert(x)
 /* rl_insert */
 
   static int
-rl_delete(under_cursor)
-  int under_cursor;
+rl_delete(int under_cursor)
 {
   int i;
   int last_col;
@@ -703,7 +691,7 @@ rl_delete(under_cursor)
 /* rl_delete */
 
   static int
-rl_ck()
+rl_ck(void)
   /* clear all up to the end of line.
    */
 {
@@ -718,7 +706,7 @@ rl_ck()
 /* rl_ck */
 
   static int
-rl_cu()
+rl_cu(void)
   /* clear all up to the beginning of the line.
    */
 {
@@ -738,7 +726,7 @@ rl_cu()
 /* rl_cu */
 
   static int
-rl_begin()
+rl_begin(void)
 {
   rl_position = 0;
   if (rl_offset) {
@@ -751,7 +739,7 @@ rl_begin()
 /* rl_begin */
 
   static int
-rl_end()
+rl_end(void)
 {
   int length;
   int vposition;
@@ -769,7 +757,7 @@ rl_end()
 }
 /* rl_end */
   static int
-rl_left()
+rl_left(void)
 {
   int last_col;
   int position;
@@ -827,7 +815,7 @@ rl_left()
 /* rl_left */
 
   static int
-rl_right()
+rl_right(void)
 {
   int last_col;
   int append = 0;
@@ -884,9 +872,7 @@ rl_right()
 /* rl_right */ 
 
   static int
-rl_complete(context, again)
-  int context;
-  int again;
+rl_complete(int context, int again)
 {
   char **list;
   char prefix[1024];
@@ -1022,7 +1008,7 @@ dont_list:
 /* rl_complete */
 
   static void
-rl_verbatim()
+rl_verbatim(void)
 {
   int key;
   int position = rl_get_position();

@@ -107,8 +107,7 @@ static char printfbuf[2048];
 volatile int *tio_interrupt;
 
   static int
-outc(c)
-  int c;
+outc(int c)
 { 
   putc(c, stdout);
   return c;
@@ -164,7 +163,7 @@ typedef void sigtype_t;
 #endif
 
 #ifdef SIGWINCH
-static sigtype_t	 sigwinch_handler(void);
+static sigtype_t	 sigwinch_handler(int);
 #endif
 #if 0
 static void		 tio_listcaps(void);
@@ -196,7 +195,7 @@ static void tio_warning_msg( /* const char *fmt, ... */ );
 void (*error_msg)( /* const char *, ... */ ) = tio_error_msg;
 void (*warning_msg)( /* const char *, ... */ ) = tio_warning_msg;
 #endif
-void (*tio_winch)( /* void */ );
+void (*tio_winch)(void);
 
 int hx_lines; /* Number of lines. */
 int hx_columns; /* Number of columns. */
@@ -594,8 +593,7 @@ tio_warning_msg(fmt, va_alist)
 /* tio_warning_msg */
 
   static char *
-tio_cap(id)
-  const char *id;
+tio_cap(const char *id)
   /* Returns the string for capability `id'.  This function woks only
    * for capabilities that have already been read from the termcap entry.
    */
@@ -809,7 +807,7 @@ tio_init(prog)
   {
 #ifdef SV_INTERRUPT
     static struct sigvec vec;
-    vec.sv_handler = (void (*)())sigwinch_handler;
+    vec.sv_handler = (void (*)(int))sigwinch_handler;
     vec.sv_mask = 0;
     vec.sv_flags = SV_INTERRUPT;
     sigvec(SIGWINCH, &vec, 0);
@@ -977,9 +975,7 @@ tio_keypad(on)
  * are called by `tio_getch_()'.
  */
   static long
-tio_read(buf, count)
-  char *buf;
-  long count;
+tio_read(char *buf, long count)
 {
   long i = count, j;
 
@@ -995,9 +991,7 @@ tio_read(buf, count)
 /* tio_read */
 
   static void
-tio_unread(buf, count)
-  char *buf;
-  long count;
+tio_unread(char *buf, long count)
 {
   while (count--) tio_unread_buffer[tio_unread_count++] = buf[count];
 }
@@ -1018,7 +1012,7 @@ tio_getmore()
 /* tio_getmore */
 
   static int
-tio_getch_()
+tio_getch_(void)
   /* Read a character or keypad key from the keyboard.  Keypad keys
    * (like arrow keys, function keys, ...) are recognized only if the
    * terminal is in keypad transmit mode.  (Use `tio_keypad()' to set or
@@ -2160,7 +2154,7 @@ tio_delete_character()
 
 #ifdef SIGWINCH
   static sigtype_t
-sigwinch_handler(void)
+sigwinch_handler(int sig)
   /* Signal handler for signal `SIGWINCH'.
    */
 {

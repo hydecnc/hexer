@@ -75,8 +75,7 @@
 int he_map_special;
 
   static void
-press_any_key(hedit)
-  struct he_s *hedit;
+press_any_key(struct he_s *hedit)
 {
   tio_printf("@Ar press any key @~@r");
   tio_getch();
@@ -94,9 +93,7 @@ press_any_key(hedit)
  */
 
   static char *
-exh_skipcmd(cmd, dest)
-  char *cmd;
-  char *dest;
+exh_skipcmd(char *cmd, char *dest)
   /* read `cmd' up to the next semicolon.  `\;' escapes the semicolon.
    * The return value is the character following the first occurence of an
    * unmasked semicolon or 0 if no semicolon was found or the first unmasked
@@ -119,10 +116,7 @@ exh_skipcmd(cmd, dest)
 /* exh_skipcmd */
 
   static char *
-exh_map(hedit, args, map)
-  struct he_s *hedit;
-  char *args;
-  int map;
+exh_map(struct he_s *hedit, char *args, int map)
 {
   char *from, *to;
   char *p, *skip;
@@ -154,10 +148,7 @@ exh_map(hedit, args, map)
 /* exh_map */
 
   static char *
-exh_unmap(hedit, args, map)
-  struct he_s *hedit;
-  char *args;
-  int map;
+exh_unmap(struct he_s *hedit, char *args, int map)
   /* ARGSUSED */
 {
   char *from;
@@ -177,11 +168,7 @@ exh_unmap(hedit, args, map)
 /* exh_unmap */
 
   static char *
-exh_save_buffer(hedit, name, begin, end, error)
-  struct he_s *hedit;
-  char *name;
-  long begin, end;
-  int *error;
+exh_save_buffer(struct he_s *hedit, char *name, long begin, long end, int *error)
 {
   struct buffer_s *i;
   char *p;
@@ -237,11 +224,7 @@ exh_save_buffer(hedit, name, begin, end, error)
 /* exh_save_buffer */
 
   static char *
-exh_write(hedit, file, begin, end, error)
-  struct he_s *hedit;
-  char *file;
-  long begin, end;
-  int *error;
+exh_write(struct he_s *hedit, char *file, long begin, long end, int *error)
 {
   char *p;
   char *skip;
@@ -286,10 +269,7 @@ exh_write(hedit, file, begin, end, error)
 
 
   static char *
-exhcmd_substitute(hedit, pattern, begin, end)
-  struct he_s *hedit;
-  char *pattern;
-  long begin, end;
+exhcmd_substitute(struct he_s *hedit, char *pattern, long begin, long end)
 {
   char *p = pattern;
   char separator = *pattern;
@@ -474,19 +454,14 @@ exit_exh_substitute:
 /* exhcmd_substitute */
 
   static char *
-exhcmd_write(hedit, file, begin, end)
-  struct he_s *hedit;
-  char *file;
-  long begin, end;
+exhcmd_write(struct he_s *hedit, char *file, long begin, long end)
 {
   return exh_write(hedit, file, begin, end, 0);
 }
 /* exhcmd_write */
 
   static char *
-exhcmd_skip(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_skip(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -513,9 +488,7 @@ exhcmd_skip(hedit, args)
 /* exhcmd_skip */
 
   static char *
-exhcmd_next(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_next(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -540,9 +513,7 @@ exhcmd_next(hedit, args)
 /* exhcmd_next */
 
   static char *
-exhcmd_previous(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_previous(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -568,9 +539,7 @@ exhcmd_previous(hedit, args)
 /* exhcmd_previous */
 
   static char *
-exhcmd_rewind(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_rewind(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   char *ab = alternate_buffer;
@@ -591,10 +560,7 @@ exhcmd_rewind(hedit, args)
 /* exhcmd_rewind */
 
   static char *
-exhcmd_wn(hedit, file, begin, end)
-  struct he_s *hedit;
-  char *file;
-  long begin, end;
+exhcmd_wn(struct he_s *hedit, char *file, long begin, long end)
 {
   char *skip;
   int error = 0;
@@ -606,10 +572,7 @@ exhcmd_wn(hedit, file, begin, end)
 /* exhcmd_wn */
 
   static char *
-exhcmd_read(hedit, file, position)
-  struct he_s *hedit;
-  char *file;
-  long position;
+exhcmd_read(struct he_s *hedit, char *file, long position)
 {
   FILE *fp;
   long l;
@@ -637,9 +600,7 @@ exhcmd_read(hedit, file, position)
 /* exhcmd_read */
 
   static char *
-exhcmd_edit(hedit, name)
-  struct he_s *hedit;
-  char *name;
+exhcmd_edit(struct he_s *hedit, char *name)
   /* ARGSUSED */
 {
   char *ab = alternate_buffer;
@@ -704,9 +665,7 @@ exhcmd_edit(hedit, name)
 /* exhcmd_edit */
 
   static char *
-exhcmd_buffer(hedit, name)
-  struct he_s *hedit;
-  char *name;
+exhcmd_buffer(struct he_s *hedit, char *name)
 {
   char *ab = alternate_buffer;
   long j, k;
@@ -781,9 +740,7 @@ exhcmd_buffer(hedit, name)
 /* exhcmd_buffer */
 
   static char *
-exhcmd_wall(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_wall(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -807,9 +764,7 @@ exhcmd_wall(hedit, args)
 /* exhcmd_wall */
 
   static char *
-exhcmd_quit(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_quit(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i, *j;
@@ -846,9 +801,7 @@ close_all_buffers:
 /* exhcmd_quit */
 
   static char *
-exhcmd_close(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_close(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   int force_f = 0;
@@ -891,63 +844,49 @@ exhcmd_close(hedit, args)
 /* exhcmd_close */
 
   static char *
-exhcmd_map(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_map(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_COMMAND);
 }
 /* exhcmd_map */
 
   static char *
-exhcmd_imap(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_imap(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_INSERT);
 }
 /* exhcmd_imap */
 
   static char *
-exhcmd_vmap(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_vmap(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_VISUAL);
 }
 /* exhcmd_vmap */
 
   static char *
-exhcmd_unmap(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_unmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_COMMAND);
 }
 /* exhcmd_unmap */
 
   static char *
-exhcmd_iunmap(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_iunmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_INSERT);
 }
 /* exhcmd_iunmap */
 
   static char *
-exhcmd_vunmap(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_vunmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_VISUAL);
 }
 /* exhcmd_vunmap */
 
   static char *
-exhcmd_set(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_set(struct he_s *hedit, char *args)
 {
   char *p, *q, *option;
   enum s_option_e type;
@@ -1014,10 +953,7 @@ exhcmd_set(hedit, args)
 /* exhcmd_set */
 
   static char *
-exhcmd_delete(hedit, args, begin, end)
-  struct he_s *hedit;
-  char *args;
-  long begin, end;
+exhcmd_delete(struct he_s *hedit, char *args, long begin, long end)
   /* ARGSUSED */
 {
   long count = end - begin;
@@ -1048,10 +984,7 @@ exhcmd_delete(hedit, args, begin, end)
 /* exhcmd_delete */
 
   static char *
-exhcmd_yank(hedit, args, begin, end)
-  struct he_s *hedit;
-  char *args;
-  long begin, end;
+exhcmd_yank(struct he_s *hedit, char *args, long begin, long end)
   /* ARGSUSED */
 {
   long count = end - begin;
@@ -1070,9 +1003,7 @@ exhcmd_yank(hedit, args, begin, end)
 /* exhcmd_yank */
 
   static char *
-exhcmd_version(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_version(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   char *skip = exh_skipcmd(args, 0);
@@ -1082,9 +1013,7 @@ exhcmd_version(hedit, args)
 /* exhcmd_version */
 
   static char *
-exhcmd_zz(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_zz(struct he_s *hedit, char *args)
 {
   int k;
   char *skip;
@@ -1100,9 +1029,7 @@ exhcmd_zz(hedit, args)
 /* exhcmd_zz */
 
   static char *
-exhcmd_zt(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_zt(struct he_s *hedit, char *args)
 {
   char *skip;
 
@@ -1114,9 +1041,7 @@ exhcmd_zt(hedit, args)
 /* exhcmd_zt */
 
   static char *
-exhcmd_zb(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_zb(struct he_s *hedit, char *args)
 {
   char *skip;
 
@@ -1129,9 +1054,7 @@ exhcmd_zb(hedit, args)
 /* exhcmd_zb */
 
   static char *
-exhcmd_help(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_help(struct he_s *hedit, char *args)
 {
   int pid1, pid2, status, x = 0;
   int pipefd[2];
@@ -1197,9 +1120,7 @@ exit_exhcmd_help:
 /* exhcmd_help */
 
   static char *
-exhcmd_exit(hedit, args)
-  struct he_s *hedit;
-  char *args;
+exhcmd_exit(struct he_s *hedit, char *args)
 {
   struct buffer_s *i;
   int cant_write_f = 0;

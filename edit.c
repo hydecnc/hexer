@@ -83,8 +83,7 @@ const struct he_refresh_s NO_REFRESH =
 int he_message_wait = 10;
 
   static char *
-he_bigendian(x)
-  long x;
+he_bigendian(long x)
 {
   static char bigendian[4];
 
@@ -97,8 +96,7 @@ he_bigendian(x)
 /* he_bigendian */
 
   static long
-he_bigendian_to_long(bigendian)
-  char *bigendian;
+he_bigendian_to_long(char *bigendian)
 {
   long x;
 
@@ -111,8 +109,7 @@ he_bigendian_to_long(bigendian)
 /* he_bigendian_to_long */
 
   static int
-he_digit(key)
-  int key;
+he_digit(int key)
 {
   if (isdigit(key)) return key - '0';
   key = tolower(key);
@@ -338,9 +335,7 @@ he_do_command(hedit, command)
 /* he_do_command */
 
   static long
-he_undo_command(hedit, command)
-  struct he_s *hedit;
-  struct he_command_s *command;
+he_undo_command(struct he_s *hedit, struct he_command_s *command)
   /* Undo the compound command `command'.  The return value is the position
    * of the last change made.
    */
@@ -366,8 +361,7 @@ he_undo_command(hedit, command)
 /* he_undo_command */
 
   static long
-he_rewind_command(hedit)
-  struct he_s *hedit;
+he_rewind_command(struct he_s *hedit)
   /* Rewind the swap file by one compound command.  If the beginning of the
    * file is hit (the rewind failed), the return value is -1, else the
    * current position in the file is returned.
@@ -386,8 +380,7 @@ he_rewind_command(hedit)
 /* he_rewind_command */
 
   static struct he_command_s *
-he_read_command(hedit)
-  struct he_s *hedit;
+he_read_command(struct he_s *hedit)
   /* Read a compound command from the swap file.  If the end of the
    * swap file is hit (the read failed), the return value is 0, else
    * a pointer to the command read is returned.
@@ -431,8 +424,7 @@ he_read_command(hedit)
 /* he_read_command */
 
   static void
-he_undo(hedit)
-  struct he_s *hedit;
+he_undo(struct he_s *hedit)
   /* Undo the last command.
    */
 {
@@ -475,8 +467,7 @@ fail:
 /* he_undo */
 
   static void
-he_redo(hedit)
-  struct he_s *hedit;
+he_redo(struct he_s *hedit)
   /* Redo the last undo.
    */
 {
@@ -511,9 +502,7 @@ fail:
 /* he_redo */
 
   static void
-he_again(hedit, position)
-  struct he_s *hedit;
-  long position;
+he_again(struct he_s *hedit, long position)
   /* Walk backwards through the undo list, until a command is found with
    * the `again' flag set and reperfom this command on position `position'.
    * If no such command is found, a beep is "returned".
@@ -595,10 +584,7 @@ he_again(hedit, position)
 /* he_again */
 
   static void
-he_delete(hedit, count, dont_save)
-  struct he_s *hedit;
-  long count;
-  int dont_save;
+he_delete(struct he_s *hedit, long count, int dont_save)
   /* If `dont_save == 1' the data deleted is not copied to the `kill_buffer'.
    */
 {
@@ -641,9 +627,7 @@ he_delete(hedit, count, dont_save)
 /* he_delete */
 
   static void
-he_paste(hedit, count)
-  struct he_s *hedit;
-  long count;
+he_paste(struct he_s *hedit, long count)
 {
   char *data;
   long x = count > 2 ? count : 1, c = -1;
@@ -665,9 +649,7 @@ he_paste(hedit, count)
 /* he_paste */
 
   static void
-he_paste_over(hedit, count)
-  struct he_s *hedit;
-  long count;
+he_paste_over(struct he_s *hedit, long count)
 {
   char *data_insert, *data_delete;
   long x = count > 2 ? count : 1, c = -1;
@@ -697,9 +679,7 @@ he_paste_over(hedit, count)
 /* he_paste_over */
 
   static void
-he_yank(hedit, count)
-  struct he_s *hedit;
-  long count;
+he_yank(struct he_s *hedit, long count)
 {
   long start;
 
@@ -721,9 +701,7 @@ he_yank(hedit, count)
 /* he_yank */
 
   static char *
-he_line(hedit, position)
-  const struct he_s *hedit;
-  long position;
+he_line(const struct he_s *hedit, long position)
   /* Create a line suitable for `tio_display()' (including @-commands).
    * `position' ist the number of the first byte in the line to be
    * created.  If `hedit->insert_position' is a positive value and
@@ -873,9 +851,7 @@ he_set_cursor(hedit)
 /* he_set_cursor */
 
   static void
-he_display(hedit, start, end)
-  const struct he_s *hedit;
-  int start, end;
+he_display(const struct he_s *hedit, int start, int end)
 {
   int i;
 
@@ -892,10 +868,7 @@ he_display(hedit, start, end)
 /* he_display */
 
   static void
-he_motion(hedit, key, count)
-  struct he_s *hedit;
-  int key;
-  long count;
+he_motion(struct he_s *hedit, int key, long count)
 {
   int i;
 
@@ -984,8 +957,7 @@ he_motion(hedit, key, count)
 #define HE_CASE_MOTION_SHIFT case '<': case '>'
 
   static void
-he_begin_selection(hedit)
-  struct he_s *hedit;
+he_begin_selection(struct he_s *hedit)
   /* Set the beginning of the selected text to the current position in the
    * file.
    */
@@ -1000,8 +972,7 @@ he_begin_selection(hedit)
 /* he_begin_selection */
 
   static void
-he_end_selection(hedit)
-  struct he_s *hedit;
+he_end_selection(struct he_s *hedit)
   /* Set the end of the selected text to the current position in the
    * buffer.
    */
@@ -1047,10 +1018,7 @@ he_select(hedit, begin, end)
 /* he_select */
 
   static int
-he_command(hedit, key, count)
-  struct he_s *hedit;
-  int key;
-  long count;
+he_command(struct he_s *hedit, int key, long count)
   /* Execute a command-mode command.  If `key' is an unknown command,
    * the return value is 0.  If `key' is a quit command, the return value
    * is -1.  In all other cases the return value is 1.
@@ -1408,8 +1376,7 @@ exit_get_counter:
 /* he_get_counter */
 
   static int
-he_verbatim(hedit)
-  struct he_s *hedit;
+he_verbatim(struct he_s *hedit)
 {
   int key;
 

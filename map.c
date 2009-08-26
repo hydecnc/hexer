@@ -92,8 +92,7 @@ static int munget_n = 0;
  */
 
   static int
-key_strcmp(ks1, ks2)
-  const int *ks1, *ks2;
+key_strcmp(const int *ks1, const int *ks2)
 {
   while (*ks1 && *ks2 && *ks1 == *ks2) ++ks1, ++ks2;
   return *ks1 != *ks2;
@@ -101,9 +100,7 @@ key_strcmp(ks1, ks2)
 /* key_strcmp */
 
   static int
-key_strncmp(ks1, ks2, n)
-  const int *ks1, *ks2;
-  int n;
+key_strncmp(const int *ks1, const int *ks2, int n)
 {
   while (*ks1 && *ks2 && *ks1 == *ks2 && n--) ++ks1, ++ks2;
   return n && *ks1 != *ks2;
@@ -111,8 +108,7 @@ key_strncmp(ks1, ks2, n)
 /* key_strncmp */
 
   static char *
-key_strrep(ks)
-  const int *ks;
+key_strrep(const int *ks)
 {
   int n;
   const int *i;
@@ -169,9 +165,7 @@ key_strncpy(ks1, ks2, n)
 #endif
 
   static int
-key_strcpy(ks1, ks2)
-  int *ks1;
-  const int *ks2;
+key_strcpy(int *ks1, const int *ks2)
 {
   while (*ks2) *ks1++ = *ks2++;
   return *ks1 = 0;
@@ -179,9 +173,7 @@ key_strcpy(ks1, ks2)
 /* key_strcpy */
 
   static int
-string_to_keys(keys, string)
-  int *keys;
-  char *string;
+string_to_keys(int *keys, char *string)
 {
   while (*string) {
     if (*string == MAP_ESC) {
@@ -200,10 +192,7 @@ string_to_keys(keys, string)
 /* string_to_keys */
 
   static int
-scan_keys(keys, string, mode)
-  int *keys;
-  char *string;
-  int mode;
+scan_keys(int *keys, char *string, int mode)
 {
   do {
     if (*string == MAP_ESC) {
@@ -232,8 +221,7 @@ mungetch(key)
 #endif
 
   static void
-mungets(keys)
-  int *keys;
+mungets(int *keys)
 {
   int i;
 

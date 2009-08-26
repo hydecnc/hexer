@@ -115,8 +115,7 @@ he_message(beep, fmt, va_alist)
  */
 
   static void
-action_ascii(current_value)
-  int current_value;
+action_ascii(int current_value)
 {
   he_refresh_all(current_buffer->hedit);
   if (current_value)
@@ -127,8 +126,7 @@ action_ascii(current_value)
 /* action_ascii */
 
   static void
-action_iso(current_value)
-  int current_value;
+action_iso(int current_value)
 {
   he_refresh_all(current_buffer->hedit);
   if (current_value)
@@ -139,15 +137,14 @@ action_iso(current_value)
 /* action_iso */
 
   static void
-action_maxmatch(current_value)
-  long current_value;
+action_maxmatch(long current_value)
 {
   rx_maxmatch = current_value;
 }
 /* action_maxmatch */
 
   static void
-action_TERM()
+action_TERM(void)
 {
   tio_init(0);
   he_refresh_all(current_buffer->hedit);
@@ -155,16 +152,14 @@ action_TERM()
 /* action_TERM */
 
   static void
-action_specialnl(current_value)
-  int current_value;
+action_specialnl(int current_value)
 {
   rx_special_nl = current_value;
 }
 /* action_specialnl */
 
   static void
-action_mapmagic(current_value)
-  int current_value;
+action_mapmagic(int current_value)
 {
   he_map_special = current_value;
 }
@@ -625,9 +620,7 @@ static Buffer *rxwrap_current_buffer;
 static long rxwrap_position;
 
   static long
-rxwrap_read(buf, count)
-  char *buf;
-  long count;
+rxwrap_read(char *buf, long count)
 {
   long rval = b_read(rxwrap_current_buffer, buf, rxwrap_position, count);
   rxwrap_position += rval;
@@ -636,15 +629,14 @@ rxwrap_read(buf, count)
 /* rxwrap_read */
 
   static long
-rxwrap_seek(position)
-  long position;
+rxwrap_seek(long position)
 {
   return rxwrap_position = position;
 }
 /* rxwrap_seek */
 
   static long
-rxwrap_tell()
+rxwrap_tell(void)
 {
   return rxwrap_position;
 }
@@ -773,7 +765,7 @@ exit:
 /* he_search_command */
 
   static void
-he_refresh()
+he_refresh(void)
 {
   he_refresh_all(current_buffer->hedit);
   he_update_screen(current_buffer->hedit);

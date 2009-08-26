@@ -63,7 +63,7 @@ regex_match(long *, long, char **, long *, long *);
 regex_compile(char *, char *);
 
   int
-regex_init(long (*)(char *, long), long (*)(long), long (*)());
+regex_init(long (*)(char *, long), long (*)(long), long (*)(void));
 
   int
 regex_reset(void);

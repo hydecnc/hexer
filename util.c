@@ -74,8 +74,7 @@ util_trunc(s)
 /* util_trunc */
 
   static int
-util_pstrcmp(a, b)
-  char **a, **b;
+util_pstrcmp(char **a, char **b)
 {
   return strcmp(*a, *b);
 }
@@ -90,7 +89,7 @@ util_strsort(list)
   int n;
 
   for (n = 0; list[n]; ++n);
-  qsort((void *)list, n, sizeof(char *), (int (*)())util_pstrcmp);
+  qsort((void *)list, n, sizeof(char *), (int (*)(const void *, const void *))util_pstrcmp);
   return 0;
 }
 /* util_strsort */

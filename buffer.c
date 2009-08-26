@@ -83,10 +83,7 @@ Buffer *last_buffer = 0;
 
 #if !HAVE_MEMMOVE
   static void
-b_memmove(t, s, count)
-  char *t;
-  const char *s;
-  const long count;
+b_memmove(char *t, const char *s, const long count)
 {
   register long i;
 

@@ -47,7 +47,13 @@
 
 enum s_option_e { S_STRING = 1, S_INTEGER, S_BOOL };
 
+#ifdef __GNUC__
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
+#endif
 typedef void (*set_fn)();
+#ifdef __GNUC__
+#pragma GCC diagnostic error "-Wstrict-prototypes"
+#endif
 
 long
 s_get_option_integer(const char *option);

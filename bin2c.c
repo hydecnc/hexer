@@ -64,9 +64,7 @@ usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
 ";
 
   int
-main(argc, argv)
-  int argc;
-  char **argv;
+main(int argc, char **argv)
 {
   char *name = "data";
   FILE *in = stdin, *out = stdout;

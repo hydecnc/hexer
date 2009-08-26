@@ -220,7 +220,7 @@ static struct calc_object_s stack[CALC_STACKSIZE];
 static int sp;
 
   static int
-calc_initialize_stack()
+calc_initialize_stack(void)
 {
   int i;
 
@@ -232,8 +232,7 @@ calc_initialize_stack()
 /* calc_initialize_stack */
 
   static int
-calc_clear_stack(count)
-  int count;
+calc_clear_stack(int count)
   /* remove the trailing `count' stack elements from the stack.
    */
 {
@@ -255,9 +254,7 @@ calc_clear_stack(count)
 /* calc_clear_stack */
 
   static int
-calc_set_stack(position, object)
-  int position;
-  struct calc_object_s object;
+calc_set_stack(int position, struct calc_object_s object)
 {
   if (stack[position].type == CO_ERROR || stack[position].type == CO_VARIABLE)
     free(stack[position].u.s);
@@ -267,9 +264,7 @@ calc_set_stack(position, object)
 /* calc_set_stack */
 
   static char *
-calc_sprint(s, object)
-  char *s;
-  struct calc_object_s object;
+calc_sprint(char *s, struct calc_object_s object)
 {
   switch(object.type) {
   case CO_BINARY_OPERATOR:
@@ -327,8 +322,7 @@ calc_error(x, fmt, va_alist)
 /* calc_error */
 
   static int
-calc_evaluate(object)
-  struct calc_object_s *object;
+calc_evaluate(struct calc_object_s *object)
 {
   struct calc_variable_s *i;
 
@@ -344,8 +338,7 @@ calc_evaluate(object)
 /* calc_evaluate */
 
   static int
-calc_assign(x, y)
-  struct calc_object_s x, y;
+calc_assign(struct calc_object_s x, struct calc_object_s y)
 {
   struct calc_variable_s *i;
 
@@ -367,9 +360,7 @@ calc_assign(x, y)
 /* calc_assign */
 
   static int
-calc_operation(position, binary)
-  int position;
-  int binary;
+calc_operation(int position, int binary)
   /* evaluate the simple expression on stack position `position' and
    * update the stack.  if `binary == 0', a unary expression is expected,
    * else a binary expression is expected.  the function returns 0 on
@@ -875,7 +866,7 @@ exit:
 /* calc_operation */
 
   static int
-calc_reduce()
+calc_reduce(void)
   /* try to reduce to top of the stack.  return values:
    * -1:  reduction failed due to an error.  an error element has been put
    *      onto the stack.
@@ -977,9 +968,7 @@ eval: /* evaluate a parenthesed expression */
 /* calc_reduce */
 
   static int
-istrue(s, endptr)
-  char *s;
-  char **endptr;
+istrue(char *s, char **endptr)
 {
   static char *true_strings[] = { "true", "t", "TRUE", "True", "T",
     "yes", "y", "YES", "Yes", "on", "ON", "On", 0 };
@@ -996,9 +985,7 @@ istrue(s, endptr)
 /* istrue */
 
   static int
-isfalse(s, endptr)
-  char *s;
-  char **endptr;
+isfalse(char *s, char **endptr)
 {
   static char *false_strings[] = { "false", "f", "FALSE", "False", "F",
     "no", "n", "NO", "No", "off", "OFF", "Off", 0 };
@@ -1019,8 +1006,7 @@ isfalse(s, endptr)
 #endif
 
   static int
-calc_scan(exp)
-  char *exp;
+calc_scan(char *exp)
 {
   char *p, *q, *r;
   long val;

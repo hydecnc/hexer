@@ -184,13 +184,13 @@ volatile int *rx_interrupt = &interrupt;
 #define u_short unsigned short
 #define u_long unsigned long
 
-static long (*rx_read)( /* char *target, long count */ );
+static long (*rx_read)(char *target, long count);
   /* pointer to a function used for reading from the buffer/file.
    */
-static long (*rx_seek)( /* long position */ );
+static long (*rx_seek)(long position);
   /* pointer to a function used for setting the pointer in the buffer/file.
    */
-static long (*rx_tell)( /* void */ );
+static long (*rx_tell)(void);
   /* pointer to a function returning the current position if the buffer/file.
    */
 static long rx_size = 0;
@@ -230,9 +230,9 @@ int rx_special_nl = 0;
    * *not* match a newline character.
    */
 
-static unsigned char buffer_[3 * REGEX_BLOCKSIZE];
-static unsigned char *buffer = buffer_ + REGEX_BLOCKSIZE;
-static unsigned char *bp;
+static char buffer_[3 * REGEX_BLOCKSIZE];
+static char *buffer = buffer_ + REGEX_BLOCKSIZE;
+static char *bp;
 static long buffer_base;
 
 #define REGEX_ADVANCE {                                                       \
@@ -263,10 +263,7 @@ static long buffer_base;
 
 #if !HAVE_MEMMOVE
   static void
-rx_memmove(t, s, count)
-  char *t;
-  const char *s;
-  const long count;
+rx_memmove(char *t, const char *s, const long count)
 {
   register long i;
 
@@ -281,10 +278,7 @@ rx_memmove(t, s, count)
 #endif
 
   int
-regex_init(read, seek, tell)
-  long (*read)();
-  long (*seek)();
-  long (*tell)();
+regex_init(long (*read)(char *, long), long (*seek)(long), long (*tell)(void))
 {
   rx_read = read;
   rx_seek = seek;
@@ -294,8 +288,7 @@ regex_init(read, seek, tell)
 /* regex_init */
 
   static int
-regex_set_position(position)
-  long position;
+regex_set_position(long position)
   /* NOTE: `bp' and `buffer_base' *must* be initialized before calling
    *   `regex_set_position'.
    */
@@ -339,14 +332,11 @@ rebuild_buffer:
 
 static long rx_store_begin[RX_NSLOTS];
 static long rx_store_end[RX_NSLOTS];
-static u_char *rx_store_match[RX_NSLOTS];
+static char *rx_store_match[RX_NSLOTS];
 static int rx_store_initialized = 0;
 
   static int
-regex_store(slot, begin, end)
-  long slot;
-  long begin;
-  long end;
+regex_store(long slot, long begin, long end)
   /* The text between the positions `begin' (incl.) and `end' (excl.) is
    * stored in slot `slot'.  (Actually only the `begin' and `end' positions
    * are stored.)
@@ -357,7 +347,7 @@ regex_store(slot, begin, end)
   if (!rx_store_initialized) {
     memset(rx_store_begin, 0, RX_NSLOTS * sizeof(long));
     memset(rx_store_end, 0, RX_NSLOTS * sizeof(long));
-    memset(rx_store_match, 0, RX_NSLOTS * sizeof(u_char *));
+    memset(rx_store_match, 0, RX_NSLOTS * sizeof(char *));
     rx_store_initialized = 1;
   }
   if (rx_store_match[slot]) {
@@ -370,9 +360,8 @@ regex_store(slot, begin, end)
 }
 /* regex_store */
 
-  static u_char *
-regex_ref(slot)
-  int slot;
+  static char *
+regex_ref(int slot)
   /* The contents of undefined slots default to an empty string, therefore
    * the return value is always a valid (non-zero) pointer.
    */
@@ -383,26 +372,25 @@ regex_ref(slot)
   if (!rx_store_initialized) {
     memset(rx_store_begin, 0, RX_NSLOTS * sizeof(long));
     memset(rx_store_end, 0, RX_NSLOTS * sizeof(long));
-    memset(rx_store_match, 0, RX_NSLOTS * sizeof(u_char *));
+    memset(rx_store_match, 0, RX_NSLOTS * sizeof(char *));
     rx_store_initialized = 1;
   }
   position = rx_store_begin[slot];
   count = rx_store_end[slot] - position;
   if (!rx_store_match[slot] && count) {
-    rx_store_match[slot] = (u_char *)malloc(count);
+    rx_store_match[slot] = malloc(count);
     rx_seek(position);
     rx_read(rx_store_match[slot], count);
     return rx_store_match[slot];
   } else if (rx_store_match[slot])
     return rx_store_match[slot];
   else
-    return (u_char *)"";
+    return "";
 }
 /* regex_ref */
 
   static long
-regex_ref_len(slot)
-  int slot;
+regex_ref_len(int slot)
   /* The length of an undefined slot is 0.
    */
 {
@@ -412,7 +400,7 @@ regex_ref_len(slot)
   if (!rx_store_initialized) {
     memset(rx_store_begin, 0, RX_NSLOTS * sizeof(long));
     memset(rx_store_end, 0, RX_NSLOTS * sizeof(long));
-    memset(rx_store_match, 0, RX_NSLOTS * sizeof(u_char *));
+    memset(rx_store_match, 0, RX_NSLOTS * sizeof(char *));
     rx_store_initialized = 1;
   }
   position = rx_store_begin[slot];
@@ -422,7 +410,7 @@ regex_ref_len(slot)
 /* regex_ref_len */
 
   static void
-regex_clear()
+regex_clear(void)
   /* clear all slots.
    */
 {
@@ -431,7 +419,7 @@ regex_clear()
   if (!rx_store_initialized) {
     memset(rx_store_begin, 0, RX_NSLOTS * sizeof(long));
     memset(rx_store_end, 0, RX_NSLOTS * sizeof(long));
-    memset(rx_store_match, 0, RX_NSLOTS * sizeof(u_char *));
+    memset(rx_store_match, 0, RX_NSLOTS * sizeof(char *));
     rx_store_initialized = 1;
   } else {
     for (i = 0; i < RX_NSLOTS; ++i) {
@@ -446,7 +434,7 @@ regex_clear()
 /* regex_clear */
 
   int
-regex_match();
+regex_match(long *, long, char **, long *, long *);
 
   int
 regex_reset()
@@ -474,7 +462,7 @@ regex_search(regex, begin, end, start, direction,
 {
   long position;
   int i;
-  u_char *bp1;
+  char *bp1;
   long base1;
 
   direction = direction < 0 ? -1 : 1;
@@ -496,7 +484,7 @@ regex_search(regex, begin, end, start, direction,
   if (rx_size && position >= rx_size) position = rx_size - 1;
   while (position < end && position >= begin) {
     if (rx_start >= 0)
-      while ((u_char)*bp != (u_char)rx_start && position < end) {
+      while (*bp != rx_start && position < end) {
 	if (*rx_interrupt) {
 	  rx_error = (int)E_interrupt;
           *rx_interrupt = 0;
@@ -528,11 +516,7 @@ regex_search(regex, begin, end, start, direction,
 /* regex_search */
 
   static int
-regex_match_(regex, position, parstack, parsp)
-  long *regex;        /* pointer to the regex-code to be processed. */
-  long position;      /* position in the input stream. */
-  int *parstack;      /* pointer to the callers `local_parstack'. */
-  int *parsp;         /* pointer to the callers `local_parsp'. */
+regex_match_(long *regex, long position, int *parstack, int *parsp)
 {
   long *pp = regex;
   long p = position;
@@ -541,7 +525,7 @@ regex_match_(regex, position, parstack, parsp)
   long min, max;
   long operand;
   long operand2;
-  u_char *bp1;
+  char *bp1;
   long base1;
   int i;
 
@@ -573,14 +557,14 @@ regex_match_(regex, position, parstack, parsp)
 	++p, ++bp;
 	break;
       case CHAR:
-	if (*bp++ != (u_char)*pp++) goto fail;
+	if (*bp++ != *pp++) goto fail;
 	++p;
 	break;
       case STRING:
         operand = *pp++; /* length of the string. */
 	if (rx_size && p + operand > rx_size) goto fail;
 	/* if (memcmp(bp, pp, operand)) goto fail; */
-        for (; operand; --operand) if ((u_char)*pp++ != *bp++) goto fail;
+        for (; operand; --operand) if (*pp++ != *bp++) goto fail;
         /*
 	pp += operand;
 	bp += operand;
@@ -970,9 +954,9 @@ compile:
       case '\\':
         if (escape) {
 	  expression = pp;
-	  *pp++ = (u_char)CHAR;
+	  *pp++ = CHAR;
 	  *pp++ = '\\';
-	  if (start) rx_start = (u_char)'\\';
+	  if (start) rx_start = '\\';
 	  BRANCH_LEN_INC(1);
 	} else {
 	  ++escape;
@@ -984,8 +968,8 @@ compile:
       case 'a': case 'b': case 'f': case 'n': case 'r': case 't': case 'v':
         if (escape) {
 	  expression = pp;
-	  *pp++ = (u_char)CHAR;
-	  *pp++ = (u_char)escape_char[(int)cp[-1]];
+	  *pp++ = CHAR;
+	  *pp++ = escape_char[(int)cp[-1]];
 	  if (start) rx_start = pp[-1];
 	  BRANCH_LEN_INC(1);
 	} else
@@ -1004,7 +988,7 @@ compile:
 	  if (*cp == 'o') { /* octal string */
 	    long *length;
 	    ++cp;
-	    *pp++ = (u_char)STRING;
+	    *pp++ = STRING;
 	    *(length = pp++) = 1;
 	    EAT_WHITESPACE;
 	    for (;; ++*length) {
@@ -1020,7 +1004,7 @@ compile:
 	  } else { /* octal character */
 	    GET_OCT(oct, 3);
 	    if (oct > 255) { rx_error = (int)E_invalid_character; break; }
-	    *pp++ = (u_char)CHAR;
+	    *pp++ = CHAR;
 	    *pp++ = oct;
 	    if (start) rx_start = pp[-1];
 	    BRANCH_LEN_INC(1);
@@ -1035,7 +1019,7 @@ compile:
 	  if (*cp == 'x') { /* hex string */
 	    long *length;
 	    ++cp;
-	    *pp++ = (u_char)STRING;
+	    *pp++ = STRING;
 	    *(length = pp++) = 1;
 	    EAT_WHITESPACE;
 	    for (;; ++*length) {
@@ -1064,7 +1048,7 @@ compile:
 	  if (*cp == 'd') { /* decimal string */
 	    long *length;
 	    ++cp;
-	    *pp++ = (u_char)STRING;
+	    *pp++ = STRING;
 	    *(length = pp++) = 1;
 	    EAT_WHITESPACE;
 	    for (;; ++*length) {
@@ -1080,7 +1064,7 @@ compile:
 	  } else { /* decimal character */
 	    GET_DEC(dec, 3);
 	    if (dec > 255) { rx_error = (int)E_invalid_character; break; }
-	    *pp++ = (u_char)CHAR;
+	    *pp++ = CHAR;
 	    *pp++ = dec;
 	    if (start) rx_start = pp[-1];
 	    BRANCH_LEN_INC(1);
@@ -1097,9 +1081,9 @@ compile:
 	  i = 0;
 	  expression = pp;
 	  if (*cp == '^')
-	    ++cp, *pp++ = (u_char)ANY_BUT;
+	    ++cp, *pp++ = ANY_BUT;
 	  else
-	    *pp++ = (u_char)ANY_OF;
+	    *pp++ = ANY_OF;
 	  do {
 	    switch (*cp++) {
 	      case 0:
@@ -1112,11 +1096,11 @@ compile:
 	        if (*cp == ']' || !i)
 		  any[i++] = '-';
 		else {
-		  if (any[i - 1] > (u_char)*cp) {
+		  if (any[i - 1] > *cp) {
 		    rx_error = (int)E_invalid_range;
 		    break;
 		  }
-		  for (j = any[i - 1] + 1; j <= *cp; ++j) any[i++] = (u_char)j;
+		  for (j = any[i - 1] + 1; j <= *cp; ++j) any[i++] = j;
 		  ++cp;
 		}
 		break;
@@ -1144,7 +1128,7 @@ compile:
                     rx_error = (int)E_invalid_character;
                     break;
                   }
-		  any[i++] = (u_char)oct;
+		  any[i++] = oct;
 		} else
 		  goto Default1;
 		break;
@@ -1156,7 +1140,7 @@ compile:
                     rx_error = (int)E_invalid_character;
                     break;
                   }
-		  any[i++] = (u_char)dec;
+		  any[i++] = dec;
 		} else
 		  goto Default1;
 		break;
@@ -1164,7 +1148,7 @@ compile:
 	        if (escape) {
 		  int hex;
 		  GET_HEX(hex, 2);
-		  any[i++] = (u_char)hex;
+		  any[i++] = hex;
 		} else
 		  goto Default1;
 		break;
@@ -1179,8 +1163,8 @@ compile:
 	  /* sort the list and remove duplicate entries. */
 	  memset(table, 0, 256);
 	  for (j = 0; j < i; ++j) table[any[j]] = 1;
-	  for (i = 0, j = 0; j < 256; ++j) if (table[j]) any[i++] = (u_char)j;
-	  *pp++ = (u_char)i;
+	  for (i = 0, j = 0; j < 256; ++j) if (table[j]) any[i++] = j;
+	  *pp++ = i;
 	  for (j = 0; j < i; ++j) *pp++ = any[j];
 	  BRANCH_LEN_INC(1);
 	} else
@@ -1191,7 +1175,7 @@ compile:
       case '(':
         if ((escape && !rx_allmagic) || (!escape && rx_allmagic)) {
 	  expression = 0;
-	  *pp++ = (u_char)PAR_OPEN;
+	  *pp++ = PAR_OPEN;
 	  ++pc;
 	  branch[pc] = par[pc] = pp;
 	  branch_len[pc][0] = 0;
@@ -1202,11 +1186,11 @@ compile:
       case '|':
         if ((escape && !rx_allmagic) || (!escape && rx_allmagic)) {
 	  expression = 0;
-	  *pp++ = (u_char)EOX; /* end of branch */
+	  *pp++ = EOX; /* end of branch */
 	  /* insert a `BRANCH'-command at `branch[pc]'. */
 	  for (i = -1; pp + i >= branch[pc]; --i)
 	    pp[i + SIZE_BRANCH] = pp[i];
-	  branch[pc][0] = (u_char)BRANCH;
+	  branch[pc][0] = BRANCH;
 	  branch[pc][2] = pp - branch[pc];
 	  /* store the position of this `BRANCH' command. */
 	  branch_n[pc][branch_n_c[pc]++] = branch[pc];
@@ -1222,7 +1206,7 @@ compile:
 	  /* NOTE: if the parenthesized expression is split up into
 	   * multiple branches, the last branch is *not* terminated
 	   * by an `EOX'. */
-	  *pp++ = (u_char)PAR_CLOSE;
+	  *pp++ = PAR_CLOSE;
 	  *pp++ = slot++;
 	  /* first we'll check if all branches have equal length. */
 	  j = branch_len[pc][0];
@@ -1259,7 +1243,7 @@ compile:
       case '5': case '6': case '7': case '8': case '9':
         if (escape) {
 	  expression = pp;
-	  *pp++ = (u_char)BACKREF;
+	  *pp++ = BACKREF;
 	  *pp++ = cp[-1] - '0';
 	  if (ref_len[cp[-1] - '0'] >= 0) {
 	    BRANCH_LEN_INC(ref_len[cp[-1] - '0']);
@@ -1279,11 +1263,11 @@ compile:
 	    rx_error = (int)E_operator_without_operand;
 	    break;
 	  }
-	  *pp++ = (u_char)EOX; /* end of expression */
+	  *pp++ = EOX; /* end of expression */
 	  /* insert a `REPEAT'-command at `expression'. */
 	  for (i = -1; pp + i >= expression; --i)
 	    pp[i + SIZE_REPEAT] = pp[i];
-	  expression[0] = (u_char)REPEAT;
+	  expression[0] = REPEAT;
 	  expression[1] = 0;
 	  expression[2] = 1;
 	  expression[3] = pp - expression;
@@ -1308,12 +1292,12 @@ compile:
 	    no_limit = 1;
 	    ++cp;
 	  }
-	  *pp++ = (u_char)EOX; /* end of expression */
+	  *pp++ = EOX; /* end of expression */
 	  if (exp_len < 0) {
 	    /* insert a `REPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_REPEAT] = pp[i];
-	    expression[0] = (u_char)REPEAT;
+	    expression[0] = REPEAT;
 	    expression[1] = 1;
 	    expression[2] = -1;
 	    expression[3] = pp - expression;
@@ -1322,7 +1306,7 @@ compile:
 	    /* insert a `FIXREPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_FIXREPEAT] = pp[i];
-	    expression[0] = (u_char)FIXREPEAT;
+	    expression[0] = FIXREPEAT;
 	    expression[1] = 1;
 	    expression[2] = no_limit ? -1 : rx_maxmatch;
 	    expression[3] = exp_len;
@@ -1350,12 +1334,12 @@ compile:
 	    no_limit = 1;
 	    ++cp;
 	  }
-	  *pp++ = (u_char)EOX; /* end of expression */
+	  *pp++ = EOX; /* end of expression */
 	  if (exp_len < 0) {
 	    /* insert a `REPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_REPEAT] = pp[i];
-	    expression[0] = (u_char)REPEAT;
+	    expression[0] = REPEAT;
 	    expression[1] = 0;
 	    expression[2] = -1;
 	    expression[3] = pp - expression;
@@ -1364,7 +1348,7 @@ compile:
 	    /* insert a `FIXREPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_FIXREPEAT] = pp[i];
-	    expression[0] = (u_char)FIXREPEAT;
+	    expression[0] = FIXREPEAT;
 	    expression[1] = 0;
 	    expression[2] = no_limit ? -1 : rx_maxmatch;
 	    expression[3] = exp_len;
@@ -1402,12 +1386,12 @@ compile:
 	    break;
 	  }
 	  if (!max) max = exp_len < 0 ? rx_maxmatch : -1;
-	  *pp++ = (u_char)EOX; /* end of expression */
+	  *pp++ = EOX; /* end of expression */
 	  if (exp_len < 0) {
 	    /* insert a `REPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_REPEAT] = pp[i];
-	    expression[0] = (u_char)REPEAT;
+	    expression[0] = REPEAT;
 	    expression[1] = min;
 	    expression[2] = max;
 	    expression[3] = pp - expression;
@@ -1416,7 +1400,7 @@ compile:
 	    /* insert a `FIXREPEAT'-command at `expression'. */
 	    for (i = -1; pp + i >= expression; --i)
 	      pp[i + SIZE_FIXREPEAT] = pp[i];
-	    expression[0] = (u_char)FIXREPEAT;
+	    expression[0] = FIXREPEAT;
 	    expression[1] = min;
 	    expression[2] = max;
 	    expression[3] = exp_len;
@@ -1436,28 +1420,28 @@ compile:
       /* context specifiers */
       case '<':
 	if ((escape && !rx_allmagic) || (!escape && rx_allmagic)) {
-	  *pp++ = (u_char)BEGIN_WORD;
+	  *pp++ = BEGIN_WORD;
 	  expression = 0;
 	} else
 	  goto Default;
 	break;
       case '>':
 	if ((escape && !rx_allmagic) || (!escape && rx_allmagic)) {
-	  *pp++ = (u_char)END_WORD;
+	  *pp++ = END_WORD;
 	  expression = 0;
 	} else
 	  goto Default;
 	break;
       case '^':
         if (!escape) {
-	  *pp++ = (u_char)BEGIN_LINE;
+	  *pp++ = BEGIN_LINE;
 	  expression = 0;
 	} else
 	  goto Default;
 	break;
       case '$':
         if (!escape) {
-	  *pp++ = (u_char)END_LINE;
+	  *pp++ = END_LINE;
 	  expression = 0;
 	} else
 	  goto Default;
@@ -1467,7 +1451,7 @@ compile:
       case '.':
         if ((escape && rx_nomagic) || (!escape && !rx_nomagic)) {
 	  expression = pp;
-	  *pp++ = (u_char)ANY_CHAR;
+	  *pp++ = ANY_CHAR;
 	  BRANCH_LEN_INC(1);
 	} else
 	  goto Default;
@@ -1476,8 +1460,8 @@ compile:
       /* single character */
       default: Default:
         expression = pp;
-	if (start) rx_start = (u_char)cp[-1];
-        *pp++ = (u_char)CHAR;
+	if (start) rx_start = cp[-1];
+        *pp++ = CHAR;
 	*pp++ = cp[-1];
 	BRANCH_LEN_INC(1);
 	break;
@@ -1503,7 +1487,7 @@ compile:
 	pp - (branch_n[pc][branch_n_c[0]] + SIZE_BRANCH);
     }
   }
-  *pp++ = (u_char)EOX;
+  *pp++ = EOX;
   *pp++ = 0;
 
   *regex = pp - regex; /* set the replace offset */
@@ -1611,12 +1595,12 @@ compile:
 	      /* it is sufficient lo leave 64 bytes of extra space here,
 	       * because there won't be any `ANY_OF' of `ANY_BUT' commands
 	       * in the replace-code. */
-	    *pp++ = (u_char)STRING;
+	    *pp++ = STRING;
 	    *pp++ = j;
-	    for (i = 0; i < j; ++i) *pp++ = (u_char)s[i];
+	    for (i = 0; i < j; ++i) *pp++ = s[i];
 	    j = 0;
 	  }
-	  *pp++ = (u_char)BACKREF;
+	  *pp++ = BACKREF;
 	  *pp++ = cp[-1] - '0';
 	} else
 	  goto Default2;
@@ -1632,11 +1616,11 @@ compile:
   } /* while */
   if (j) {
     if (pp - regex + j > regex_size * regex_blocksize - 64) goto compile;
-    *pp++ = (u_char)STRING;
+    *pp++ = STRING;
     *pp++ = j;
-    for (i = 0; i < j; ++i) *pp++ = (u_char)s[i];
+    for (i = 0; i < j; ++i) *pp++ = s[i];
   }
-  *pp++ = (u_char)EOX;
+  *pp++ = EOX;
   *pp = 0;
 
 exit_regex_compile:

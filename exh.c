@@ -88,11 +88,11 @@ char *exh_initialize[] = {
 };
 
   static int
-exh_shell_command(command, pager_f)
-  char *command;    /* command to be executed by the shell specified by
+exh_shell_command(char *command, int pager_f)
+                    /* command to be executed by the shell specified by
                      * the "SHELL" environment variable.  the default shell
                      * is `EXH_DEFAULT_SHELL'. */
-  int pager_f;      /* if `pager != 0' the output is piped into the
+                    /* if `pager != 0' the output is piped into the
                      * pager specified by the "PAGER" environment.  the
                      * default pager is `EXH_DEFAULT_PAGER'. */
   /* we won't use the "-c"-switch (available for most shells), instead we're
@@ -237,7 +237,7 @@ exit_exh_shell_command:
 /* exh_shell_command */
 
   static int
-exh_subshell()
+exh_subshell(void)
   /* start a subshell session.
    */
 {
@@ -343,9 +343,7 @@ exh_skip_replace(exp, separator)
 /* exh_skip_replace */
 
   static char *
-exh_get_number(exp, number)
-  char *exp;
-  long *number;
+exh_get_number(char *exp, long *number)
 {
   char *p;
 
@@ -399,10 +397,7 @@ exh_get_number(exp, number)
 /* exh_get_number */
 
   static char *
-exh_get_address(hedit, exp, address)
-  struct he_s *hedit;
-  char *exp;
-  long *address;
+exh_get_address(struct he_s *hedit, char *exp, long *address)
   /* evaluate the specified address and store it in `*address'.  on success
    * a skip-pointer for the expression is returned, else (if `exp' is not
    * a valid address or expression) 0 is returned.
@@ -638,8 +633,7 @@ exit_exh_command:
  */
 
   static char **
-exh_cpl_file_list(prefix)
-  char *prefix;
+exh_cpl_file_list(char *prefix)
 {
   int i;
   DIR *dp;
@@ -750,8 +744,7 @@ empty_list:
 /* exh_cpl_file_list */
 
   static char **
-exh_cpl_command_list(prefix)
-  char *prefix;
+exh_cpl_command_list(char *prefix)
 {
   int i, j;
   int plen = strlen(prefix);
@@ -787,8 +780,7 @@ exh_cpl_command_list(prefix)
 /* exh_cpl_command_list */
 
   static char **
-exh_cpl_buffer_list(prefix)
-  char *prefix;
+exh_cpl_buffer_list(char *prefix)
 {
   struct buffer_s *i;
   char **list;
@@ -812,8 +804,7 @@ exh_cpl_buffer_list(prefix)
 /* exh_cpl_buffer_list */
 
   static char **
-exh_cpl_file_and_buffer_list(prefix)
-  char *prefix;
+exh_cpl_file_and_buffer_list(char *prefix)
 {
   char **list1 = exh_cpl_file_list(prefix);
   char **list2 = exh_cpl_buffer_list(prefix);
@@ -841,8 +832,7 @@ exh_cpl_file_and_buffer_list(prefix)
 /* exh_cpl_file_and_buffer_list */
 
   static char **
-exh_cpl_option_list(prefix)
-  char *prefix;
+exh_cpl_option_list(char *prefix)
 {
   char **list, **i;
   int j, k;
@@ -876,7 +866,7 @@ exh_completer(prefix, command, line, context)
 {
   int expect = -1;
   int i, j, k;
-  char **(*completer[16])( /* char * */ );
+  char **(*completer[16])(char *);
   completer[0] = exh_cpl_command_list;
   completer[1] = exh_cpl_file_list;
   completer[2] = exh_cpl_buffer_list;

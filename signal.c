@@ -68,7 +68,7 @@ volatile int caught_sigint;
 
 #ifdef SIGINT
   static sigtype_t
-sigint_handler()
+sigint_handler(int sig)
 {
   signal(SIGINT, sigint_handler);
   caught_sigint = 1;
@@ -79,7 +79,7 @@ sigint_handler()
 
 #ifdef SIGTSTP
   static sigtype_t
-sigtstp_handler()
+sigtstp_handler(int sig)
 {
   signal(SIGTSTP, sigtstp_handler);
   tio_suspend();
@@ -96,7 +96,7 @@ sigtstp_handler()
 
 #ifdef SIGCONT
   static sigtype_t
-sigcont_handler()
+sigcont_handler(int sig)
 {
   signal(SIGCONT, sigcont_handler);
   tio_restart();
@@ -108,7 +108,7 @@ sigcont_handler()
 
 #ifdef SIGPIPE
   static sigtype_t
-sigpipe_handler()
+sigpipe_handler(int sig)
 {
   signal(SIGPIPE, sigpipe_handler);
 #if 0
@@ -128,7 +128,7 @@ setup_signal_handlers(void)
 #endif
 #ifdef SIGTSTP
   /* if the shell can't do job control, we'll ignore the signal `SIGTSTP' */
-  if ((sigtype_t (*)())signal(SIGTSTP, SIG_IGN) != (sigtype_t (*)())SIG_IGN)
+  if ((sigtype_t (*)(int))signal(SIGTSTP, SIG_IGN) != (sigtype_t (*)(int))SIG_IGN)
     signal(SIGTSTP, sigtstp_handler);
 #endif
 #ifdef SIGCONT
