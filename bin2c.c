@@ -49,9 +49,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern char *optarg;
-extern int optind;
-
 static char *usage = "\
 usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
   -t  you can use this option if the inputfile is a small (< 1K) textfile.\n\

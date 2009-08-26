@@ -434,9 +434,6 @@ regex_clear(void)
 /* regex_clear */
 
   int
-regex_match(long *, long, char **, long *, long *);
-
-  int
 regex_reset()
 {
   rx_error = 0;

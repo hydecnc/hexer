@@ -417,11 +417,6 @@ tio_rel_move(int line, int column);
    */
 
   void
-tio_last_line(void);
-  /* Move the cursor to the last line, first column.
-   */
-
-  void
 tio_clear(void);
   /* Clear screen.
    */

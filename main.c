@@ -72,9 +72,6 @@
 #include "signal.h"
 #include "tio.h"
 
-extern char *optarg;
-extern int optind;
-
 static char *usage_message = "\
 hexer - a binary file editor\n\
 usage: hexer [options] [file [...]]\n\
