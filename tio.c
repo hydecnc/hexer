@@ -51,7 +51,7 @@
 
 #include "config.h"
 
-#undef _POSIX_SOURCE
+#define _GNU_SOURCE
 
 /* ANSI C
  */
