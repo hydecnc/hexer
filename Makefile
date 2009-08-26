@@ -134,28 +134,3 @@ install: all
 
 ### DO NOT DELETE THIS LINE ###
 
-# Dependencies:
-
-bin2c.o: bin2c.c
-buffer.o: buffer.c config.h buffer.h defs.h
-calc.o: calc.c config.h defs.h buffer.h hexer.h calc.h readline.h tio.h
-commands.o: commands.c config.h buffer.h hexer.h defs.h commands.h edit.h \
-  exh.h helptext.h regex.h set.h tio.h util.h
-edit.o: edit.c config.h buffer.h hexer.h defs.h calc.h edit.h readline.h \
-  tio.h
-exh.o: exh.c config.h buffer.h hexer.h defs.h commands.h exh.h regex.h \
-  set.h tio.h
-hexer.o: hexer.c config.h buffer.h hexer.h defs.h commands.h exh.h \
-  readline.h regex.h set.h tio.h util.h
-main.o: main.c config.h buffer.h hexer.h defs.h exh.h readline.h regex.h \
-  set.h signal.h tio.h
-map.o: map.c config.h buffer.h hexer.h defs.h tio.h
-port.o: port.c config.h
-readline.o: readline.c config.h buffer.h hexer.h defs.h readline.h tio.h \
-  util.h
-regex.o: regex.c defs.h regex.h
-set.o: set.c config.h buffer.h hexer.h defs.h set.h
-signal.o: signal.c config.h buffer.h hexer.h defs.h signal.h tio.h
-tio.o: tio.c config.h defs.h tio.h set.h
-util.o: util.c config.h buffer.h hexer.h defs.h util.h tio.h
-

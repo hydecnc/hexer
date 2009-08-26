@@ -1,1 +1,1 @@
-config.linux
+config.mine
