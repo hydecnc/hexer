@@ -159,17 +159,17 @@ delete_buffer_block(block)
 new_buffer(arg_options)
   struct BufferOptions *arg_options;
 {
-  Buffer * new_buffer;
+  Buffer * new_buf;
   struct BufferOptions options;
   
   options = arg_options ? *arg_options : b_default_options;
-  if (!(new_buffer = (Buffer *)malloc(sizeof(Buffer)))) return 0;
-  new_buffer->first_block = 0;
-  new_buffer->size = 0;
-  new_buffer->blocksize = options.blocksize;
-  new_buffer->read_only = options.opt & B_READ_ONLY;
-  new_buffer->modified = 0;
-  return new_buffer;
+  if (!(new_buf = (Buffer *)malloc(sizeof(Buffer)))) return 0;
+  new_buf->first_block = 0;
+  new_buf->size = 0;
+  new_buf->blocksize = options.blocksize;
+  new_buf->read_only = options.opt & B_READ_ONLY;
+  new_buf->modified = 0;
+  return new_buf;
 }
 /* new_buffer */
 

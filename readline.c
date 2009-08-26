@@ -386,24 +386,24 @@ rl_get_vposition(void)
 /* rl_get_position */
 
   static int
-rl_get_length(struct rl_line_s *rl)
-  /* return the number of logical characters in `rl->line'.  escape sequences
+rl_get_length(struct rl_line_s *rrl)
+  /* return the number of logical characters in `rrl->line'.  escape sequences
    * are counted as a single character.
    */
 {
   int i;
   int length;
 
-  for (i = length = 0; rl->line[i]; ++i, ++length)
-    if (rl->line[i] == RL_ESC) ++i;
+  for (i = length = 0; rrl->line[i]; ++i, ++length)
+    if (rrl->line[i] == RL_ESC) ++i;
   return length;
 }
 /* rl_get_length */
 
   static char *
-rl_make_vline_(struct rl_line_s *rl)
-  /* update the visible line `rl->vline' from `rl->line'.
-   * the return value is `rl->vline'.
+rl_make_vline_(struct rl_line_s *rrl)
+  /* update the visible line `rrl->vline' from `rrl->line'.
+   * the return value is `rrl->vline'.
    */
 {
   int i;
@@ -411,43 +411,43 @@ rl_make_vline_(struct rl_line_s *rl)
   int key;
   char *rep;
 
-  for (i = vposition = 0; rl->line[i]; ++i) {
-    if (rl->line[i] != RL_ESC)
-      if (tio_isprint(rl->line[i]))
-        rl->vline[vposition++] = rl->line[i];
+  for (i = vposition = 0; rrl->line[i]; ++i) {
+    if (rrl->line[i] != RL_ESC)
+      if (tio_isprint(rrl->line[i]))
+        rrl->vline[vposition++] = rrl->line[i];
       else {
-        strcpy(rl->vline + vposition, rep = tio_keyrep(rl->line[i]));
+        strcpy(rrl->vline + vposition, rep = tio_keyrep(rrl->line[i]));
         vposition += strlen(rep);
       }
     else {
       ++i;
-      if (rl->line[i] == 1) {
+      if (rrl->line[i] == 1) {
         /* ESCAPE-character */
-        strcpy(rl->vline + vposition, rep = tio_keyrep(HXKEY_ESCAPE));
+        strcpy(rrl->vline + vposition, rep = tio_keyrep(HXKEY_ESCAPE));
         vposition += strlen(rep);
-      } else if (rl->line[i] == (int)HXKEY_NULL - HXKEY_BIAS) {
+      } else if (rrl->line[i] == (int)HXKEY_NULL - HXKEY_BIAS) {
         /* null-character */
-        strcpy(rl->vline + vposition, rep = tio_keyrep(HXKEY_NULL));
+        strcpy(rrl->vline + vposition, rep = tio_keyrep(HXKEY_NULL));
         vposition += strlen(rep);
       } else {
-        key = rl->line[i] + HXKEY_BIAS;
-        strcpy(rl->vline + vposition, rep = tio_keyrep(key));
+        key = rrl->line[i] + HXKEY_BIAS;
+        strcpy(rrl->vline + vposition, rep = tio_keyrep(key));
         vposition += strlen(rep);
       }
     }
   }
-  rl->vline[vposition] = 0;
-  return rl->vline;
+  rrl->vline[vposition] = 0;
+  return rrl->vline;
 }
 /* rl_make_vline_ */
 
   static int
-rl_get_vlength(struct rl_line_s *rl)
-  /* return the number of  characters in `rl->vline'.
+rl_get_vlength(struct rl_line_s *rrl)
+  /* return the number of  characters in `rrl->vline'.
    */
 {
-  rl_make_vline_(rl);
-  return strlen(rl->vline);
+  rl_make_vline_(rrl);
+  return strlen(rrl->vline);
 }
 /* rl_get_vlength */
 
@@ -907,9 +907,9 @@ rl_complete(int context, int again)
   if (*list) { /* found at least one completion */
     if (list[1]) { /* more than one completion */
       char c;
-      int l;
+      int len;
       /* find the longest unique prefix of all completions */
-      for (i = 0, l = strlen(prefix); i < l; ++i)
+      for (i = 0, len = strlen(prefix); i < len; ++i)
         for (j = 0; list[j + 1]; ++j) assert(list[j][i] == list[j + 1][i]);
       for (stop_f = 1;; ++i, stop_f = 0) {
 	if (!(c = list[0][i])) break;

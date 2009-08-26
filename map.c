@@ -173,39 +173,39 @@ key_strcpy(int *ks1, const int *ks2)
 /* key_strcpy */
 
   static int
-string_to_keys(int *keys, char *string)
+string_to_keys(int *kkeys, char *string)
 {
   while (*string) {
     if (*string == MAP_ESC) {
       ++string;
       if (*string == 1)
-        *keys++ = (int)HXKEY_ESCAPE;
+        *kkeys++ = (int)HXKEY_ESCAPE;
       else
-        *keys++ = *string + (int)HXKEY_BIAS;
+        *kkeys++ = *string + (int)HXKEY_BIAS;
     } else
-      *keys++ = *string;
+      *kkeys++ = *string;
     ++string;
   }
-  *keys = 0;
+  *kkeys = 0;
   return 0;
 }
 /* string_to_keys */
 
   static int
-scan_keys(int *keys, char *string, int mode)
+scan_keys(int *kkeys, char *string, int mode)
 {
   do {
     if (*string == MAP_ESC) {
       ++string;
       if (*string == 1)
-        *keys++ = HXKEY_ESCAPE;
+        *kkeys++ = HXKEY_ESCAPE;
       else
-        *keys++ = *string + HXKEY_BIAS;
+        *kkeys++ = *string + HXKEY_BIAS;
       ++string;
     } else
-      string = tio_keyscan(keys++, string, mode);
+      string = tio_keyscan(kkeys++, string, mode);
   } while (*string);
-  *keys = 0;
+  *kkeys = 0;
   return 0;
 }
 /* scan_keys */
@@ -221,15 +221,15 @@ mungetch(key)
 #endif
 
   static void
-mungets(int *keys)
+mungets(int *kkeys)
 {
   int i;
 
-  for (i = 0; keys[i]; ++i);
+  for (i = 0; kkeys[i]; ++i);
   if (tio_m_remap)
-    while (i) tio_ungetch(keys[--i]);
+    while (i) tio_ungetch(kkeys[--i]);
   else
-    while (i) munget[munget_n++] = keys[--i];
+    while (i) munget[munget_n++] = kkeys[--i];
 }
 /* mungets */
 

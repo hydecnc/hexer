@@ -1178,11 +1178,10 @@ tio_get()
 /* tio_get */
 
   int
-tio_tget(timeout)
+tio_tget(int tmout)
   /* Like `tio_get()', but waits `timeout' tenths of a second for input.
    * `tio_tget()' returns `HXKEY_NONE' (0) if nothing has been read.
    */
-  int timeout;
 {
   struct termios ts, ts_rec;
   int key;
@@ -1193,7 +1192,7 @@ tio_tget(timeout)
   ts.c_cc[VMIN] = 1;
   ts.c_cc[VTIME] = 0;
   tcsetattr(0, TCSANOW, &ts);
-  switch (tio_getwait(timeout * 100)) {
+  switch (tio_getwait(tmout * 100)) {
     case -1:
 #ifdef TCFLSH
       ioctl(0, TCFLSH, TCIFLUSH);
@@ -2174,8 +2173,7 @@ sigwinch_handler(int sig)
 #endif
 
   int
-tio_raw_readwait(timeout)
-  int timeout;
+tio_raw_readwait(tmout)
 {
 #ifdef FD_ZERO
   fd_set fdset;
@@ -2183,11 +2181,11 @@ tio_raw_readwait(timeout)
 
   FD_ZERO(&fdset);
   FD_SET(0, &fdset);
-  if (timeout < 0)
+  if (tmout < 0)
     tv = 0;
   else {
-    tv->tv_sec = timeout / 1000;
-    tv->tv_usec = timeout % 1000;
+    tv->tv_sec = tmout / 1000;
+    tv->tv_usec = tmout % 1000;
   }
   tio_flush();
   return select(1, &fdset, 0, 0, tv);
@@ -2198,7 +2196,7 @@ tio_raw_readwait(timeout)
   fd.fd = 0;
   fd.events = POLLIN;
   tio_flush();
-  return poll(&fd, 1, timeout);
+  return poll(&fd, 1, tmout);
 #else
   tio_flush();
   return 1;
@@ -2209,20 +2207,18 @@ tio_raw_readwait(timeout)
 /* tio_raw_readwait */
 
   int
-tio_readwait(timeout)
-  int timeout;
+tio_readwait(int tmout)
 {
   if (tio_unread_count) return 1;
-  return tio_raw_readwait(timeout);
+  return tio_raw_readwait(tmout);
 }
 /* tio_readwait */
 
   int
-tio_getwait(timeout)
-  int timeout;
+tio_getwait(int tmout)
 {
   if (tio_unget_count) return 1;
-  return tio_readwait(timeout);
+  return tio_readwait(tmout);
 }
 /* tio_getwait */
 

@@ -237,14 +237,14 @@ static long buffer_base;
 
 #define REGEX_ADVANCE {                                                       \
   if (bp >= buffer + REGEX_BLOCKSIZE) {                                       \
-    long i;                                                                   \
+    long ii;                                                                   \
     rx_memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);        \
     buffer_base += REGEX_BLOCKSIZE;                                           \
     rx_seek(buffer_base + REGEX_BLOCKSIZE);                                   \
-    i = rx_read(buffer + REGEX_BLOCKSIZE, REGEX_BLOCKSIZE);                   \
-    if (i < REGEX_BLOCKSIZE) {                                                \
-      rx_size = buffer_base + REGEX_BLOCKSIZE + i;                            \
-      memset(buffer + REGEX_BLOCKSIZE + i, 0, REGEX_BLOCKSIZE - i);           \
+    ii = rx_read(buffer + REGEX_BLOCKSIZE, REGEX_BLOCKSIZE);                   \
+    if (ii < REGEX_BLOCKSIZE) {                                                \
+      rx_size = buffer_base + REGEX_BLOCKSIZE + ii;                            \
+      memset(buffer + REGEX_BLOCKSIZE + ii, 0, REGEX_BLOCKSIZE - ii);           \
     }                                                                         \
     bp -= REGEX_BLOCKSIZE;                                                    \
   } else if (bp < buffer) {                                                   \
@@ -1074,7 +1074,7 @@ compile:
       case '[':
         if ((escape && rx_nomagic) || (!escape && !rx_nomagic)) {
 	  u_char any[1024], table[256];
-	  int escape = 0;
+	  int nescape = 0;
 	  i = 0;
 	  expression = pp;
 	  if (*cp == '^')
@@ -1087,7 +1087,7 @@ compile:
 	        rx_error = (int)E_unmatched_bracket;
 		break;
 	      case '\\':
-	        if (!escape) { escape = 1; continue; } else goto Default1;
+	        if (!nescape) { nescape = 1; continue; } else goto Default1;
 		break;
 	      case '-':
 	        if (*cp == ']' || !i)
@@ -1103,14 +1103,14 @@ compile:
 		break;
 	      case 'a': case 'b': case 'f': case 'n': case 'r':
 	      case 't': case 'v':
-		if (escape)
+		if (nescape)
 		  any[i++] = escape_char[(int)cp[-1]];
 		else
 		  goto Default1;
 		break;
 	      case '0': case '1': case '2': case '3': case '4':
 	      case '5': case '6': case '7':
-	        if (escape) {
+	        if (nescape) {
 		  /* using back references in a range doesn't make sense, so
 		   * we treat them as octal characters. */
 		  --cp;
@@ -1118,7 +1118,7 @@ compile:
 		  goto Default1;
 		/* fall through */
 	      case 'o':  /* octal character */
-	        if (escape) {
+	        if (nescape) {
 		  int oct;
 		  GET_OCT(oct, 3);
 		  if (oct > 255) {
@@ -1130,7 +1130,7 @@ compile:
 		  goto Default1;
 		break;
 	      case 'd':  /* decimal character */
-	        if (escape) {
+	        if (nescape) {
 		  int dec;
 		  GET_DEC(dec, 3);
 		  if (dec > 255) {
@@ -1142,7 +1142,7 @@ compile:
 		  goto Default1;
 		break;
 	      case 'x':  /* hex character */
-	        if (escape) {
+	        if (nescape) {
 		  int hex;
 		  GET_HEX(hex, 2);
 		  any[i++] = hex;
@@ -1153,7 +1153,7 @@ compile:
 	        any[i++] = cp[-1];
 	    }
 	    if (rx_error) break;
-	    escape = 0;
+	    nescape = 0;
 	  } while (*cp != ']');
 	  if (rx_error) break;
 	  ++cp;

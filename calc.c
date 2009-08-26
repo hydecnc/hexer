@@ -370,11 +370,11 @@ calc_operation(int position, int binary)
   struct calc_object_s x, y, op;
   int int_f;
   int error_f = 0;
-  int remove;  /* number of elements to remove from the stack */
+  int nremove;  /* number of elements to remove from the stack */
   int i;
 
   if (binary) {  /* binary operator */
-    remove = 2;
+    nremove = 2;
     assert(position + 2 < sp);
     x = stack[position];
     op = stack[position + 1];
@@ -788,7 +788,7 @@ calc_operation(int position, int binary)
       break;
     }
   } else {  /* unary operator */
-    remove = 1;
+    nremove = 1;
     assert(position + 1 < sp);
     op = stack[position];
     x = stack[position + 1];
@@ -858,8 +858,8 @@ calc_operation(int position, int binary)
     }
   }
 exit:
-  for (i = position + 1; i < sp; ++i) calc_set_stack(i, stack[i + remove]);
-  calc_clear_stack(remove);
+  for (i = position + 1; i < sp; ++i) calc_set_stack(i, stack[i + nremove]);
+  calc_clear_stack(nremove);
   calc_set_stack(position, x);
   return error_f;
 }
@@ -1006,7 +1006,7 @@ isfalse(char *s, char **endptr)
 #endif
 
   static int
-calc_scan(char *exp)
+calc_scan(char *expr)
 {
   char *p, *q, *r;
   long val;
@@ -1017,7 +1017,7 @@ calc_scan(char *exp)
   int i;
 
   calc_clear_stack(sp);
-  for (p = exp; p;) {
+  for (p = expr; p;) {
     while (isspace(*p)) ++p;
     if (!*p) break;
     if (isdigit(*p) || *p == '.') {
@@ -1288,8 +1288,7 @@ main(argc, argv)
 /* main */
 #else
   char *
-calculator(exp)
-  char *exp;
+calculator(char *expr)
 {
   int i;
   int error_f = 0;
@@ -1297,7 +1296,7 @@ calculator(exp)
   struct calc_object_s x;
 
   calc_initialize_stack();
-  if (calc_scan(exp)) {
+  if (calc_scan(expr)) {
     /* search for error objects on the stack */
     for (i = sp - 1; i >= 0; --i)
       if (stack[i].type == CO_ERROR) {
