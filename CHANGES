@@ -1,6 +1,6 @@
 Change log for hexer, the multi-view binary editor
 
-0.1.5
+0.1.5	2009/08/27
 	- taken over by Peter Pentchev <roam@ringlet.net>
 	- remove the "bdir" and "ef" settings from the Vim modelines to
 	  make them actually acceptable to today's Vim
