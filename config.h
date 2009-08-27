@@ -1,1 +1,1 @@
-config.mine
+config.posix
