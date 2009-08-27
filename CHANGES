@@ -55,6 +55,8 @@ Change log for hexer, the multi-view binary editor
 	- convert all functions to ANSI C prototypes
 	- remove a couple of redundant declarations of functions and vars
 	- rename several variables to avoid collisions
+	- add a HAVE_MEMMOVE definition to the config files; buffer.c and
+	  regex.c already test for it
 
 0.1.4c
 	- the last version released by Sascha Demetrio <demetrio@cs.uni-sb.de>
