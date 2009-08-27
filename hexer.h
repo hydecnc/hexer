@@ -59,7 +59,7 @@
 #include <alloca.h>
 #endif
 #else
-char *alloca();
+char *alloca(size_t);
 #endif
 
 #define TIO_MAP 1
