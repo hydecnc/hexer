@@ -27,6 +27,7 @@ Change log for hexer, the multi-view binary editor
 	  - convert all functions to ANSI C prototypes
 	  - remove a couple of redundant declarations of functions and vars
 	  - rename several variables to avoid collisions
+	  - check the result status of various I/O functions
 	- clean up the Makefile:
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)
