@@ -141,8 +141,14 @@ exh_shell_command(char *command, int pager_f)
         close(pipe2[0]);
         close(pipe2[1]);
         /* send the command to the shell */
-        write(pipe1[1], command, strlen(command));
-        write(pipe1[1], "\n", 1);
+        if (write(pipe1[1], command, strlen(command)) != strlen(command) ||
+	    write(pipe1[1], "\n", 1) != 1) {
+	  close(pipe1[1]);
+	  he_message(1, "couldn't send the `%s' command to the pager", command);
+	  close(pipe2[0]);
+	  close(pipe2[1]);
+	  pager_f = 0;
+	} else {
         close(pipe1[1]);
         do if (waitpid(shell_pid, &shell_status, 0) >= 0) break;
           while (errno == ERESTARTSYS);
@@ -166,6 +172,7 @@ exh_shell_command(char *command, int pager_f)
         }
         if (!shell_x && !pager_x)
           he_message(0, "shell command done");
+	}
       } else if (pager_pid < 0) { /* `fork()' failed */
         close(pipe2[0]);
         close(pipe2[1]);
@@ -182,13 +189,17 @@ exh_shell_command(char *command, int pager_f)
         close(pipe1[1]);
         close(pipe2[1]);
         close(0);
-        dup(pipe2[0]);
+        if (dup(pipe2[0]) != 0)
+	  exit(EXIT_EXEC_FAILED);
         execvp(*pager, pager);
         exit(EXIT_EXEC_FAILED);
       }
     } else { /* !pager_f */
-      write(pipe1[1], command, strlen(command));
-      write(pipe1[1], "\n", 1);
+      if (write(pipe1[1], command, strlen(command)) != strlen(command) ||
+	  write(pipe1[1], "\n", 1) != 1) {
+	close(pipe1[1]);
+	he_message(1, "couldn't send command `%s' to pager", command);
+      } else {
       close(pipe1[1]);
       do if (waitpid(shell_pid, &shell_status, 0) >= 0) break;
         while (errno == ERESTARTSYS);
@@ -199,17 +210,21 @@ exh_shell_command(char *command, int pager_f)
           he_message(1, "%s exited with code %i", *shell, shell_x);
       }
       if (!shell_x) he_message(0, "shell command done");
+      }
     }
   } else { /* child: shell */
     close(pipe1[1]);
     close(pipe2[0]);
     close(0);
-    dup(pipe1[0]);
+    if (dup(pipe1[0]) != 0)
+      exit(EXIT_EXEC_FAILED);
     if (pager_f) {
       close(1);
-      dup(pipe2[1]);
+      if (dup(pipe2[1]) != 1)
+	exit(EXIT_EXEC_FAILED);
       close(2);
-      dup(pipe2[1]);
+      if (dup(pipe2[1]) != 2)
+	exit(EXIT_EXEC_FAILED);
     }
     /* execute the shell */
     execvp(*shell, shell);

@@ -317,13 +317,19 @@ he_select_buffer_(buffer)
     }
     if (i->hedit->swapping) {
       /* write the swap-header to the swapfile */
-      fputs("hexer ", i->hedit->undo.swapfile);
-      fputs(HEXER_VERSION, i->hedit->undo.swapfile);
-      fputc('\n', i->hedit->undo.swapfile);
-      fputs(i->fullpath, i->hedit->undo.swapfile);
-      fputc('\n', i->hedit->undo.swapfile);
-      fwrite("\0\0\0\0", 4, 1, i->hedit->undo.swapfile);
-      fflush(i->hedit->undo.swapfile);
+      size_t len;
+      char *buf;
+
+      len = 6 + strlen(HEXER_VERSION) + 1 + strlen(i->fullpath) + 1 + 4;
+      buf = alloca(len + 1);
+      if (snprintf(buf, len + 1, "hexer %s\n%s\n%c%c%c%c",
+	  HEXER_VERSION, i->fullpath, 0, 0, 0, 0) != len ||
+	  fwrite(buf, 1, len, i->hedit->undo.swapfile) != len ||
+	  fflush(i->hedit->undo.swapfile) == EOF) {
+	/* TODO: some kind of error output */
+	fclose(i->hedit->undo.swapfile);
+	i->hedit->swapping = 0;
+      }
     }
     i->hedit->buffer->modified = 0;
     i->loaded_f = 1;
@@ -811,8 +817,8 @@ hexer_init()
   strcat(path, hexerinit);
   if ((fp = fopen(path, "r"))) {
     while (!feof(fp)) {
-      fgets(line, 1024, fp);
-      if (!*line) break;
+      if (fgets(line, 1024, fp) == NULL || !*line)
+	break;
       line[strlen(line) - 1] = 0; /* discard the trailing newline */
       if (*line && *line != '"')
         exh_command(current_buffer->hedit, line);

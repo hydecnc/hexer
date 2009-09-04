@@ -214,6 +214,11 @@ he_compound_comand(hedit, command)
   struct he_s *hedit;
   struct he_command_s *command;
 {
+  char *buf;
+  size_t sz, pos;
+#define BADD(ptr, size)	memcpy(buf + pos, (ptr), (size)); pos += (size);
+#define BADDC(c)	buf[pos++] = (c);
+
   if (hedit->swapping) {
     /* Remember the file position of `hedit->undo.swapfile'.
      */
@@ -223,23 +228,39 @@ he_compound_comand(hedit, command)
 
     /* Write the command to the swapfile.
      */
-    for (n = 0, i = command; i; ++n, i = i->next_subcommand);
-      /* Count the number of subcommands.
+    sz = 4 + 1 + 4 + 4;
+    for (n = 0, i = command; i; ++n, i = i->next_subcommand)
+      /* Count the number of subcommands and determine the size of the buffer.
        */
-    fwrite(he_bigendian(n), 4, 1, hedit->undo.swapfile);
-    fputc(command->again, hedit->undo.swapfile);
+      sz += 1 + 4 + 4 + i->count;
+    buf = alloca(sz);
+    if (buf == NULL) {
+      /* TODO: some kind of error indication */
+      fclose(hedit->undo.swapfile);
+      hedit->swapping = 0;
+      return;
+    }
+    pos = 0;
+    BADD(he_bigendian(n), 4);
+    BADDC(command->again);
     for (i = command; i; i = i->next_subcommand) {
       /* Write the subcommands to the swap file.
        */
-      fputc(i->type, hedit->undo.swapfile);
-      fwrite(he_bigendian(i->position), 4, 1, hedit->undo.swapfile);
-      fwrite(he_bigendian(i->count), 4, 1, hedit->undo.swapfile);
-      fwrite(i->data, 1, i->count, hedit->undo.swapfile);
+      BADDC(i->type);
+      BADD(he_bigendian(i->position), 4);
+      BADD(he_bigendian(i->count), 4);
+      BADD(i->data, i->count);
     }
-    fwrite(he_bigendian(swap_position), 4, 1, hedit->undo.swapfile);
-    fwrite("\0\0\0\0", 4, 1, hedit->undo.swapfile);
-    fflush(hedit->undo.swapfile);
-    fseek(hedit->undo.swapfile, -4, SEEK_CUR);
+    BADD(he_bigendian(swap_position), 4);
+    BADD("\0\0\0\0", 4);
+    if (fwrite(buf, 1, pos, hedit->undo.swapfile) != pos ||
+	fflush(hedit->undo.swapfile) == EOF ||
+	fseek(hedit->undo.swapfile, -4, SEEK_CUR) == EOF) {
+      /* TODO: some kind of error indication */
+      fclose(hedit->undo.swapfile);
+      hedit->swapping = 0;
+      return;
+    }
     he_free_command(command);
   } else { /* (!hedit->swapping) */
     if (!hedit->command) {
@@ -371,7 +392,8 @@ he_rewind_command(struct he_s *hedit)
   char bigendian[4];
 
   fseek(hedit->undo.swapfile, -4, SEEK_CUR);
-  fread(bigendian, 4, 1, hedit->undo.swapfile);
+  if (fread(bigendian, 4, 1, hedit->undo.swapfile) < 1)
+    return -1;
   position = he_bigendian_to_long(bigendian);
   if (!position) return -1;
   fseek(hedit->undo.swapfile, position, SEEK_SET);
@@ -391,24 +413,33 @@ he_read_command(struct he_s *hedit)
   char bigendian[4];
   int i;
 
-  fread(bigendian, 4, 1, hedit->undo.swapfile);
+  if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
+    return 0;
   n_subcommands = he_bigendian_to_long(bigendian);
   if (!n_subcommands) {
     fseek(hedit->undo.swapfile, -4, SEEK_CUR);
     return 0;
   }
-  fgetc(hedit->undo.swapfile); /* the again-flag */
+  if (fgetc(hedit->undo.swapfile) == EOF)
+    return 0;
   c = command = (struct he_command_s *)malloc(sizeof(struct he_command_s));
   for (i = 1; c; ++i) {
+    int n;
     c->next_command = 0;
     c->prev_command = 0;
-    c->type = !!fgetc(hedit->undo.swapfile);
-    fread(bigendian, 4, 1, hedit->undo.swapfile);
+    n = fgetc(hedit->undo.swapfile);
+    if (n == EOF)
+      return 0;
+    c->type = !!n;
+    if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
+      return 0;
     c->position = he_bigendian_to_long(bigendian);
-    fread(bigendian, 4, 1, hedit->undo.swapfile);
+    if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
+      return 0;
     c->count = he_bigendian_to_long(bigendian);
     c->data = (char *)malloc(c->count);
-    fread(c->data, 1, c->count, hedit->undo.swapfile);
+    if (fread(c->data, 1, c->count, hedit->undo.swapfile) != c->count)
+      return 0;
     if (i < n_subcommands) {
       c->next_subcommand =
         (struct he_command_s *)malloc(sizeof(struct he_command_s));
