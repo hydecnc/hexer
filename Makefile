@@ -1,5 +1,8 @@
 #  Makefile for hexer version 0.1.5
 
+#  Copyright (c) 1995,1996 Sascha Demetrio
+#  Copyright (c) 2009 Peter Pentchev
+
 #  It might be helpful to read the `README'-file first.
 
 #  -- Where? --
