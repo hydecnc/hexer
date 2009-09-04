@@ -23,8 +23,10 @@ Change log for hexer, the multi-view binary editor
 	  - replace the "extern" definitions for hexer functions and
 	    variables with the appropriate includes
 	  - fix various C compiler warnings
-	  - use ANSI prototypes for the already-prototyped static functions
 	  - fix some function definitions and calls to match the prototypes
+	  - convert all functions to ANSI C prototypes
+	  - remove a couple of redundant declarations of functions and vars
+	  - rename several variables to avoid collisions
 	- clean up the Makefile:
 	  - allow the user to override most of the variables
 	  - no need to ignore the result of "rm -f" :)
@@ -52,9 +54,6 @@ Change log for hexer, the multi-view binary editor
 	  on Linux systems; it is also available on modern BSD's, but
 	  the config.bsd file needs a lot of updating anyway.
 	  Reported by: Michael Gold <mgold@ncf.ca> in Debian bug #540571
-	- convert all functions to ANSI C prototypes
-	- remove a couple of redundant declarations of functions and vars
-	- rename several variables to avoid collisions
 	- add a HAVE_MEMMOVE definition to the config files; buffer.c and
 	  regex.c already test for it
 
