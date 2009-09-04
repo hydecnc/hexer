@@ -588,9 +588,15 @@ exhcmd_read(struct he_s *hedit, char *file, long position)
   }
   fclose(fp);
   l = b_paste_from_file(hedit->buffer, file, position);
+  if (l == -1)
+    return skip;
   data = (char *)malloc(l);
   fp = fopen(file, "r");
-  fread(data, 1, l, fp);
+  if (fread(data, 1, l, fp) != l) {
+    free(data);
+    fclose(fp);
+    return skip;
+  }
   he_subcommand(hedit, 1, position, l, data);
   he_subcommand(hedit, -1, 0, 0, 0);
   he_message(0, "read 0x%lx (%li) bytes from `%s'", l, l, file);
@@ -1078,7 +1084,8 @@ exhcmd_help(struct he_s *hedit, char *args)
   } else if (!pid1) { /* child */
     close(pipefd[1]);
     close(0);
-    dup(pipefd[0]);
+    if (dup(pipefd[0]) == -1)
+      exit(EXIT_EXEC_FAILED);
     p = (char *)alloca(strlen(he_pagerprg) + 1);
     strcpy(p, he_pagerprg);
     for (vp[i = 0] = p; *p; ++p)
@@ -1097,7 +1104,12 @@ exhcmd_help(struct he_s *hedit, char *args)
     close(pipefd[1]);
     goto exit_exhcmd_help;
   } else if (!pid2) { /* child */
-    write(pipefd[1], helptext, strlen(helptext));
+    size_t len, n;
+    ssize_t res;
+
+    for (n = 0, len = strlen(helptext); n < len; n += res)
+      if ((res = write(pipefd[1], helptext + n, len - n)) == -1)
+	exit(1);
     close(pipefd[1]);
     exit(0);
   }
