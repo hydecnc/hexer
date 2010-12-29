@@ -16,7 +16,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009 Peter Pentchev
+ * Copyright (c) 2009, 2010 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
