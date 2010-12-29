@@ -1,5 +1,5 @@
 /* calc.c	01/13/1996
- * a simple calcualtor.
+ * a simple calculator.
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio

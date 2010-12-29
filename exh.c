@@ -562,7 +562,7 @@ check_terminal:
   }
   if (!terminal_match_f) goto exit_exh_command;
   /* check if an address or address range is specified in the command */
-  if (*p == '%') { /* calcualtor command */
+  if (*p == '%') { /* calculator command */
     ++p;
     begin = 0;
     end = hedit->buffer->size;
