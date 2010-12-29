@@ -102,6 +102,7 @@ main(int argc, char **argv)
   if (outfile)
     if (!(out = fopen(outfile, "w"))) {
       perror(outfile);
+      fclose(in);
       exit(1);
     }
 
@@ -188,6 +189,7 @@ main(int argc, char **argv)
       /* we write a trailing 0 so the array can be used as a sting. */
   }
   fprintf(out, "/* end of %s.c */\n\n", name);
+  fclose(in);
   return 0;
 }
 /* main */

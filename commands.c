@@ -602,6 +602,7 @@ exhcmd_read(struct he_s *hedit, char *file, long position)
   he_subcommand(hedit, -1, 0, 0, 0);
   he_message(0, "read 0x%lx (%li) bytes from `%s'", l, l, file);
   if (l) he_refresh_part(hedit, position, -1);
+  fclose(fp);
   return skip;
 }
 /* exhcmd_read */

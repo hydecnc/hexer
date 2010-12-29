@@ -1,6 +1,13 @@
 Change log for hexer, the multi-view binary editor
 
 0.1.6	not yet ;)
+	- fix some errors and warnings detected by cppcheck:
+	  - bin2c.c, buffer.c, commands.c, hexer.c - file descriptor leaks
+	  - calc.c - a buffer overflow with an overlong command line
+	  - main.c - suppress a false positive about a global pointer
+	  - regex.c - note that I've been aware of the negative array index
+	    problem ever since I first looked at the hexer source code and
+	    tried to build it with a raised compiler warning level :)
 
 0.1.5	2009/09/04
 	- taken over by Peter Pentchev <roam@ringlet.net>

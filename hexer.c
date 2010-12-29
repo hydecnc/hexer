@@ -831,6 +831,7 @@ hexer_init()
         break;
       }
     }
+    fclose(fp);
   }
 }
 /* hexer_init */

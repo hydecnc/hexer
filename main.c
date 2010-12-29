@@ -187,6 +187,8 @@ process_args(int argc, char **argv)
     hexer_init();
     if (startup_commands_n && current_buffer)
       for (i = 0; i < startup_commands_n; ++i) {
+	// I think this is a false positive - current_buffer is global! :)
+	// cppcheck-suppress nullPointer
         exh_command(current_buffer->hedit, startup_commands[i]);
         if (!current_buffer) break;
       }

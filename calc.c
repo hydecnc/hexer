@@ -1242,7 +1242,8 @@ main(argc, argv)
   for (;;) {
     *buf = 0;
     if (argc > 1)
-      for (i = 1; i < argc; ++i) strcat(buf, argv[i]);
+      for (i = 1; i < argc; ++i)
+	snprintf(buf + strlen(buf), sizeof(buf) - strlen(buf), "%s", argv[i]);
     else
       fgets(buf, 256, stdin);
     if (!*buf) break;

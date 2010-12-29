@@ -564,7 +564,10 @@ b_read_buffer_from_file(buffer, filename)
     
   assert(!buffer->read_only);
   BUFFER_CHANGED(buffer);
-  if (file <= 0) return -1;
+  if (file <= 0) {
+    close(file);
+    return -1;
+  }
   b_clear(buffer);
   do {
     tmp = (char *)malloc(buffer->blocksize);
@@ -635,6 +638,7 @@ b_copy_to_file(buffer, filename, position, count)
 
   if (file < 0 || !tmp) {
     if (tmp) free((char *)tmp);
+    if (file >= 0) close(file);
     return -1;
   }
   do {
@@ -670,6 +674,7 @@ b_paste_from_file(buffer, filename, position)
   assert(!buffer->read_only);
   if (file < 0 || !tmp) {
     if (tmp) free((char *)tmp);
+    if (file >= 0) close(file);
     return -1;
   }
   BUFFER_CHANGED(buffer);

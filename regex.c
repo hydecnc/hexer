@@ -943,6 +943,13 @@ compile:
   slot = 1;
 
   rx_start = -1;
+  /*
+   * Yes, I know this generates warnings from both the compiler and cppcheck.
+   * Unfortunately, fixing it would mean basically redoing the regular
+   * expression parser; I've been thinking about using the libc one for some
+   * time, but not quite right now.
+   *   -- Peter Pentchev, 2010/12/29
+   */
   branch[-1] = regex;
 
   ++pp; /* leave space for the replace offset */
