@@ -1,0 +1,2 @@
+To-do list for hexer, the simple binary editor:
+- check for malloc()/realloc() result in almost all of the code!
