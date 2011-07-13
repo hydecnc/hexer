@@ -1,6 +1,6 @@
 Change log for hexer, the multi-view binary editor
 
-0.1.7	not yet ;)
+0.1.7	2011/07/13
 	- fix searching for characters with a code point above 127
 	  Reported by: Michael Gold <mgold@ncf.ca> in Debian bug #633508
 	- bump the year of my copyright notice on files changed in 2011
