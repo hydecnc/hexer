@@ -16,7 +16,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010 Peter Pentchev
+ * Copyright (c) 2009 - 2011 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -482,7 +482,7 @@ regex_search(regex, begin, end, start, direction,
   if (rx_size && position >= rx_size) position = rx_size - 1;
   while (position < end && position >= begin) {
     if (rx_start >= 0)
-      while (*bp != rx_start && position < end) {
+      while (*bp != (char)rx_start && position < end) {
 	if (*rx_interrupt) {
 	  rx_error = (int)E_interrupt;
           *rx_interrupt = 0;
@@ -555,14 +555,14 @@ regex_match_(long *regex, long position, int *parstack, int *parsp)
 	++p, ++bp;
 	break;
       case CHAR:
-	if (*bp++ != *pp++) goto fail;
+	if (*bp++ != (char)*pp++) goto fail;
 	++p;
 	break;
       case STRING:
         operand = *pp++; /* length of the string. */
 	if (rx_size && p + operand > rx_size) goto fail;
 	/* if (memcmp(bp, pp, operand)) goto fail; */
-        for (; operand; --operand) if (*pp++ != *bp++) goto fail;
+        for (; operand; --operand) if ((char)*pp++ != *bp++) goto fail;
         /*
 	pp += operand;
 	bp += operand;
@@ -571,15 +571,15 @@ regex_match_(long *regex, long position, int *parstack, int *parsp)
 	break;
       case ANY_OF:
         operand = *pp++; /* number of characters */
-	for (i = 0; i < operand && *bp > *pp; ++pp, ++i);
-	if (*bp != *pp) goto fail;
+	for (i = 0; i < operand && *bp > (char)*pp; ++pp, ++i);
+	if (*bp != (char)*pp) goto fail;
 	pp += operand - i;
 	++p, ++bp;
 	break;
       case ANY_BUT:
         operand = *pp++; /* number of characters */
-        for (i = 0; i < operand && *bp > *pp; ++pp, ++i);
-	if (*bp == *pp) goto fail;
+        for (i = 0; i < operand && *bp > (char)*pp; ++pp, ++i);
+	if (*bp == (char)*pp) goto fail;
         if (rx_special_nl && *bp == '\n') goto fail;
 	pp += operand - i;
 	++p, ++bp;
