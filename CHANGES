@@ -1,5 +1,7 @@
 Change log for hexer, the multi-view binary editor
 
+0.1.7	not yet ;)
+
 0.1.6	2010/12/29
 	- fix some errors and warnings detected by cppcheck:
 	  - bin2c.c, buffer.c, commands.c, hexer.c - file descriptor leaks
