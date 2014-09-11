@@ -54,6 +54,8 @@ INSTALLMAN ?= $(INSTALL) -m 644
 #INSTALLBIN = $(INSTALL)
 #INSTALLMAN = $(INSTALL)
 
+MKDIR ?= mkdir -p
+
 ###  It shouldn't be necessary to change anything below this line.
 
 HEXER = hexer
@@ -129,6 +131,7 @@ distclean: clean
 	rm -f depend
 
 install: all
+	$(MKDIR) $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)
 	$(INSTALLBIN) $(HEXER) $(DESTDIR)$(BINDIR)
 	$(INSTALLMAN) $(HEXER).1 $(DESTDIR)$(MANDIR)
 	[ ! -f $(MYC) ] || $(INSTALLBIN) $(MYC) $(DESTDIR)$(BINDIR)
