@@ -1,4 +1,4 @@
-#  Makefile for hexer version 0.1.7
+#  Makefile for hexer version 0.1.8
 
 #  Copyright (c) 1995,1996 Sascha Demetrio
 #  Copyright (c) 2009 - 2011 Peter Pentchev
@@ -30,7 +30,7 @@ LTERMCAP ?= -lcurses
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
-CPPFLAGS += -DHEXER_VERSION=\"0.1.7\"
+CPPFLAGS += -DHEXER_VERSION=\"0.1.8\"
 
 #  -- Which compiler? --
 CC ?= cc
