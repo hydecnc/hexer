@@ -30,18 +30,17 @@ LTERMCAP ?= -lcurses
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
-DEFINES = -DHEXER_VERSION=\"0.1.7\"
+CPPFLAGS += -DHEXER_VERSION=\"0.1.7\"
 
 #  -- Which compiler? --
 CC ?= cc
 CFLAGS ?= -O
-CFLAGS += $(DEFINES)
 LDFLAGS ?=
 LDLIBS = $(LTERMCAP) -lm
 #
 #  Uncomment the following lines if you want to use the GNU compiler.
 #CC = gcc
-#CFLAGS = -O6 $(DEFINES)
+#CFLAGS = -O6
 #LDFALGS =
 #LDLIBS = $(LTERMCAP)
 
@@ -79,10 +78,10 @@ $(HEXER): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
 $(MYC): calc.c
-	$(CC) $(LDFLAGS) $(CFLAGS) -DMYCALC=1 -o $@ calc.c -lm
+	$(CC) $(LDFLAGS) $(CPPFLAGS) $(CFLAGS) -DMYCALC=1 -o $@ calc.c -lm
 
 bin2c: bin2c.c
-	$(CC) $(CFLAGS) -o $@ bin2c.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ bin2c.c
 
 helptext.c: help.txt bin2c
 	./bin2c -n helptext -o $@ help.txt
@@ -108,8 +107,8 @@ depend: *.c *.h
 	-echo >> Makefile~
 	@{ for i in *.c; do \
 	      if [ "$$i" != 'termlib.c' ]; then \
-	      echo $(CC) -MM $(CINCLUDE) $(CFLAGS) $$i '>>' Makefile~; \
-	      $(CC) -MM $(CINCLUDE) $(CFLAGS) $$i >> Makefile~; \
+	      echo $(CC) -MM $(CPPFLAGS) $$i '>>' Makefile~; \
+	      $(CC) -MM $(CPPFLAGS) $$i >> Makefile~; \
 	      fi \
 	    done; }
 	-echo >> Makefile~
