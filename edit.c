@@ -1524,8 +1524,10 @@ he_insert_mode(hedit, replace_mode, count)
             hedit->insert_position = -1;
             b_copy(hedit->buffer, replace,
                    hedit->position, replace->size - 1, 1);
-            b_set_size(replace, replace->size - 1);
-            b_set_size(insert, insert->size - 1);
+            if (replace->size > 0)
+                b_set_size(replace, replace->size - 1);
+            if (insert->size > 0)
+                b_set_size(insert, insert->size - 1);
             he_refresh_part(hedit, hedit->position, hedit->position);
           } else
             if (insert->size) {
@@ -1553,7 +1555,8 @@ he_insert_mode(hedit, replace_mode, count)
             insert_state = 0;
             hedit->insert_position = -1;
             b_delete(hedit->buffer, hedit->position, 1);
-            b_set_size(insert, insert->size - 1);
+            if (insert->size > 0)
+              b_set_size(insert, insert->size - 1);
             he_refresh_part(hedit, hedit->position, hedit->buffer->size - 1);
           } else
             if (insert->size) {
