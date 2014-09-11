@@ -5,6 +5,7 @@ Change log for hexer, the multi-view binary editor
 	  Thanks, Thibaut Girka <thib@sitedethib.com>
 	- use CPPFLAGS and LDFLAGS as appropriate during the build
 	- create the destination directories during the installation
+	- bump the year of my copyright notice on files changed in 2014
 
 0.1.7	2011/07/13
 	- fix searching for characters with a code point above 127
