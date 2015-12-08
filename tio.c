@@ -523,8 +523,7 @@ static struct t_keys_s {
    */
 
   int
-tio_isprint(x)
-  int x;
+tio_isprint(int x)
 {
   if (x < 0) x += 0x100;
   if (x < 0x20) return 0;
@@ -658,8 +657,7 @@ tio_command(cmd, affcnt, va_alist)
 /* tio_command */
 
   int
-tio_init(prog)
-  char *prog;
+tio_init(char *prog)
   /* Initialize.  This function should be called before any other
    * `tio_*'-function.  `prog' should be the name of the application.
    * If you call `tio_init()' with `prog == 0', the program name is set
@@ -835,7 +833,7 @@ fail:
 /* tio_init */
 
   void
-tio_return()
+tio_return(void)
 {
   tio_command(t_return, 1);
   t_column = 0;
@@ -843,10 +841,9 @@ tio_return()
 /* tio_return */
 
   void
-tio_up(count)
+tio_up(int count)
   /* Move cursor up `count' lines.
    */
-  int count;
 {
   if (!count) return;
   if (t_line < 0)
@@ -864,10 +861,9 @@ tio_up(count)
 /* tio_up */
 
   void
-tio_down(count)
+tio_down(int count)
   /* Move cursor down `count' lines.
    */
-  int count;
 {
   if (!count) return;
   if (t_line < 0) {
@@ -888,10 +884,9 @@ tio_down(count)
 /* tio_down */
 
   void
-tio_left(count)
+tio_left(int count)
   /* Move cursor left `count' lines.
    */
-  int count;
 {
   if (!count) return;
   if (t_line < 0)
@@ -911,10 +906,9 @@ tio_left(count)
 /* tio_left */
 
   void
-tio_right(count)
+tio_right(int count)
   /* Move cursor right `count' lines.
    */
-  int count;
 {
   if (!count) return;
   if (t_column < 0) {
@@ -935,7 +929,7 @@ tio_right(count)
 /* tio_right */
 
   void
-tio_start_application()
+tio_start_application(void)
 {
   if (!tio_tite_f) tio_command(t_tc_init, 1);
   t_application_mode = 1;
@@ -943,7 +937,7 @@ tio_start_application()
 /* tio_start_application */
 
   void
-tio_end_application()
+tio_end_application(void)
 {
   if (!tio_tite_f) tio_command(t_tc_end, 1);
   t_application_mode = 0;
@@ -951,8 +945,7 @@ tio_end_application()
 /* tio_end_application */
 
   void
-tio_keypad(on)
-  int on;
+tio_keypad(int on)
   /* Set the keypad mode.
    * on=0: numeric keypad.
    * on=1: application keypad.  Select this mode if you want to use the
@@ -999,14 +992,14 @@ tio_unread(char *buf, long count)
 /* tio_unread */
 
   int
-tio_readmore()
+tio_readmore(void)
 {
   return tio_unread_count;
 }
 /* tio_readmore */
 
   int
-tio_getmore()
+tio_getmore(void)
 {
   return tio_unget_count;
 }
@@ -1120,7 +1113,7 @@ tio_getch_(void)
 /* tio_getch_ */
 
   int
-tio_getch()
+tio_getch(void)
   /* Read a character or keypad key from the keyboard.  `tio_getch()' waits
    * for input and returns the key pressed or `HXKEY_ERROR' (-1) on error.
    * This function calls `tio_getch_()' to read the character.
@@ -1158,7 +1151,7 @@ tio_getch()
 /* tio_getch */
 
   int
-tio_get()
+tio_get(void)
   /* Like `tio_getch()', but doesn't wait input.  `tio_get()' returns
    * `HXKEY_NONE' (0) if no input is available.
    */
@@ -1213,12 +1206,11 @@ tio_tget(int tmout)
 /* tio_tget */
 
   int
-tio_ungetch(x)
+tio_ungetch(int x)
   /* Put the character `x' back into the input stream.  At most
    * `TIO_MAX_UNGET' characters can be ungetch.  The return value is `x'
    * or -1 on error.
    */
-  int x;
 {
   if (tio_unget_count >= TIO_MAX_UNGET) return -1;
   tio_unget_buffer[tio_unget_count++] = x;
@@ -1227,11 +1219,10 @@ tio_ungetch(x)
 /* tio_ungetch */
 
   int
-tio_ungets(x)
+tio_ungets(int *x)
   /* Put the key string `x' back into the input stream using
    * `tio_ungetch()'.  The return value is 0 and -1 on error.
    */
-  int *x;
 {
   int i;
 
@@ -1242,12 +1233,11 @@ tio_ungets(x)
 /* tio_ungets */
 
   int
-tio_testkey(key)
+tio_testkey(int key)
   /* Returns 1, if a termcap entry for the requested key exists, else 0.
    * The function return always 1 for the keys `HXKEY_BACKSPACE', `HXKEY_TAB',
    * `HXKEY_RETURN', `HXKEY_ESCAPE', `HXKEY_DELETE', `HXKEY_NONE' and `HXKEY_ERROR'.
    */
-  int key;
 {
   int i;
 
@@ -1259,13 +1249,12 @@ tio_testkey(key)
 /* tio_testkey */
 
   char *
-tio_keyname(key)
+tio_keyname(int key)
   /* Returns the name of the key `key'.  If `key' is a printable character,
    * it is returned as a string.  If `key' is a special key, the name of
    * that key is returned.  If `key' is unknown and greater than 0xff "??"
    * is returned, else a `\x??' hexadecimal code.
    */
-  int key;
 {
   int i;
   static char name[8];
@@ -1285,8 +1274,7 @@ tio_keyname(key)
 /* tio_keyname */
 
   char *
-tio_keyrep(key)
-  int key;
+tio_keyrep(int key)
 {
   static char rep[8];
   int i;
@@ -1311,8 +1299,7 @@ tio_keyrep(key)
 /* tio_keyrep */
 
   char *
-tio_vkeyrep(key)
-  int key;
+tio_vkeyrep(int key)
 {
   int i;
 
@@ -1323,10 +1310,7 @@ tio_vkeyrep(key)
 /* tio_vkeyrep */
 
   char *
-tio_keyscan(key, s, mode)
-  int *key;
-  char *s;
-  int mode;
+tio_keyscan(int *key, char *s, int mode)
   /* Check if `s' is a sting representation of a key.
    * the keycode is written to `*key' and a pointer to the first
    * character after the srep is returned.
@@ -1356,8 +1340,7 @@ tio_keyscan(key, s, mode)
 /* tio_keyscan */
 
   int
-tio_echo(on)
-  int on;
+tio_echo(int on)
   /* on=1:  characters are echoed as they are typed.
    * on=0:  characters are not echoed.
    * Thie echo-option has no effect on other `tio_*'-functions,
@@ -1384,7 +1367,7 @@ tio_echo(on)
 /* tio_echo */
 
   void
-tio_home()
+tio_home(void)
   /* Cursor home. */
 {
   if (t_home)
@@ -1399,7 +1382,7 @@ tio_home()
 /* tio_home */
 
   void
-tio_last_line()
+tio_last_line(void)
   /* Move the cursor to the last line, first column.  */
 {
   if (t_last_line) {
@@ -1412,8 +1395,7 @@ tio_last_line()
 /* tio_last_line */
 
   void
-tio_goto_line(line)
-  int line;
+tio_goto_line(int line)
   /* Move cursor to line `line'.
    */
 {
@@ -1432,8 +1414,7 @@ tio_goto_line(line)
 /* tio_goto_line */
 
   void
-tio_goto_column(column)
-  int column;
+tio_goto_column(int column)
   /* Move cursor to column `column'.
    */
 {
@@ -1454,8 +1435,7 @@ tio_goto_column(column)
 /* tio_goto_column */
 
   void
-tio_move(lin, col)
-  int lin, col;
+tio_move(int lin, int col)
   /* Move the cursor to position `line'/`column'.
    */
 {
@@ -1471,8 +1451,7 @@ tio_move(lin, col)
 /* tio_move */
 
   void
-tio_rel_move(lin, col)
-  int lin, col;
+tio_rel_move(int lin, int col)
   /* Move the cursor relative to the cursor position.
    */
 {
@@ -1482,8 +1461,7 @@ tio_rel_move(lin, col)
 /* tio_rel_move */
 
   static int
-tio_set_scrolling_region(first, last)
-  int first, last;
+tio_set_scrolling_region(int first, int last)
 {
   if (t_change_scroll) {
     if (last < 0) last = hx_lines - 1;
@@ -1502,9 +1480,7 @@ tio_reset_scrolling_region(void)
 /* tio_reset_scrolling_region */
 
   int
-tio_scroll_up(count, first, last)
-  int count;
-  int first, last;
+tio_scroll_up(int count, int first, int last)
   /* Scroll up (forward) `count' lines.  returns -1 if the terminal
    * can't scroll.
    */
@@ -1559,9 +1535,7 @@ scroll_all:
 /* tio_scroll_up */
 
   int
-tio_scroll_down(count, first, last)
-  int count;
-  int first, last;
+tio_scroll_down(int count, int first, int last)
   /* Scroll down (reverse) `count' lines.  returns -1 if the terminal can't
    * scroll backwards.
    */
@@ -1606,8 +1580,7 @@ tio_scroll_down(count, first, last)
 /* tio_scroll_down */
 
   int
-tio_puts(s)
-  char *s;
+tio_puts(char *s)
   /* Like `fputs(s, stdout)'.
    */
 {
@@ -1659,8 +1632,7 @@ tio_puts(s)
 /* tio_puts */
 
   int
-tio_putchar(x)
-  int x;
+tio_putchar(int x)
   /* Like `putchar(x)'.
    */
 {
@@ -1674,28 +1646,28 @@ tio_putchar(x)
 /* tio_putchar */
 
   void
-tio_bell()
+tio_bell(void)
 {
   if (t_bell) tio_command(t_bell, 1); else putchar('\a');
 }
 /* tio_bell */
 
   void
-tio_visible_bell()
+tio_visible_bell(void)
 {
   tio_command(t_visible_bell, 1);
 }
 /* tio_visible_bell */
 
   void
-tio_underscore()
+tio_underscore(void)
 {
   tio_command(t_underscore_on, 1);
 }
 /* tio_underscore */
 
   void
-tio_underscore_off()
+tio_underscore_off(void)
 {
   tio_command(t_underscore_off, 1);
   tio_set_colors(t_fg, t_bg);
@@ -1703,35 +1675,35 @@ tio_underscore_off()
 /* tio_underscore_off */
 
   void
-tio_bold()
+tio_bold(void)
 {
   tio_command(t_bold_on, 1);
 }
 /* tio_bold */
 
   void
-tio_blink()
+tio_blink(void)
 {
   tio_command(t_blink_on, 1);
 }
 /* tio_blink */
 
   void
-tio_half_bright()
+tio_half_bright(void)
 {
   tio_command(t_half_bright_on, 1);
 }
 /* tio_half_bright */
 
   void
-tio_reverse()
+tio_reverse(void)
 {
   tio_command(t_reverse_on, 1);
 }
 /* tio_reverse */
 
   void
-tio_normal()
+tio_normal(void)
 {
   tio_command(t_all_off, 1);
   tio_command(t_underscore_off, 1);
@@ -1740,13 +1712,12 @@ tio_normal()
 /* tio_normal */
 
   void
-tio_set_cursor(mode)
+tio_set_cursor(int mode)
   /* Set the visibility of the cursor.
    * `mode == 0':  invisible.
    * `mode == 1':  normal.
    * `mode == 2':  standout.
    */
-  int mode;
 {
   switch (mode) {
   case 0:
@@ -1763,7 +1734,7 @@ tio_set_cursor(mode)
 /* tio_set_cursor */
 
   int
-tio_have_color()
+tio_have_color(void)
   /* returns a non-zero value if color is available, 0 else.
    */
 {
@@ -1776,7 +1747,7 @@ tio_have_color()
 /* tio_have_color */
 
   void
-tio_set_colors(fg, bg)
+tio_set_colors(int fg, int bg)
 {
   tio_set_fg(fg);
   tio_set_bg(bg);
@@ -1784,8 +1755,7 @@ tio_set_colors(fg, bg)
 /* tio_set_colors */
 
   void
-tio_set_fg(color)
-  int color;
+tio_set_fg(int color)
   /* set the foreground color to `color'.
    */
 {
@@ -1797,8 +1767,7 @@ tio_set_fg(color)
 /* tio_set_af */
 
   void
-tio_set_bg(color)
-  int color;
+tio_set_bg(int color)
   /* set the background color to `color'.
    */
 {
@@ -1810,21 +1779,21 @@ tio_set_bg(color)
 /* tio_set_ab */
 
   int
-tio_get_fg()
+tio_get_fg(void)
 {
   return t_fg;
 }
 /* tio_get_af */
 
   int
-tio_get_bg()
+tio_get_bg(void)
 {
   return t_bg;
 }
 /* tio_get_bg */
 
   void
-tio_clear()
+tio_clear(void)
 {
   tio_command(t_clear_screen, 1);
   t_line = 0;
@@ -1833,14 +1802,14 @@ tio_clear()
 /* tio_clear */
 
   void
-tio_clear_to_eol()
+tio_clear_to_eol(void)
 {
   tio_command(t_clear_to_eol, 1);
 }
 /* clear_to_eol */
 
   void
-tio_display(text, indent_arg)
+tio_display(char *text, int indent_arg)
   /* Send the string `text' to the terminal.  The string may contain the
    * following `@*'-commands:
    *
@@ -1872,8 +1841,6 @@ tio_display(text, indent_arg)
    * `indent_arg' sets the indent.  If `indent_arg < 0', the indent stays
    * unchanged.
    */
-  char *text;
-  int indent_arg;
 {
   int i, j;
   int lin, col;
@@ -1968,9 +1935,7 @@ tio_display(text, indent_arg)
 /* tio_display */
 
   void
-tio_message(message, indent)
-  char **message;
-  int indent;
+tio_message(char **message, int indent)
   /* displays the array of strings `message' via `tio_display()' providing
    * a simple pager.  this function assumes, that every string in
    * `message' displays as a single line.
@@ -2035,9 +2000,7 @@ tio_printf(fmt, va_alist)
 /* tio_printf */
 
   int
-tio_vprintf(fmt, ap)
-  const char *fmt;
-  va_list ap;
+tio_vprintf(const char *fmt, va_list ap)
   /* Similar to `printf()'.  `tio_printf()' understands the same @-commands
    * as `tio_display()'.  Note that @-commands in strings inserted via %s
    * are executed.  Use `tio_raw_printf()' if you don't wan't @-commands to
@@ -2088,9 +2051,7 @@ tio_raw_printf(fmt, va_alist)
 /* tio_raw_printf */
 
   int
-tio_raw_vprintf(fmt, ap)
-  const char *fmt;
-  va_list ap;
+tio_raw_vprintf(const char *fmt, va_list ap)
   /* Like `printf()'.  No @-commands.
    */
 {
@@ -2114,8 +2075,7 @@ tio_raw_vprintf(fmt, ap)
 /* tio_raw_vprintf */
 
   int
-tio_insert_character(x)
-  char x;
+tio_insert_character(char x)
   /* Insert the character `x' at the current position.
    */
 {
@@ -2138,7 +2098,7 @@ tio_insert_character(x)
 /* tio_insert_character */
 
   int
-tio_delete_character()
+tio_delete_character(void)
   /* Delete the character under the cursor.
    */
 {
@@ -2174,7 +2134,7 @@ sigwinch_handler(int sig)
 #endif
 
   int
-tio_raw_readwait(tmout)
+tio_raw_readwait(int tmout)
 {
 #ifdef FD_ZERO
   fd_set fdset;
@@ -2224,14 +2184,14 @@ tio_getwait(int tmout)
 /* tio_getwait */
 
   void
-tio_reset()
+tio_reset(void)
 {
   tcsetattr(0, TCSANOW, &ts_start);
 }
 /* tio_reset */
 
   void
-tio_suspend()
+tio_suspend(void)
 {
   if ((t_keypad_transmit_recover = t_keypad_transmit))
     tio_keypad(0);
@@ -2243,7 +2203,7 @@ tio_suspend()
 /* tio_suspend */
 
   void
-tio_restart()
+tio_restart(void)
 {
   if (t_keypad_transmit_recover) tio_keypad(1);
   if (t_application_mode_recover) tio_start_application();

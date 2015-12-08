@@ -108,9 +108,7 @@ b_memmove(char *t, const char *s, const long count)
   buffer->modified = 1; }
 
   long
-count_lines(source, count)
-  char *source;
-  long count;
+count_lines(char *source, long count)
 {
   char *i;
   long j = 0;
@@ -125,9 +123,7 @@ count_lines(source, count)
  */
 
   BufferBlock *
-new_buffer_block(blocksize, data)
-  unsigned long blocksize;
-  char *data;
+new_buffer_block(unsigned long blocksize, char *data)
 {
   BufferBlock *new_block;
 
@@ -144,8 +140,7 @@ new_buffer_block(blocksize, data)
 /* new_buffer_block */
 
   void
-delete_buffer_block(block)
-  BufferBlock *block;
+delete_buffer_block(BufferBlock *block)
 {
   free((char *)block->data);
   free((char *)block);
@@ -157,8 +152,7 @@ delete_buffer_block(block)
  */
 
   Buffer *
-new_buffer(arg_options)
-  struct BufferOptions *arg_options;
+new_buffer(struct BufferOptions *arg_options)
 {
   Buffer * new_buf;
   struct BufferOptions options;
@@ -175,8 +169,7 @@ new_buffer(arg_options)
 /* new_buffer */
 
   int
-delete_buffer(buffer)
-  Buffer *buffer;
+delete_buffer(Buffer *buffer)
 {
   BufferBlock *i, *j;
 
@@ -190,9 +183,7 @@ delete_buffer(buffer)
 /* delete_buffer */
 
   int
-copy_buffer(target, source)
-  Buffer *target;
-  Buffer *source;
+copy_buffer(Buffer *target, Buffer *source)
   /* NOTE: `copy_buffer()' only copies the contents of `source', i.e.
    *   the blacksize of `target' is kept unchanged.
    */
@@ -210,17 +201,14 @@ copy_buffer(target, source)
 /* copy_buffer */
 
   void
-clear_buffer(buffer)
-  Buffer *buffer;
+clear_buffer(Buffer *buffer)
 {
   b_clear(buffer);
 }
 /* clear_buffer */
 
   BufferBlock *
-find_block(buffer, position)
-  Buffer *buffer;
-  unsigned long position;
+find_block(Buffer *buffer, unsigned long position)
 {
   BufferBlock *i;
   long block_number;
@@ -235,9 +223,7 @@ find_block(buffer, position)
 /* find_block */
 
   int
-b_set_size(buffer, size)
-  Buffer *buffer;
-  unsigned long size;
+b_set_size(Buffer *buffer, unsigned long size)
 {
   BufferBlock *i, *j = 0, *k;
   long block_number;
@@ -272,11 +258,7 @@ b_set_size(buffer, size)
 /* b_set_size */
 
   long
-b_read(buffer, target, position, count)
-  Buffer *buffer;
-  char *target;
-  long position;
-  long count;
+b_read(Buffer *buffer, char *target, long position, long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -296,11 +278,7 @@ b_read(buffer, target, position, count)
 /* b_read */
 
   long
-b_write(buffer, source, position, count)
-  Buffer *buffer;
-  char *source;
-  long position;
-  long count;
+b_write(Buffer *buffer, char *source, long position, long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -321,11 +299,7 @@ b_write(buffer, source, position, count)
 /* b_write */
 
   long
-b_write_append(buffer, source, position, count)
-  Buffer *buffer;
-  char *source;
-  long position;
-  long count;
+b_write_append(Buffer *buffer, char *source, long position, long count)
 {
   assert(!buffer->read_only);
   if (position + count > buffer->size) {
@@ -336,21 +310,14 @@ b_write_append(buffer, source, position, count)
 /* b_write_append */
 
   long
-b_append(buffer, source, count)
-  Buffer *buffer;
-  char *source;
-  long count;
+b_append(Buffer *buffer, char *source, long count)
 {
   return b_write_append(buffer, source, buffer->size, count);
 }
 /* b_append */
 
   long
-b_fill(buffer, c, position, count)
-  Buffer *buffer;
-  char c;
-  long position;
-  long count;
+b_fill(Buffer *buffer, char c, long position, long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -371,11 +338,7 @@ b_fill(buffer, c, position, count)
 /* b_fill */
 
   long
-b_fill_append(buffer, c, position, count)
-  Buffer *buffer;
-  char c;
-  long position;
-  long count;
+b_fill_append(Buffer *buffer, char c, long position, long count)
 {
   if (position + count > buffer->size)
     b_set_size(buffer, position + count);
@@ -384,10 +347,7 @@ b_fill_append(buffer, c, position, count)
 /* b_fill_append */
 
   long
-b_count_lines(buffer, position, count)
-  Buffer *buffer;
-  long position;
-  long count;
+b_count_lines(Buffer *buffer, long position, long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -405,10 +365,7 @@ b_count_lines(buffer, position, count)
 /* b_count_lines */
 
   long
-b_insert(buffer, position, count)
-  Buffer *buffer;
-  long position;
-  long count;
+b_insert(Buffer *buffer, long position, long count)
 {
   long i;
 
@@ -421,10 +378,7 @@ b_insert(buffer, position, count)
 /* b_insert */
 
   long
-b_delete(buffer, position, count)
-  Buffer *buffer;
-  long position;
-  long count;
+b_delete(Buffer *buffer, long position, long count)
 {
   long size = buffer->size;
 
@@ -437,12 +391,7 @@ b_delete(buffer, position, count)
 /* b_delete */
 
   long
-b_copy(target_buffer, source_buffer, target_position, source_position, count)
-  Buffer *target_buffer;
-  Buffer *source_buffer;
-  long target_position;
-  long source_position;
-  long count;
+b_copy(Buffer *target_buffer, Buffer *source_buffer, long target_position, long source_position, long count)
 {
   BufferBlock *t_block;
   long t_offset = target_position % target_buffer->blocksize;
@@ -474,11 +423,7 @@ b_copy(target_buffer, source_buffer, target_position, source_position, count)
 /* b_copy */
 
   long
-b_copy_forward(buffer, target_position, source_position, count)
-  Buffer *buffer;
-  long target_position;
-  long source_position;
-  long count;
+b_copy_forward(Buffer *buffer, long target_position, long source_position, long count)
 {
   BufferBlock *t_block, *s_block;
   long bs = buffer->blocksize;
@@ -536,8 +481,7 @@ b_copy_forward(buffer, target_position, source_position, count)
 /* b_copy_forward */
 
   void
-b_clear(buffer)
-  Buffer *buffer;
+b_clear(Buffer *buffer)
 {
   BufferBlock *i, *j;
 
@@ -553,9 +497,7 @@ b_clear(buffer)
 /* b_clear */
 
   long
-b_read_buffer_from_file(buffer, filename)
-  Buffer *buffer;
-  char *filename;
+b_read_buffer_from_file(Buffer *buffer, char *filename)
 {
   BufferBlock *i = 0;
   long bytes_read = 0;
@@ -597,9 +539,7 @@ b_read_buffer_from_file(buffer, filename)
 /* b_read_buffer_from_file */
 
   long
-b_write_buffer_to_file(buffer, filename)
-  Buffer *buffer;
-  char *filename;
+b_write_buffer_to_file(Buffer *buffer, char *filename)
 {
   BufferBlock *i;
   long bytes_wrote = 0;
@@ -626,11 +566,7 @@ b_write_buffer_to_file(buffer, filename)
 /* b_write_buffer_to_file */
 
   long
-b_copy_to_file(buffer, filename, position, count)
-  Buffer *buffer;
-  char *filename;
-  long position;
-  long count;
+b_copy_to_file(Buffer *buffer, char *filename, long position, long count)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read = 0, bytes_wrote = 0;
@@ -662,10 +598,7 @@ b_copy_to_file(buffer, filename, position, count)
 /* b_copy_to_file */
 
   long
-b_paste_from_file(buffer, filename, position)
-  Buffer *buffer;
-  char *filename;
-  long position;
+b_paste_from_file(Buffer *buffer, char *filename, long position)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read, bytes_wrote = 0;
@@ -699,17 +632,14 @@ b_paste_from_file(buffer, filename, position)
  */
 
   long
-b_no_lines(buffer)
-  Buffer *buffer;
+b_no_lines(Buffer *buffer)
 {
   return b_count_lines(buffer, 0, buffer -> size);
 }
 /* b_no_lines */
 
   long
-b_goto_line(buffer, number)
-  Buffer *buffer;
-  long number;
+b_goto_line(Buffer *buffer, long number)
 {
   BufferBlock *i;
   long newlines = 0, blocks = 0;
@@ -735,9 +665,7 @@ b_goto_line(buffer, number)
 /* b_goto_line */
 
   long
-b_get_linenumber(buffer, position)
-  Buffer *buffer;
-  long position;
+b_get_linenumber(Buffer *buffer, long position)
 {
   long number;
 
@@ -755,9 +683,7 @@ b_get_linenumber(buffer, position)
 /* b_get_linenumber */
 
   long
-b_line_start(buffer, position)
-  Buffer *buffer;
-  long position;
+b_line_start(Buffer *buffer, long position)
 {
   const long bs = buffer -> blocksize;
   BufferBlock *i;
@@ -773,9 +699,7 @@ b_line_start(buffer, position)
 /* b_line_start */
 
   long
-b_line_end(buffer, position)
-  Buffer *buffer;
-  long position;
+b_line_end(Buffer *buffer, long position)
 {
   const long bs = buffer -> blocksize;
   BufferBlock *i;
@@ -791,9 +715,7 @@ b_line_end(buffer, position)
 /* b_line_end */
 
   long
-b_length_of_line(buffer, number)
-  Buffer *buffer;
-  long number;
+b_length_of_line(Buffer *buffer, long number)
 {
   long position, length;
 
@@ -808,10 +730,7 @@ b_length_of_line(buffer, number)
 /* b_length_of_line */
 
   long
-b_length_of_text_block(buffer, number, count)
-  Buffer *buffer;
-  long number;
-  long count;
+b_length_of_text_block(Buffer *buffer, long number, long count)
 {
   long start, end;
 
@@ -825,10 +744,7 @@ b_length_of_text_block(buffer, number, count)
 /* b_length_of_text_block */
 
   long
-b_read_line(buffer, line, number)
-  Buffer *buffer;
-  char *line;
-  long number;
+b_read_line(Buffer *buffer, char *line, long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
@@ -841,11 +757,7 @@ b_read_line(buffer, line, number)
 /* b_read_line */
 
   long
-b_read_text_block(buffer, target, number, count)
-  Buffer *buffer;
-  char *target;
-  long number;
-  long count;
+b_read_text_block(Buffer *buffer, char *target, long number, long count)
 {
   long start = b_goto_line(buffer, number);
   long end = start;
@@ -860,9 +772,7 @@ b_read_text_block(buffer, target, number, count)
 /* b_read_text_block */
 
   long
-b_delete_line(buffer, number)
-  Buffer *buffer;
-  long number;
+b_delete_line(Buffer *buffer, long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
@@ -872,10 +782,7 @@ b_delete_line(buffer, number)
 /* b_delete_line */
   
   long
-b_delete_text_block(buffer, number, count)
-  Buffer *buffer;
-  long number;
-  long count;
+b_delete_text_block(Buffer *buffer, long number, long count)
 {
   long start = b_goto_line(buffer, number);
   long end = start;
@@ -886,9 +793,7 @@ b_delete_text_block(buffer, number, count)
 /* b_delete_text_block */
 
   long
-b_clear_line(buffer, number)
-  Buffer *buffer;
-  long number;
+b_clear_line(Buffer *buffer, long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
@@ -898,10 +803,7 @@ b_clear_line(buffer, number)
 /* b_clear_line */
 
   long
-b_insert_text_block(buffer, source, number)
-  Buffer *buffer;
-  char *source;
-  long number;
+b_insert_text_block(Buffer *buffer, char *source, long number)
 {
   long position, bytes_inserted;
 
