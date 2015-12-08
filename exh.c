@@ -142,7 +142,7 @@ exh_shell_command(char *command, int pager_f)
         close(pipe2[0]);
         close(pipe2[1]);
         /* send the command to the shell */
-        if (write(pipe1[1], command, strlen(command)) != strlen(command) ||
+        if (write(pipe1[1], command, strlen(command)) != (ssize_t)strlen(command) ||
 	    write(pipe1[1], "\n", 1) != 1) {
 	  close(pipe1[1]);
 	  he_message(1, "couldn't send the `%s' command to the pager", command);
@@ -196,7 +196,7 @@ exh_shell_command(char *command, int pager_f)
         exit(EXIT_EXEC_FAILED);
       }
     } else { /* !pager_f */
-      if (write(pipe1[1], command, strlen(command)) != strlen(command) ||
+      if (write(pipe1[1], command, strlen(command)) != (ssize_t)strlen(command) ||
 	  write(pipe1[1], "\n", 1) != 1) {
 	close(pipe1[1]);
 	he_message(1, "couldn't send command `%s' to pager", command);
@@ -359,7 +359,7 @@ exh_skip_replace(exp, separator)
 /* exh_skip_replace */
 
   static char *
-exh_get_number(char *exp, long *number)
+exh_get_number(char *exp, unsigned long *number)
 {
   char *p;
 
@@ -413,7 +413,7 @@ exh_get_number(char *exp, long *number)
 /* exh_get_number */
 
   static char *
-exh_get_address(struct he_s *hedit, char *exp, long *address)
+exh_get_address(struct he_s *hedit, char *exp, unsigned long *address)
   /* evaluate the specified address and store it in `*address'.  on success
    * a skip-pointer for the expression is returned, else (if `exp' is not
    * a valid address or expression) 0 is returned.
@@ -424,9 +424,9 @@ exh_get_address(struct he_s *hedit, char *exp, long *address)
   long rl, ml;
   int direction;
   char separator;
-  long n;
+  unsigned long n;
   long positive_f;
-  long offset;
+  unsigned long offset;
   int eox_f = 0;
   long old_position = hedit->position;
 
@@ -467,19 +467,20 @@ exh_get_address(struct he_s *hedit, char *exp, long *address)
       case '5': case '6': case '7': case '8': case '9':
         p = exh_get_number(p, address);
         if (*address > (n = hedit->buffer->size)) {
-          he_message(0, "only 0x%lx (%li) bytes", n, n);
+          he_message(0, "only 0x%lx (%lu) bytes", n, n);
           p = 0;
         } else
           hedit->position = *address;
         break;
       case '#':  /* line number */
         p = exh_get_number(p + 1, &n);
-        if ((*address = b_goto_line(hedit->buffer, n)) < 0) {
+	long naddr = b_goto_line(hedit->buffer, n);
+	if (naddr < 0) {
           n = b_no_lines(hedit->buffer);
           he_message(0, "only 0x%lx (%lu) lines", n, n);
           p = 0;
         } else
-          hedit->position = *address;
+          hedit->position = *address = naddr;
         break;
       case '.':  /* current position */
         p = exp + 1;
@@ -499,13 +500,14 @@ exh_get_address(struct he_s *hedit, char *exp, long *address)
           p = 0;
           break;
         }
+	long naddress = *address;
         if (positive_f)
-          *address += offset;
+          naddress += offset;
         else
-          *address -= offset;
-        if (*address < 0) *address = 0;
-        if (*address > hedit->buffer->size) *address = hedit->buffer->size;
-        hedit->position = *address;
+          naddress -= offset;
+        if (naddress < 0) naddress = 0;
+        if ((unsigned long)naddress > hedit->buffer->size) naddress = hedit->buffer->size;
+	hedit->position = *address = naddress;
         break;
       default:
         eox_f = 1;
@@ -532,7 +534,7 @@ exh_command(hedit, cmd)
 {
   char command[256];
   char *p;
-  long begin = 0, end = 0;
+  unsigned long begin = 0, end = 0;
   int i, j, k;
   int terminal_match_f = -1;
   char *skip;
@@ -634,7 +636,7 @@ check_terminal:
 exh_execute:
   if (begin == 0 && end == 0) {
     begin = exh_commands[i].whole_f ? 0 : hedit->position;
-    end = exh_commands[i].whole_f ? hedit->buffer->size - 1 : hedit->position;
+    end = exh_commands[i].whole_f ? hedit->buffer->size - 1 : (unsigned long)hedit->position;
   }
   while (*p == ' ' || *p == '\t') ++p;
   skip = exh_commands[i].cmd(hedit, p, begin, end);
@@ -708,7 +710,7 @@ exh_cpl_file_list(char *prefix)
         goto empty_list;
       }
     } else {
-      int uid = getuid();
+      uid_t uid = getuid();
       setpwent();
       for (; (pe = getpwent());) if (pe->pw_uid == uid) break;
       if (!pe) {
@@ -869,11 +871,7 @@ exh_cpl_option_list(char *prefix)
 /* exh_cpl_option_list */
 
   char **
-exh_completer(prefix, command, line, context)
-  char *prefix;
-  char *command;
-  char *line; /* unused */
-  int context;
+exh_completer(char *prefix, char *command, char *line __unused, int context)
   /* we're looking for completions of `prefix'; `command' is the
    * command-string that `prefix' is the argument of; `line' is the
    * complete line before the cursor.

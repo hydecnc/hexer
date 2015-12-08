@@ -8,6 +8,14 @@
  */
 #define TMP_DIR "/tmp"
 
+#ifndef __unused
+#ifdef __GNUC__
+#define __unused __attribute__((unused))
+#else  /* __GNUC__ */
+#define __unused
+#endif /* __GNUC__ */
+#endif /* __unused */
+
 /*
  * Buffer: (defaults)
  */

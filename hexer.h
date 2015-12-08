@@ -329,7 +329,7 @@ he_status_message(int verbose);
    */
 
 void
-he_select(struct he_s *hedit, long begin, long end);
+he_select(struct he_s *hedit, unsigned long begin, unsigned long end);
 
 int
 he_select_buffer_(struct buffer_s *);

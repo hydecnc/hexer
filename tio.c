@@ -99,14 +99,6 @@
 #include "set.h"
 #endif
 
-#ifndef __unused
-#ifdef __GNUC__
-#define __unused __attribute__((unused))
-#else  /* __GNUC__ */
-#define __unused
-#endif /* __GNUC__ */
-#endif /* __unused */
-
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
 #if !HAVE_VASPRINTF

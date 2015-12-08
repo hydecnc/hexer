@@ -1047,7 +1047,7 @@ he_cancel_selection(hedit)
   void
 he_select(hedit, begin, end)
   struct he_s *hedit;
-  long begin, end;
+  unsigned long begin, end;
 {
   if (hedit->begin_selection >= 0) he_cancel_selection(hedit);
   assert(begin <= end);
