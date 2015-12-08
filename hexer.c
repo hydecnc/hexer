@@ -324,7 +324,7 @@ he_select_buffer_(buffer)
       len = 6 + strlen(HEXER_VERSION) + 1 + strlen(i->fullpath) + 1 + 4;
       buf = alloca(len + 1);
       if (snprintf(buf, len + 1, "hexer %s\n%s\n%c%c%c%c",
-	  HEXER_VERSION, i->fullpath, 0, 0, 0, 0) != len ||
+	  HEXER_VERSION, i->fullpath, 0, 0, 0, 0) != (int)len ||
 	  fwrite(buf, 1, len, i->hedit->undo.swapfile) != len ||
 	  fflush(i->hedit->undo.swapfile) == EOF) {
 	/* TODO: some kind of error output */
