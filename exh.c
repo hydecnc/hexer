@@ -46,6 +46,7 @@
 
 #include "config.h"
 
+#include <alloca.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -297,9 +298,7 @@ exh_subshell(void)
 /* exh_subshell */
 
   char *
-exh_skip_expression(exp, separator)
-  char *exp;
-  char separator;
+exh_skip_expression(char *exp, char separator)
   /* returns a pointer to the first unmasked occurrence of the separator
    * `separator'; separators within a range or prefixed by `\' are ignored.
    * if no separator is found, 0 is returned.
@@ -333,9 +332,7 @@ exh_skip_expression(exp, separator)
 /* exh_skip_expression */
 
   char *
-exh_skip_replace(exp, separator)
-  char *exp;
-  char separator;
+exh_skip_replace(char *exp, char separator)
   /* similar to `exh_skip_expression()', but ignores the special meaning of
    * brackets.
    */

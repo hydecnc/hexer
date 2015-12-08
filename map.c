@@ -47,6 +47,7 @@
 
 #include "config.h"
 
+#include <alloca.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -61,11 +62,7 @@
 #define MAP_MAXLEN 256
 #define MAP_MAX 16
 
-#if ('\e' == 'e')
-#define MAP_ESC ((char)27)
-#else
-#define MAP_ESC ('\e')
-#endif
+#define MAP_ESC ('\033')
 
 int tio_m_remap = 0;
   /* if `tio_m_remap == 1', the sequence of keys another sequence is mapped

@@ -70,11 +70,7 @@
                                  * partially scrolled out to the left */
 #define RL_RIGHT_MORE "@Ab>@~"  /* character displayed if the line is
                                  * partially scrolled out to the right */
-#if ('\e' == 'e')
-#define RL_ESC ((char)27)
-#else
-#define RL_ESC ('\e')
-#endif
+#define RL_ESC ('\033')
 
 /* strings:
  * `readline()' returns strings of characters.  special characters (like
