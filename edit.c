@@ -296,7 +296,7 @@ he_subcommand(hedit, type, position, count, data)
 {
   static struct he_command_s *command = 0;
     /* Maybe `command' will become part of `struct he_s' instead of being
-     * remembered statcially.  To stay compatible `hedit' should be 
+     * remembered statically.  To stay compatible `hedit' should be 
      * specified in all calls to `he_subcommand()'.
      */
   static long last_position;
@@ -536,7 +536,7 @@ fail:
   static void
 he_again(struct he_s *hedit, long position)
   /* Walk backwards through the undo list, until a command is found with
-   * the `again' flag set and reperfom this command on position `position'.
+   * the `again' flag set and reperform this command at position `position'.
    * If no such command is found, a beep is "returned".
    */
 {
@@ -575,7 +575,7 @@ he_again(struct he_s *hedit, long position)
        * positions.  If `command' is an insert command, the field `data'
        * will be copied to `command2'.  If `command' is a delete command,
        * we'll read the `data' field from the buffer.  In this case it may
-       * be nesseccary to adjust `j->count' in `command2'.
+       * be necessary to adjust `j->count' in `command2'.
        */
       struct he_command_s *command2, *j;
       command2 = (struct he_command_s *)malloc(sizeof(struct he_command_s));
@@ -1175,7 +1175,7 @@ he_command(struct he_s *hedit, int key, long count)
    */
 #define HE_CASE_COMMAND _HE_CASE_COMMAND_NO_V: case 'v'
 #define HE_CASE_COMMAND_INSERT case 'l' & 0x1f: case 'g' & 0x1f
-  /* Commands that should be availabe in insert mode.
+  /* Commands that should be available in insert mode.
    */
 
   static void
@@ -1327,7 +1327,7 @@ he_get_counter(hedit)
       if (window_changed) he_refresh_screen(hedit);
       break;
     HE_CASE_COMMAND_INSERT:
-      /* The commands that are availabe in insert mode do not affect and
+      /* The commands that are available in insert mode do not affect and
        * are not affected by the counter.
        */
       he_command(hedit, key, 0);
@@ -1855,7 +1855,7 @@ he_update_screen(hedit)
     }
   }
   if (hedit->refresh.flag) {
-    /* first we'r gonna check if some of the refresh commands can be
+    /* first we'll check if some of the refresh commands can be
      * combined or omitted.  A cancelled command is marked with a negative
      * `first' value.
      */

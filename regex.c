@@ -2,7 +2,7 @@
  * Regular expressions, version 0.3
  *
  * This file provides a set of functions for dealing with binary regular
- * expressions, where binary means that some extesions have been made to
+ * expressions, where binary means that some extensions have been made to
  * the standard UN*X-regular expressions making it possible to search for
  * an arbitrary byte pattern.
  *
@@ -227,7 +227,7 @@ long rx_maxmatch = REGEX_MAXMATCH_DFL;
 
 int rx_special_nl = 0;
   /* if `rx_special_nl' is set, the newline character (0xa) is treated as a
-   * special cahacter, i.e. the dot and `ANY_BUT'-ranges ("[^...]") do
+   * special character, i.e. the dot and `ANY_BUT'-ranges ("[^...]") do
    * *not* match a newline character.
    */
 

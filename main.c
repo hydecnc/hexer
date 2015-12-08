@@ -78,7 +78,7 @@ hexer - a binary file editor\n\
 usage: hexer [options] [file [...]]\n\
   -R/--readonly\n\
   -v/--view\n\
-      Edit files in read only mode.\n\
+      Edit files in read-only mode.\n\
   -r/--recover filename\n\
       Recover  the  file filename after a crash. (not implemented)\n\
   -c/--command command\n\
@@ -91,7 +91,7 @@ usage: hexer [options] [file [...]]\n\
       Print out a short help message and exit.\n\
   +command\n\
       This is equivalent to the -c option.\n\
-  Note: The long options are not availabe on all systems.\n";
+  Note: The long options are not available on all systems.\n";
 
 #if HEXER_LONG_OPTIONS
 static struct option longopts[] = {

@@ -94,7 +94,7 @@ struct he_s {
   long insert_position;
   int text_mode;
   int swapping;
-    /* `swapping == 0': no swapfile, all changes ar stored in memory.
+    /* `swapping == 0': no swapfile, all changes are stored in memory.
      * `swapping == 1': use the filestream `swapfile' for swapping.
      */
   char *swapfile;
@@ -151,7 +151,7 @@ he_update_screen(struct he_s *hedit);
 
 struct he_command_s {
   struct he_command_s *next_subcommand;
-    /* Multiple commands may be treatet as a single command, i.e. a relpace
+    /* Multiple commands may be treated as a single command, i.e. a replace
      * command is made up by an insert command and a delete command.  Such
      * a compound command is stored as a list of commands.
      */
@@ -172,16 +172,16 @@ struct he_command_s {
     /* `type == 0': delete command; `type == 1': insert command.
      */
   int again;
-    /* `again == 1': This command can be preformed again on a diffrent
+    /* `again == 1': This command can be performed again at a different
      *   position in the file.  When the command is repeated with the
      *   `he_again()' function, the position of every subcommand will be
      *   changed to the new position, thus the `again' flag should be set
      *   only if all subcommands perform on the same position in the file.
-     * `again == 0': This command can't be performed again on a diffrent
+     * `again == 0': This command can't be performed again at a different
      *   position in the file.
      */
   long position;
-    /* The poisition of the byte of the inserted or deleted data.
+    /* The position of the byte of the inserted or deleted data.
      */
   long count;
     /* The length of the buffer containing the inserted/deleted data.
@@ -199,8 +199,8 @@ struct he_command_s {
  *  - A list of commands, terminated by 4 zero bytes.
  * Each command is stored as:
  *  - The number of subcommands stored as big-endian long (4 bytes).
- *  - One byte indicating if the command may be performed again on a
- *    diffrent position.
+ *  - One byte indicating if the command may be performed again at a
+ *    different position.
  *    0: `again' flag cleared.
  *    1: `again' flag set.
  *  - A list of subcommands.
@@ -303,8 +303,8 @@ int
 he_buffer_readonly(char *name);
   /* Return values:
    * -1: no buffer named `name'
-   * 0:  buffer is readwrite
-   * 1:  buffer is readonly
+   * 0:  buffer is read/write
+   * 1:  buffer is read-only
    */
 
 int

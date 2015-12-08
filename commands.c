@@ -96,7 +96,7 @@ press_any_key(struct he_s *hedit)
   static char *
 exh_skipcmd(char *cmd, char *dest)
   /* read `cmd' up to the next semicolon.  `\;' escapes the semicolon.
-   * The return value is the character following the first occurence of an
+   * The return value is the character following the first occurrence of an
    * unmasked semicolon or 0 if no semicolon was found or the first unmasked
    * semicolon was the last character in the string `cmd'.  the string read is
    * written to `dest'.
@@ -367,11 +367,11 @@ exhcmd_substitute(struct he_s *hedit, char *pattern, long begin, long end)
 	if (!confirm_f)
 	  goto substitute;
 	else {
-	  /* We want to show the user the match found so we can query him/her
+	  /* We want to show the user the match found so we can ask him/her
 	   * if the match should be replaced.  We'll do this by selecting the
            * match.
            * NOTE: `match_len' and/or `replace_len' might be zero.  If both
-           *   are zero, we won't query the user.
+           *   are zero, we won't ask the user.
 	   */
 	  int choice;
           if (!match_len && !replace_len) goto substitute;

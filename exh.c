@@ -96,7 +96,7 @@ exh_shell_command(char *command, int pager_f)
                     /* if `pager != 0' the output is piped into the
                      * pager specified by the "PAGER" environment.  the
                      * default pager is `EXH_DEFAULT_PAGER'. */
-  /* we won't use the "-c"-switch (available for most shells), instead we're
+  /* we won't use the "-c"-switch (available for most shells), instead we'll
    * gonna pipe the command into the shell.
    */
 {
@@ -300,7 +300,7 @@ exh_subshell(void)
 exh_skip_expression(exp, separator)
   char *exp;
   char separator;
-  /* returns a pointer to the first unmasked occurence of the separator
+  /* returns a pointer to the first unmasked occurrence of the separator
    * `separator'; separators within a range or prefixed by `\' are ignored.
    * if no separator is found, 0 is returned.
    */
@@ -585,7 +585,7 @@ check_terminal:
     } else
       end = begin;
     if (begin > end) {
-      if (he_query_yn(1, "@Abfirst address exceeds the second@~ - swap") > 0)
+      if (he_query_yn(1, "@Abfirst address succeeds the second@~ - swap") > 0)
 	begin ^= end, end ^= begin, begin ^= end;
       else
 	goto exit_exh_command;
@@ -670,7 +670,7 @@ exh_cpl_file_list(char *prefix)
   while (p > dirname) if (*p != '/') --p; else break;
   if (p != dirname || *dirname == '/') ++p;
   *p = 0;
-  /* check if the `prefix' starts with a "~user/"-aberv..
+  /* check if the `prefix' starts with a "~user/"-abbrev..
    */
   if (*prefix == '~') {
     user = strdup(prefix + 1);

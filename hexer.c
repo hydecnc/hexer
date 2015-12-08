@@ -390,8 +390,8 @@ he_buffer_readonly(name)
   char *name;
   /* Return values:
    * -1: no buffer named `name'
-   * 0:  buffer is readwrite
-   * 1:  buffer is readonly
+   * 0:  buffer is read/write
+   * 1:  buffer is read-only
    */
 {
   struct buffer_s *i;
@@ -665,13 +665,13 @@ he_search(hedit, exp, replace, direction, wrap, increment, end,
      * `direction < 0': reverse search.
      */
   int wrap;
-    /* if `wrap' is set, the search continues at the top of the buffer/file
-     * if the bottom has been (or vice versa, depending on `direction').
+    /* if `wrap' is set, the search continues from the top of the buffer/file
+     * once the bottom has been passed (or vice versa, depending on `direction').
      */
   int increment;
     /* if `increment' is set, the search starts at `hedit->position + 1'
      * rather than at `hedit->position'.  if the direction is set to reverse
-     * search, the `increment'-flag has no effect.
+     * search, the `increment' flag has no effect.
      */
   long end;
     /* if `wrap' is not set and `end' is not negative, the search ends at
@@ -681,7 +681,7 @@ he_search(hedit, exp, replace, direction, wrap, increment, end,
     /* if `replace_str' is non-zero and a match was found, the replace
      * string generated from `replace' will be copied to `*replace_str'.
      * the memory for that replace string will be allocated via `malloc()'.
-     * NOTE: the replace string wont be terminated with a null-character
+     * NOTE: the replace string won't be terminated with a null character
      *   since it may contain null characters.
      */
   long *replace_len;
