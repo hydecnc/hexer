@@ -84,7 +84,7 @@ const struct he_refresh_s NO_REFRESH =
 int he_message_wait = 10;
 
   static char *
-he_bigendian(long x)
+he_bigendian(unsigned long x)
 {
   static char bigendian[4];
 
@@ -96,15 +96,15 @@ he_bigendian(long x)
 }
 /* he_bigendian */
 
-  static long
-he_bigendian_to_long(char *bigendian)
+  static unsigned long
+he_bigendian_to_ulong(char *bigendian)
 {
-  long x;
+  unsigned long x;
 
-  x = (unsigned char)bigendian[3]
-      + ((unsigned char)bigendian[2] << 8)
-      + ((unsigned char)bigendian[1] << 16)
-      + ((unsigned char)bigendian[0] << 24);
+  x = (unsigned long)bigendian[3]
+      + ((unsigned long)bigendian[2] << 8)
+      + ((unsigned long)bigendian[1] << 16)
+      + ((unsigned long)bigendian[0] << 24);
   return x;
 }
 /* he_bigendian_to_long */
@@ -227,6 +227,12 @@ he_compound_comand(hedit, command)
     long swap_position = ftell(hedit->undo.swapfile);
     int n;
 
+    if (swap_position == -1) {
+      /* TODO: some kind of error indication */
+      fclose(hedit->undo.swapfile);
+      hedit->swapping = 0;
+      return;
+    }
     /* Write the command to the swapfile.
      */
     sz = 4 + 1 + 4 + 4;
@@ -283,8 +289,8 @@ he_compound_comand(hedit, command)
 he_subcommand(hedit, type, position, count, data)
   struct he_s *hedit;
   int type;
-  long position;
-  long count;
+  unsigned long position;
+  unsigned long count;
   char *data;
   /* Update the undo-list of `hedit' by inserting the given subcommand.
    * The command is *not* performed by calling `he_subcommand()'.
@@ -299,7 +305,7 @@ he_subcommand(hedit, type, position, count, data)
      * remembered statically.  To stay compatible `hedit' should be 
      * specified in all calls to `he_subcommand()'.
      */
-  static long last_position;
+  static unsigned long last_position;
   static int again;
   struct he_command_s *i;
 
@@ -395,7 +401,7 @@ he_rewind_command(struct he_s *hedit)
   fseek(hedit->undo.swapfile, -4, SEEK_CUR);
   if (fread(bigendian, 4, 1, hedit->undo.swapfile) < 1)
     return -1;
-  position = he_bigendian_to_long(bigendian);
+  position = he_bigendian_to_ulong(bigendian);
   if (!position) return -1;
   fseek(hedit->undo.swapfile, position, SEEK_SET);
   return position;
@@ -410,13 +416,13 @@ he_read_command(struct he_s *hedit)
    */
 {
   struct he_command_s *command, *c;
-  long n_subcommands;
+  unsigned long n_subcommands;
   char bigendian[4];
-  int i;
+  unsigned i;
 
   if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
     return 0;
-  n_subcommands = he_bigendian_to_long(bigendian);
+  n_subcommands = he_bigendian_to_ulong(bigendian);
   if (!n_subcommands) {
     fseek(hedit->undo.swapfile, -4, SEEK_CUR);
     return 0;
@@ -434,10 +440,10 @@ he_read_command(struct he_s *hedit)
     c->type = !!n;
     if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
       return 0;
-    c->position = he_bigendian_to_long(bigendian);
+    c->position = he_bigendian_to_ulong(bigendian);
     if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
       return 0;
-    c->count = he_bigendian_to_long(bigendian);
+    c->count = he_bigendian_to_ulong(bigendian);
     c->data = (char *)malloc(c->count);
     if (fread(c->data, 1, c->count, hedit->undo.swapfile) != c->count)
       return 0;
@@ -589,7 +595,9 @@ he_again(struct he_s *hedit, long position)
             memcpy(j->data, i->data, i->count);
           else { /* delete */
             long x = b_read(hedit->buffer, j->data, position, j->count);
-            if (x < j->count) {
+	    if (x > 0) {
+	      assert(0); /* FIXME: better handling */
+	    } else if ((unsigned long)x < j->count) {
               /* `x > j->count' is impossible here. */
               j->data = (char *)realloc(j->data, x);
               j->count = x;
@@ -620,13 +628,13 @@ he_delete(struct he_s *hedit, long count, int dont_save)
   /* If `dont_save == 1' the data deleted is not copied to the `kill_buffer'.
    */
 {
-  long start;
+  unsigned long start;
   char *data;
 
   if (hedit->begin_selection >= 0 &&
       hedit->end_selection >= hedit->begin_selection) {
-    start = hedit->begin_selection;
-    count = hedit->end_selection - start + 1;
+    start = (unsigned long)hedit->begin_selection;
+    count = (unsigned long)hedit->end_selection - start + 1;
     he_cancel_selection(hedit);
     he_update_screen(hedit);
   } else {
@@ -649,7 +657,7 @@ he_delete(struct he_s *hedit, long count, int dont_save)
   he_subcommand(hedit, 0, start, count, data);
   he_subcommand(hedit, -1, 0, 0, 0);
   b_delete(hedit->buffer, start, count);
-  if (hedit->position > start) hedit->position -= count - 1;
+  if (hedit->position > (long)start) hedit->position -= count - 1;
   he_refresh_part(hedit, start, hedit->buffer->size + count - 1);
 
   if (count > 1)
@@ -925,14 +933,14 @@ he_motion(struct he_s *hedit, int key, long count)
   case 'l':
   case HXKEY_RIGHT:
     hedit->position += count;
-    if (hedit->position > hedit->buffer->size)
+    if (hedit->position > (long)hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     break;
   case 'f' & 0x1f: /* C-f */
   case HXKEY_PAGE_DOWN:
     i = hedit->position;
     hedit->position += (hx_lines - 2) * 16;
-    if (hedit->position > hedit->buffer->size)
+    if (hedit->position > (long)hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     hedit->screen_offset += ((hedit->position - i) / 16) * 16;
     if (hedit->position != i) he_refresh_all(hedit);
@@ -949,7 +957,7 @@ he_motion(struct he_s *hedit, int key, long count)
   case 'd' & 0x1f: /* C-d */
     i = hedit->position;
     hedit->position += ((hx_lines - 1) / 2) * 16;
-    if (hedit->position > hedit->buffer->size)
+    if (hedit->position > (long)hedit->buffer->size)
       hedit->position = hedit->buffer->size;
     hedit->screen_offset += ((hedit->position - i) / 16) * 16;
     if (hedit->position != i) he_refresh_all(hedit);
@@ -1113,7 +1121,7 @@ he_command(struct he_s *hedit, int key, long count)
     if (count < 0)
       hedit->position = hedit->buffer->size;
     else {
-      if (count > hedit->buffer->size) {
+      if (count > (long)hedit->buffer->size) {
         count = hedit->buffer->size;
         he_message(0, "only 0x%lx (%li) bytes", count, count);
       }
@@ -1194,7 +1202,7 @@ he_visual_mode(hedit)
     he_message(1, "@Abthe buffer is empty@~");
     return;
   }
-  if (hedit->position == hedit->buffer->size) {
+  if (hedit->position == (long)hedit->buffer->size) {
     --hedit->position;
     he_update_screen(hedit);
   }
@@ -1229,7 +1237,7 @@ he_visual_mode(hedit)
     HE_CASE_MOTION:
     HE_CASE_MOTION_HJKL:
       he_motion(hedit, key, count);
-      if (hedit->position == hedit->buffer->size) --hedit->position;
+      if (hedit->position == (long)hedit->buffer->size) --hedit->position;
       he_update_screen(hedit);
       if (hedit->position == last_position) break;
       if (anchor > hedit->position) {
@@ -1377,7 +1385,7 @@ he_get_counter(hedit)
       int indent = 60;
       sprintf(arg, fmt, count);
       tio_goto_line(hx_lines - 1);
-      if (indent + strlen(arg) > hx_columns - 1)
+      if (indent + (ssize_t)strlen(arg) > hx_columns - 1)
         indent = hx_columns - 1 - strlen(arg);
       if (indent < 0) indent = 0;
       tio_return();
@@ -1387,7 +1395,7 @@ he_get_counter(hedit)
     } else {
       int indent = 60;
       tio_goto_line(hx_lines - 1);
-      if (indent + strlen(prefix) > hx_columns - 1)
+      if (indent + (ssize_t)strlen(prefix) > hx_columns - 1)
         indent = hx_columns - 1 - strlen(prefix);
       if (indent < 0) indent = 0;
       tio_return();
@@ -1656,10 +1664,12 @@ hx_exit_insert_mode:
         data_replace = (char *)malloc(replace->size * count);
         replace_size2 =
           b_read(hedit->buffer, data_replace, position, replace->size * count);
-        if (replace_size2 < replace->size * count)
+	if (replace_size2 < 0) {
+	  assert(0); // FIXME: better error handling
+	} else if ((unsigned long)replace_size2 < replace->size * count)
           /* We don't want to eat up more memory than needed.
            */
-          data_replace = (char *)realloc(data_replace, replace_size2);
+          data_replace = (char *)realloc(data_replace, (unsigned long)replace_size2);
         b_delete(hedit->buffer, position, replace_size2);
         he_subcommand(hedit, 0, position, replace_size2, data_replace);
       }

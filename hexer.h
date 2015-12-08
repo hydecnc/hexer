@@ -180,10 +180,10 @@ struct he_command_s {
      * `again == 0': This command can't be performed again at a different
      *   position in the file.
      */
-  long position;
+  unsigned long position;
     /* The position of the byte of the inserted or deleted data.
      */
-  long count;
+  unsigned long count;
     /* The length of the buffer containing the inserted/deleted data.
      */
   char *data;
@@ -226,7 +226,7 @@ he_compound_comand(struct he_s *hedit, struct he_command_s *command);
 
   void
 he_subcommand(struct he_s *hedit,
-                  int type, long position, long count, char *data);
+                  int type, unsigned long position, unsigned long count, char *data);
   /* Update the undo-list of `hedit' by inserting the given subcommand.
    * The command is *not* performed by calling `he_subcommand()'.
    * A sequence of subcommands must be terminated by calling
