@@ -73,7 +73,7 @@
 #include "signal.h"
 #include "tio.h"
 
-static char *usage_message = "\
+static const char *usage_message = "\
 hexer - a binary file editor\n\
 usage: hexer [options] [file [...]]\n\
   -R/--readonly\n\
@@ -106,7 +106,7 @@ static struct option longopts[] = {
 };
 #endif /* HEXER_LONG_OPTIONS */
 
-static char *shortopts = "Rvr:c:dth";
+static const char *shortopts = "Rvr:c:dth";
 
 static int hexer_readonly;
 

@@ -50,7 +50,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static char *usage = "\
+static const char *usage = "\
 usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
   -t  you can use this option if the inputfile is a small (< 1K) textfile.\n\
   -h  display this help message.\n\
@@ -64,7 +64,7 @@ usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
   int
 main(int argc, char **argv)
 {
-  char *name = "data";
+  const char *name = "data";
   FILE *in = stdin, *out = stdout;
   int text_f = 0;
   char *outfile = 0;

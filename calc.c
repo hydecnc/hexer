@@ -97,7 +97,7 @@ enum calc_object_e {
                      || x.type == CO_FLOAT                                    \
                      || x.type == CO_BOOLEAN)
 
-static char *calc_object_names[] = {
+static const char *calc_object_names[] = {
   "none", "integer", "float", "boolean", "unary operator", "binary operator",
   "variable", "error", 0
 };
@@ -109,7 +109,7 @@ enum calc_unary_operator_e {
   OP_max_unary_operator
 };
 
-static char *calc_unary_operator_names[OP_max_unary_operator] = {
+static const char *calc_unary_operator_names[OP_max_unary_operator] = {
   "-  neg", "!  not", "~  comp", "(  paropen", ")  parclose", ":  exec"
 };
 
@@ -130,7 +130,7 @@ static int prec[OP_max_binary_operator] = {
   0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 6, 6, 6, 7, 7, 8
 };
 
-static char *calc_binary_operator_names[OP_max_binary_operator] = {
+static const char *calc_binary_operator_names[OP_max_binary_operator] = {
   "** pow",
   "*  mul", "/  div", "%  mod", "+  add", "-  sub", "<< shl", ">> shr",
   "<  les", "<= leq", ">  grt", ">= geq", "== equ", "!= neq",
@@ -972,7 +972,7 @@ eval: /* evaluate a parenthesed expression */
   static int
 istrue(char *s, char **endptr)
 {
-  static char *true_strings[] = { "true", "t", "TRUE", "True", "T",
+  static const char *true_strings[] = { "true", "t", "TRUE", "True", "T",
     "yes", "y", "YES", "Yes", "on", "ON", "On", 0 };
   int i, l;
 
@@ -989,7 +989,7 @@ istrue(char *s, char **endptr)
   static int
 isfalse(char *s, char **endptr)
 {
-  static char *false_strings[] = { "false", "f", "FALSE", "False", "F",
+  static const char *false_strings[] = { "false", "f", "FALSE", "False", "F",
     "no", "n", "NO", "No", "off", "OFF", "Off", 0 };
   int i, l;
 

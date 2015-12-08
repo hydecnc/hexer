@@ -63,6 +63,7 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "config.h"
 #include "defs.h"
 
 #undef EOF
@@ -162,7 +163,7 @@ enum error_e {
   E_interrupt
 };
 
-char *rx_error_msg[] = {
+const char *rx_error_msg[] = {
   "", /* no error */ "invalid range", "invalid character", "unmatched `('",
   "unmatched `)'", "operator without operand", "malformed operator",
   "operand of `++' and `**' must have fixed length", "unmatched `['",
@@ -361,7 +362,7 @@ regex_store(long slot, long begin, long end)
 }
 /* regex_store */
 
-  static char *
+  static const char *
 regex_ref(int slot)
   /* The contents of undefined slots default to an empty string, therefore
    * the return value is always a valid (non-zero) pointer.
@@ -811,8 +812,8 @@ regex_match(regex, position, replace_str, replace_len, match_len)
 
   long *
 regex_compile(str, replace)
-  char *str;
-  char *replace;
+  const char *str;
+  const char *replace;
   /* Compile the regular expression `str' and return a pointer to the
    * compiled regex-code.  If `replace' is non-zero, the string `replace'
    * is interpreted as a replace-string, which may contain `\'-escape
@@ -836,7 +837,8 @@ regex_compile(str, replace)
     if (*++cp == 'x') { ++cp; GET_HEX((n), 32); } else { GET_OCT((n), 32); }  \
   else { GET_DEC((n), 32); } }
 
-  char *cp, *s;
+  const char *cp;
+  char *s;
 
   int pc;
     /* Parentheses counter; number of unmatched parentheses.

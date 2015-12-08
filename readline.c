@@ -85,9 +85,9 @@
  * of 254 (== HXKEY_BIAS) is used for the other keys).
  */
 
-static char *rl_prompt;    /* the prompt */
+static const char *rl_prompt;    /* the prompt */
 static int rl_prompt_len;  /* the length of the prompt in characters */
-static char *rl_default;   /* the default answer */
+static const char *rl_default;   /* the default answer */
 
 static char rl_line[LINE_MAXLEN];
                            /* buffer for the current line */
@@ -107,7 +107,7 @@ struct rl_line_s {
 } rl = { rl_line, rl_vline };
 
 #if USE_PROTOTYPES
-char **(*completer)(char *prefix, char *command, char *line, int context);
+char **(*completer)(char *prefix, const char *command, char *line, int context);
 #else
 char **(*completer)();
 #endif
@@ -406,7 +406,7 @@ rl_make_vline_(struct rl_line_s *rrl)
   int i;
   int vposition;
   int key;
-  char *rep;
+  const char *rep;
 
   for (i = vposition = 0; rrl->line[i]; ++i) {
     if (rrl->line[i] != RL_ESC)
@@ -1056,8 +1056,8 @@ restart:
 
   char *
 readline(prompt, default_val, context)
-  char *prompt;
-  char *default_val;
+  const char *prompt;
+  const char *default_val;
   int context;
 {
   int key;

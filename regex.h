@@ -46,7 +46,7 @@
 #ifndef _REGEX_H_
 #define _REGEX_H_
 
-extern char *rx_error_msg[];
+extern const char *rx_error_msg[];
 extern int rx_error;
 extern volatile int *rx_interrupt;
 extern int rx_nomagic;
@@ -61,7 +61,7 @@ regex_search(long *, long, long, long, int, char **, long *, long *);
 regex_match(long *, long, char **, long *, long *);
 
   long *
-regex_compile(char *, char *);
+regex_compile(const char *, const char *);
 
   int
 regex_init(long (*)(char *, long), long (*)(long), long (*)(void));

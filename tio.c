@@ -178,7 +178,7 @@ static int		 tio_set_scrolling_region(int first, int last);
 
 #define T_TABSTOP 8
 
-char *terminal_name = 0;
+const char *terminal_name = 0;
 
 int tio_tite_f = 0;
   /* if `tio_tite_f' is set, no "ti"/"te" commands will be sent to the
@@ -209,122 +209,122 @@ static int t_bg = 0;  /* background color */
 
 static char t_bp[4096];
 static char t_string_buffer[8192];
-static char *program_name;
+static const char *program_name;
 static struct termios ts_start;
 
-char *t_clear_screen;     /* cl */
-char *t_clear_to_eol;     /* ce */
-char *t_clear_to_bol;     /* cb */
-char *t_clear_to_eos;     /* cd */
-char *t_home;             /* ho */
-char *t_last_line;        /* ll */
-char *t_return;           /* cr */
-char *t_reset;            /* rs */
-char *t_bell;             /* bl */
-char *t_visible_bell;     /* vb */
+const char *t_clear_screen;     /* cl */
+const char *t_clear_to_eol;     /* ce */
+const char *t_clear_to_bol;     /* cb */
+const char *t_clear_to_eos;     /* cd */
+const char *t_home;             /* ho */
+const char *t_last_line;        /* ll */
+const char *t_return;           /* cr */
+const char *t_reset;            /* rs */
+const char *t_bell;             /* bl */
+const char *t_visible_bell;     /* vb */
 
-char *t_tc_init;          /* ti */
-char *t_tc_end;           /* te */
-char *t_kp_transmit_on;   /* ks */
-char *t_kp_transmit_off;  /* ke */
+const char *t_tc_init;          /* ti */
+const char *t_tc_end;           /* te */
+const char *t_kp_transmit_on;   /* ks */
+const char *t_kp_transmit_off;  /* ke */
 
-char *t_blink_on;         /* mb */
-char *t_bold_on;          /* md */
-char *t_half_bright_on;   /* mh */
-char *t_reverse_on;       /* mr */
-char *t_standout_on;      /* so */
-char *t_underscore_on;    /* us */
-char *t_underscore_off;   /* ue */
-char *t_all_off;          /* me */
+const char *t_blink_on;         /* mb */
+const char *t_bold_on;          /* md */
+const char *t_half_bright_on;   /* mh */
+const char *t_reverse_on;       /* mr */
+const char *t_standout_on;      /* so */
+const char *t_underscore_on;    /* us */
+const char *t_underscore_off;   /* ue */
+const char *t_all_off;          /* me */
 
-char *t_UP;               /* UP */
-char *t_DOwn;             /* DO */
-char *t_LEft;             /* LE */
-char *t_RIght;            /* RI */
-char *t_up;               /* up */
-char *t_down;             /* do */
-char *t_left;             /* le */
-char *t_right;            /* nd */
-char *t_cm;               /* cm */
-char *t_CM;               /* CM */
-char *t_goto_column;      /* ch */
-char *t_goto_line;        /* cv */
-char *t_save_position;    /* sc */
-char *t_restore_position; /* rc */
-char *t_delete_line;      /* dl */
-char *t_delete_lines;     /* DL */
-char *t_insert_line;      /* al */
-char *t_insert_lines;     /* AL */
-char *t_delete_chars;     /* DC */
-char *t_delete_char;      /* dc */
-char *t_delete_mode;      /* dm */
-char *t_end_delete_mode;  /* ed */
-char *t_insert_chars;     /* IC */
-char *t_insert_char;      /* ic */
-char *t_insert_mode;      /* im */
-char *t_end_insert_mode;  /* ei */
-char *t_scroll_fwd_n;     /* SF (NP*) */
-char *t_scroll_backwd_n;  /* SR (NP*) */
-char *t_scroll_fwd;       /* sf */
-char *t_scroll_backwd;    /* sr */
-char *t_change_scroll;    /* cs (NP) */
+const char *t_UP;               /* UP */
+const char *t_DOwn;             /* DO */
+const char *t_LEft;             /* LE */
+const char *t_RIght;            /* RI */
+const char *t_up;               /* up */
+const char *t_down;             /* do */
+const char *t_left;             /* le */
+const char *t_right;            /* nd */
+const char *t_cm;               /* cm */
+const char *t_CM;               /* CM */
+const char *t_goto_column;      /* ch */
+const char *t_goto_line;        /* cv */
+const char *t_save_position;    /* sc */
+const char *t_restore_position; /* rc */
+const char *t_delete_line;      /* dl */
+const char *t_delete_lines;     /* DL */
+const char *t_insert_line;      /* al */
+const char *t_insert_lines;     /* AL */
+const char *t_delete_chars;     /* DC */
+const char *t_delete_char;      /* dc */
+const char *t_delete_mode;      /* dm */
+const char *t_end_delete_mode;  /* ed */
+const char *t_insert_chars;     /* IC */
+const char *t_insert_char;      /* ic */
+const char *t_insert_mode;      /* im */
+const char *t_end_insert_mode;  /* ei */
+const char *t_scroll_fwd_n;     /* SF (NP*) */
+const char *t_scroll_backwd_n;  /* SR (NP*) */
+const char *t_scroll_fwd;       /* sf */
+const char *t_scroll_backwd;    /* sr */
+const char *t_change_scroll;    /* cs (NP) */
 
-char *t_standout_cursor;  /* vs */
-char *t_normal_cursor;    /* ve */
-char *t_invisible_cursor; /* vi */
+const char *t_standout_cursor;  /* vs */
+const char *t_normal_cursor;    /* ve */
+const char *t_invisible_cursor; /* vi */
 
-char *t_key_delete;       /* kD */
-char *t_key_backspace;    /* kb */
-char *t_key_tab;          /* kT */
-char *t_key_return = "\n";
-char *t_key_tilde = "~";
-char *t_key_hat = "^";
-char *t_key_null = "";
-char *t_key_break = "\3";
+const char *t_key_delete;       /* kD */
+const char *t_key_backspace;    /* kb */
+const char *t_key_tab;          /* kT */
+const char *t_key_return = "\n";
+const char *t_key_tilde = "~";
+const char *t_key_hat = "^";
+const char *t_key_null = "";
+const char *t_key_break = "\3";
 
-char *t_key_up;           /* ku */
-char *t_key_down;         /* kd */
-char *t_key_left;         /* kl */
-char *t_key_right;        /* kr */
-char *t_key_f0;           /* k0 */
-char *t_key_f1;           /* k1 */
-char *t_key_f2;           /* k2 */
-char *t_key_f3;           /* k3 */
-char *t_key_f4;           /* k4 */
-char *t_key_f5;           /* k5 */
-char *t_key_f6;           /* k6 */
-char *t_key_f7;           /* k7 */
-char *t_key_f8;           /* k8 */
-char *t_key_f9;           /* k9 */
-char *t_key_f10;          /* k; */
-char *t_key_backtab;      /* kB */
-char *t_key_begin;        /* @1 */
-char *t_key_cancel;       /* @2 */
-char *t_key_close;        /* @3 */
-char *t_key_command;      /* @4 */
-char *t_key_copy;         /* @5 */
-char *t_key_create;       /* @6 */
-char *t_key_end;          /* @7 */
-char *t_key_enter;        /* @8 */
-char *t_key_exit;         /* @9 */
-char *t_key_upper_left;   /* K1 */
-char *t_key_upper_right;  /* K3 */
-char *t_key_center;       /* K2 */
-char *t_key_bottom_left;  /* K4 */
-char *t_key_bottom_right; /* K5 */
-char *t_key_home;         /* ho */
-char *t_key_page_up;      /* kP */
-char *t_key_page_down;    /* kN */
+const char *t_key_up;           /* ku */
+const char *t_key_down;         /* kd */
+const char *t_key_left;         /* kl */
+const char *t_key_right;        /* kr */
+const char *t_key_f0;           /* k0 */
+const char *t_key_f1;           /* k1 */
+const char *t_key_f2;           /* k2 */
+const char *t_key_f3;           /* k3 */
+const char *t_key_f4;           /* k4 */
+const char *t_key_f5;           /* k5 */
+const char *t_key_f6;           /* k6 */
+const char *t_key_f7;           /* k7 */
+const char *t_key_f8;           /* k8 */
+const char *t_key_f9;           /* k9 */
+const char *t_key_f10;          /* k; */
+const char *t_key_backtab;      /* kB */
+const char *t_key_begin;        /* @1 */
+const char *t_key_cancel;       /* @2 */
+const char *t_key_close;        /* @3 */
+const char *t_key_command;      /* @4 */
+const char *t_key_copy;         /* @5 */
+const char *t_key_create;       /* @6 */
+const char *t_key_end;          /* @7 */
+const char *t_key_enter;        /* @8 */
+const char *t_key_exit;         /* @9 */
+const char *t_key_upper_left;   /* K1 */
+const char *t_key_upper_right;  /* K3 */
+const char *t_key_center;       /* K2 */
+const char *t_key_bottom_left;  /* K4 */
+const char *t_key_bottom_right; /* K5 */
+const char *t_key_home;         /* ho */
+const char *t_key_page_up;      /* kP */
+const char *t_key_page_down;    /* kN */
 
 /* terminfo variables
  */
-char *t_setab;            /* AB */
-char *t_setaf;            /* AF */
+const char *t_setab;            /* AB */
+const char *t_setaf;            /* AF */
 
 
 static struct t_strings_s {
-  char *id;
-  char **string;
+  const char *id;
+  const char **string;
 } t_strings[] = {
   /* Codes sent by special keys.
    */
@@ -436,12 +436,12 @@ static struct t_strings_s {
 };
 
 static struct t_require_s {
-  char *required[T_REQ_MAX_CAPS];
+  const char *required[T_REQ_MAX_CAPS];
     /* A null-terminated list of string capabisities.  At least one of the
      * capabilities in the list has to be present in the termcap entry.
      * At most `T_REQ_MAX_CAPS' capabilities may be listed.
      */
-  char *message;
+  const char *message;
     /* Message to be printed in case the requirement isn't met.  The
      * `message' may contain one or more `%s'.  These are replaced by the
      * capabilities in the `required' list.  At most 8 `%s' may appear in
@@ -468,9 +468,9 @@ static struct t_require_s {
 
 static struct t_keys_s {
   enum t_keys_e key; /* Internal representation for the key. */
-  char **string;     /* String sent by the terminal. */
-  char *name;        /* Name of key. */
-  char *srep;        /* String representation of the key (i.e. ~1F for F1) */
+  const char **string;     /* String sent by the terminal. */
+  const char *name;        /* Name of key. */
+  const char *srep;        /* String representation of the key (i.e. ~1F for F1) */
 } t_keys[] = {
   { HXKEY_DELETE, &t_key_delete, "delete", "~DEL" },
   { HXKEY_BACKSPACE, &t_key_backspace, "backspace", "~BS" },
@@ -592,7 +592,7 @@ tio_warning_msg(fmt, va_alist)
 }
 /* tio_warning_msg */
 
-  static char *
+  static const char *
 tio_cap(const char *id)
   /* Returns the string for capability `id'.  This function woks only
    * for capabilities that have already been read from the termcap entry.
@@ -628,11 +628,11 @@ tio_listcaps(void)
 
 #if USE_STDARG
   static int
-tio_command(char *cmd, int affcnt, ...)
+tio_command(const char *cmd, int affcnt, ...)
 #else
   static int
 tio_command(cmd, affcnt, va_alist)
-  char *cmd;
+  const char *cmd;
   int affcnt;
   va_dcl
 #endif
@@ -706,7 +706,7 @@ tio_init(char *prog)
      * termcap entry, use ASCII-codes.
      */
   for (i = 0; *t_required[i].required; ++i) {
-    char **p;
+    const char **p;
     int met;
     for (p = t_required[i].required, met = 0; *p; ++p)
       if (tio_cap(*p)) { met = 1; break; }
@@ -1248,7 +1248,7 @@ tio_testkey(int key)
 }
 /* tio_testkey */
 
-  char *
+  const char *
 tio_keyname(int key)
   /* Returns the name of the key `key'.  If `key' is a printable character,
    * it is returned as a string.  If `key' is a special key, the name of
@@ -1273,7 +1273,7 @@ tio_keyname(int key)
 }
 /* tio_keyname */
 
-  char *
+  const char *
 tio_keyrep(int key)
 {
   static char rep[8];
@@ -1298,7 +1298,7 @@ tio_keyrep(int key)
 }
 /* tio_keyrep */
 
-  char *
+  const char *
 tio_vkeyrep(int key)
 {
   int i;
@@ -1580,11 +1580,12 @@ tio_scroll_down(int count, int first, int last)
 /* tio_scroll_down */
 
   int
-tio_puts(char *s)
+tio_puts(const char *s)
   /* Like `fputs(s, stdout)'.
    */
 {
-  char *c1, *c2;
+  const char *c1;
+  char *c2;
   char *out;
   int mask_f, x;
 

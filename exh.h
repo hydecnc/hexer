@@ -42,12 +42,12 @@
 #ifndef _EXH_H_
 #define _EXH_H_
 
-extern char	 *exh_initialize[];
+extern const char *exh_initialize[];
 
-int		 exh_command(struct he_s *hedit, char *cmd);
-char		**exh_completer(char *, char *, char *, int);
+int		 exh_command(struct he_s *hedit, const char *cmd);
+char		**exh_completer(char *, const char *, char *, int);
 
-char		*exh_skip_expression(char *, char);
-char		*exh_skip_replace(char *, char);
+const char	*exh_skip_expression(const char *, char);
+const char	*exh_skip_replace(const char *, char);
 
 #endif /* _EXH_H_ */

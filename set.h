@@ -59,7 +59,7 @@ typedef void (*set_fn)();
 long
 s_get_option_integer(const char *option);
 
-char *
+const char *
 s_get_option_string(const char *option);
 
 int
@@ -68,7 +68,7 @@ s_get_option_bool(const char *option);
 enum s_option_e
 s_get_type(const char *option);
 
-char *
+const char *
 s_get_option(const char *option);
 
 int

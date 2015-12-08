@@ -46,7 +46,7 @@
 #ifndef _READLINE_H_
 #define _READLINE_H_
 
-extern char **(*completer)(char *prefix, char *command,
+extern char **(*completer)(char *prefix, const char *command,
                                char *line, int context);
 
 extern int rl_backspace_jump;
@@ -55,7 +55,7 @@ extern int rl_redisplay;
 extern void (*rl_winch)(void);
 
 char *
-readline(char *prompt, char *default_val, int context);
+readline(const char *prompt, const char *default_val, int context);
 
 int
 keys_length(void);

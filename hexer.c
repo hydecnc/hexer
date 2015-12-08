@@ -78,16 +78,16 @@ struct buffer_s *current_buffer;
 struct buffer_s *buffer_list = 0;
 struct he_message_s *he_messages;
 char *alternate_buffer;
-char *he_pagerprg;
+const char *he_pagerprg;
 
 #if USE_STDARG
   void
-he_message(int beep, char *fmt, ...)
+he_message(int beep, const char *fmt, ...)
 #else
   void
 he_message(beep, fmt, va_alist)
   int beep;
-  char *fmt;
+  const char *fmt;
   va_dcl
 #endif
 {
@@ -168,9 +168,9 @@ action_mapmagic(int current_value)
 /* action_mapmagic */
 
 static const struct hexer_options_s {
-  char *option;
+  const char *option;
   enum s_option_e type;
-  char *default_value;
+  const char *default_value;
   set_fn action;
 } hexer_options[] = {
   { "ascii", S_BOOL, "true", (set_fn)action_ascii },
@@ -190,7 +190,7 @@ static const struct hexer_options_s {
 
   int
 he_open_buffer(name, path)
-  char *name;
+  const char *name;
   char *path;
 {
   struct buffer_s *buffer;
@@ -521,8 +521,8 @@ he_status_message(verbose)
 
   char *
 he_query_command(prompt, dfl, context)
-  char *prompt;
-  char *dfl;
+  const char *prompt;
+  const char *dfl;
   int context;
   /* Convention:
    * `context == 0': exh-command;
@@ -539,12 +539,12 @@ he_query_command(prompt, dfl, context)
 
 #if USE_STDARG
   int
-he_query_yn(int dfl, char *fmt, ...)
+he_query_yn(int dfl, const char *fmt, ...)
 #else
   int
 he_query_yn(dfl, fmt, va_alist)
   int dfl;
-  char *fmt;
+  const char *fmt;
   va_dcl
 #endif
 {
@@ -654,10 +654,10 @@ rxwrap_tell(void)
 he_search(hedit, exp, replace, direction, wrap, increment, end,
           replace_str, replace_len, match_len)
   struct he_s *hedit;
-  char *exp;
+  const char *exp;
     /* regular expression.
      */
-  char *replace;
+  const char *replace;
     /* replace template.  the replace template may contain back references to
      * the regular expression (`\0', ... `\9').
      */
@@ -794,7 +794,7 @@ hexer_init()
    */
 {
   int i;
-  char *hexerinit, *home;
+  const char *hexerinit, *home;
   char path[1024];
   char line[1024];
   FILE *fp;

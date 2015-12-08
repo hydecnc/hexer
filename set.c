@@ -89,7 +89,7 @@ s_get_option_integer(option)
 }
 /* s_get_option_integer */
 
-  char *
+  const char *
 s_get_option_string(option)
   const char *option;
 {
@@ -246,7 +246,7 @@ s_get_type(option)
 }
 /* s_get_type */
 
-  char *
+  const char *
 s_get_option(option)
   const char *option;
 {

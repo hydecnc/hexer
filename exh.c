@@ -76,7 +76,7 @@
 #define ERESTARTSYS EINTR
 #endif
 
-char *exh_initialize[] = {
+const char *exh_initialize[] = {
   ":map b :?\\<[~HAT ^V^I]^M",
   ":map w :/\\<[~HAT ^V^I]^M",
   ":map e :/[~HAT ^V^I]\\>^M",
@@ -90,7 +90,7 @@ char *exh_initialize[] = {
 };
 
   static int
-exh_shell_command(char *command, int pager_f)
+exh_shell_command(const char *command, int pager_f)
                     /* command to be executed by the shell specified by
                      * the "SHELL" environment variable.  the default shell
                      * is `EXH_DEFAULT_SHELL'. */
@@ -111,9 +111,9 @@ exh_shell_command(char *command, int pager_f)
   tio_suspend();
   tio_clear();
   tio_flush();
-  if (!(*shell = getenv("SHELL"))) *shell = EXH_DEFAULT_SHELL;
+  if (!(*shell = getenv("SHELL"))) *shell = strdup(EXH_DEFAULT_SHELL);
   *shell = strdup(*shell);
-  if (!(*pager = getenv("PAGER"))) *pager = EXH_DEFAULT_PAGER;
+  if (!(*pager = getenv("PAGER"))) *pager = strdup(EXH_DEFAULT_PAGER);
   *pager = strdup(*pager);
   /* break `*shell' and `*pager' down into whitespace separated
    * substrings.  it is *not* possible to mask whitespace characters in any
@@ -265,7 +265,7 @@ exh_subshell(void)
   tio_suspend();
   tio_clear();
   tio_flush();
-  if (!(*shell = getenv("SHELL"))) *shell = EXH_DEFAULT_SHELL;
+  if (!(*shell = getenv("SHELL"))) *shell = strdup(EXH_DEFAULT_SHELL);
   *shell = strdup(*shell);
   /* break `*shell' down into whitespace separated substrings.
    * it is *not* possible to mask whitespace characters in any way. */
@@ -297,15 +297,15 @@ exh_subshell(void)
 }
 /* exh_subshell */
 
-  char *
-exh_skip_expression(char *exp, char separator)
+  const char *
+exh_skip_expression(const char *exp, char separator)
   /* returns a pointer to the first unmasked occurrence of the separator
    * `separator'; separators within a range or prefixed by `\' are ignored.
    * if no separator is found, 0 is returned.
    */
 {
-  char *p = exp;
-  char *s = 0;
+  const char *p = exp;
+  const char *s = 0;
 
   for (;; ++p) {
     while (*p && *p != separator && *p != '\\' && *p != '[') ++p;
@@ -331,14 +331,14 @@ exh_skip_expression(char *exp, char separator)
 }
 /* exh_skip_expression */
 
-  char *
-exh_skip_replace(char *exp, char separator)
+  const char *
+exh_skip_replace(const char *exp, char separator)
   /* similar to `exh_skip_expression()', but ignores the special meaning of
    * brackets.
    */
 {
-  char *p = exp;
-  char *s = 0;
+  const char *p = exp;
+  const char *s = 0;
 
   for (;; ++p) {
     while (*p && *p != separator && *p != '\\') ++p;
@@ -355,10 +355,10 @@ exh_skip_replace(char *exp, char separator)
 }
 /* exh_skip_replace */
 
-  static char *
-exh_get_number(char *exp, unsigned long *number)
+  static const char *
+exh_get_number(const char *exp, unsigned long *number)
 {
-  char *p;
+  const char *p;
 
   switch (*exp) {
     case '0':  /* octal or hex number */
@@ -409,14 +409,14 @@ exh_get_number(char *exp, unsigned long *number)
 }
 /* exh_get_number */
 
-  static char *
-exh_get_address(struct he_s *hedit, char *exp, unsigned long *address)
+  static const char *
+exh_get_address(struct he_s *hedit, const char *exp, unsigned long *address)
   /* evaluate the specified address and store it in `*address'.  on success
    * a skip-pointer for the expression is returned, else (if `exp' is not
    * a valid address or expression) 0 is returned.
    */
 {
-  char *p = exp, *q;
+  const char *p = exp, *q;
   char *rs;
   long rl, ml;
   int direction;
@@ -438,8 +438,14 @@ exh_get_address(struct he_s *hedit, char *exp, unsigned long *address)
         /* fall through */
       case '/':  /* forward search */
         p = exh_skip_expression(q = p + 1, separator);
-        if (p) *p++ = 0; else p = exp + strlen(exp);
-        *address = he_search(hedit, q, "", direction, 0, 1, -1, &rs, &rl, &ml);
+	size_t len = p? (size_t)(p - q): strlen(exp);
+	if (p)
+		p++;
+	else
+		p = exp + len;
+	char *needle = alloca(len + 1);
+	snprintf(needle, len + 1, "%s", q);
+        *address = he_search(hedit, needle, "", direction, 0, 1, -1, &rs, &rl, &ml);
         switch (*address) {
           case -2:  /* invalid expression */
             assert(rx_error);
@@ -519,7 +525,7 @@ exh_get_address(struct he_s *hedit, char *exp, unsigned long *address)
   int
 exh_command(hedit, cmd)
   struct he_s *hedit;
-  char *cmd;
+  const char *cmd;
   /* execute the exh-command `cmd' on `hedit'.  multiple commands may be
    * specified (separated by semicolons).
    * note:  if any of the commands changes the current buffer, all successive
@@ -530,18 +536,20 @@ exh_command(hedit, cmd)
    */
 {
   char command[256];
-  char *p;
+  const char *p;
   unsigned long begin = 0, end = 0;
   int i, j, k;
   int terminal_match_f = -1;
-  char *skip;
+  const char *skip;
   struct buffer_s *current = current_buffer;
 
-  p = (char *)alloca(strlen(cmd) + 1);
-  strcpy(p, cmd);
+  size_t psize = strlen(cmd) + 1;
+  char *pbuf = (char *)alloca(psize);
+  snprintf(pbuf, psize, "%s", cmd);
   /* remove trailing whitespace */
-  for (i = strlen(p) - !!*p; i && (p[i] == ' ' || p[i] == '\t'); --i);
-  if (*p) p[i + 1] = 0;
+  for (i = psize - 1 - !!*pbuf; i && (pbuf[i] == ' ' || pbuf[i] == '\t'); --i);
+  if (*pbuf) pbuf[i + 1] = 0;
+  p = pbuf;
 check_terminal:
   while (*p == ':') ++p;
   /* remove leading whitespace */
@@ -868,7 +876,7 @@ exh_cpl_option_list(char *prefix)
 /* exh_cpl_option_list */
 
   char **
-exh_completer(char *prefix, char *command, char *line __unused, int context)
+exh_completer(char *prefix, const char *command, char *line __unused, int context)
   /* we're looking for completions of `prefix'; `command' is the
    * command-string that `prefix' is the argument of; `line' is the
    * complete line before the cursor.

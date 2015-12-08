@@ -94,8 +94,8 @@ press_any_key(struct he_s *hedit)
  * null-pointer is returned.
  */
 
-  static char *
-exh_skipcmd(char *cmd, char *dest)
+  static const char *
+exh_skipcmd(const char *cmd, char *dest)
   /* read `cmd' up to the next semicolon.  `\;' escapes the semicolon.
    * The return value is the character following the first occurrence of an
    * unmasked semicolon or 0 if no semicolon was found or the first unmasked
@@ -103,7 +103,8 @@ exh_skipcmd(char *cmd, char *dest)
    * written to `dest'.
    */
 {
-  char *p, *q;
+  const char *p;
+  char *q;
 
   if (!dest) dest = (char *)alloca(strlen(cmd) + 1);
   for (p = cmd, q = dest; *p && *p != ';';)
@@ -117,11 +118,12 @@ exh_skipcmd(char *cmd, char *dest)
 }
 /* exh_skipcmd */
 
-  static char *
+  static const char *
 exh_map(struct he_s *hedit, char *args, int map)
 {
   char *from, *to;
-  char *p, *skip;
+  char *p;
+  const char *skip;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   args = p;
@@ -149,12 +151,13 @@ exh_map(struct he_s *hedit, char *args, int map)
 }
 /* exh_map */
 
-  static char *
+  static const char *
 exh_unmap(struct he_s *hedit __unused, char *args, int map)
   /* ARGSUSED */
 {
   char *from;
-  char *p, *skip;
+  char *p;
+  const char *skip;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   args = p;
@@ -169,12 +172,12 @@ exh_unmap(struct he_s *hedit __unused, char *args, int map)
 }
 /* exh_unmap */
 
-  static char *
+  static const char *
 exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end, int *error)
 {
   struct buffer_s *i;
   char *p;
-  char *skip;
+  const char *skip;
   int force_f = 0;
   FILE *fp;
   long l;
@@ -232,11 +235,11 @@ exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end,
 }
 /* exh_save_buffer */
 
-  static char *
+  static const char *
 exh_write(struct he_s *hedit, char *file, long s_begin, long s_end, int *error)
 {
   char *p;
-  char *skip;
+  const char *skip;
   int force_f = 0;
   FILE *fp;
   long l;
@@ -285,13 +288,14 @@ exh_write(struct he_s *hedit, char *file, long s_begin, long s_end, int *error)
 /* exh_write */
 
 
-  static char *
+  static const char *
 exhcmd_substitute(struct he_s *hedit, char *pattern, long begin, long end)
 {
-  char *p = pattern;
+  const char *p = pattern;
   char separator = *pattern;
-  char *exp, *replace = 0, *options = 0;
-  char *skip = 0;
+  const char *exp;
+  const char *replace = 0, *options = 0;
+  const char *skip = 0;
   int confirm_f = 0;
   long position, last_match = hedit->position;
   char *replace_str;
@@ -316,11 +320,11 @@ exhcmd_substitute(struct he_s *hedit, char *pattern, long begin, long end)
     if (*exp) {
       p = exh_skip_expression(exp, separator);
       if (p) {
-        *p = 0;
+        pattern[p - pattern] = 0;
         replace = p + 1;
         p = exh_skip_replace(replace, separator);
         if (p) {
-          *p = 0;
+          pattern[p - pattern] = 0;
           options = p + 1;
           while (*p && *p != ';') ++p;
           if (*p) skip = p + 1; else skip = 0;
@@ -490,20 +494,20 @@ exit_exh_substitute:
 }
 /* exhcmd_substitute */
 
-  static char *
+  static const char *
 exhcmd_write(struct he_s *hedit, char *file, long begin, long end)
 {
   return exh_write(hedit, file, begin, end, 0);
 }
 /* exhcmd_write */
 
-  static char *
+  static const char *
 exhcmd_skip(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
   char *ab = alternate_buffer;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   for (i = buffer_list; i; i = i->next)
@@ -524,13 +528,13 @@ exhcmd_skip(struct he_s *hedit __unused, char *args)
 }
 /* exhcmd_skip */
 
-  static char *
-exhcmd_next(struct he_s *hedit __unused, char *args)
+  static const char *
+exhcmd_next(struct he_s *hedit __unused, const char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
   char *ab = alternate_buffer;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   if ((i = current_buffer->next)) {
@@ -549,13 +553,13 @@ exhcmd_next(struct he_s *hedit __unused, char *args)
 }
 /* exhcmd_next */
 
-  static char *
+  static const char *
 exhcmd_previous(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
   char *ab = alternate_buffer;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   for (i = buffer_list; i; i = i->next) if (i->next == current_buffer) break;
@@ -575,12 +579,12 @@ exhcmd_previous(struct he_s *hedit __unused, char *args)
 }
 /* exhcmd_previous */
 
-  static char *
+  static const char *
 exhcmd_rewind(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   char *ab = alternate_buffer;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   alternate_buffer = current_buffer->hedit->buffer_name;
@@ -596,10 +600,10 @@ exhcmd_rewind(struct he_s *hedit __unused, char *args)
 }
 /* exhcmd_rewind */
 
-  static char *
+  static const char *
 exhcmd_wn(struct he_s *hedit, char *file, long begin, long end)
 {
-  char *skip;
+  const char *skip;
   int error = 0;
 
   skip = exh_write(hedit, file, begin, end, &error);
@@ -608,13 +612,14 @@ exhcmd_wn(struct he_s *hedit, char *file, long begin, long end)
 }
 /* exhcmd_wn */
 
-  static char *
+  static const char *
 exhcmd_read(struct he_s *hedit, char *file, long position)
 {
   FILE *fp;
   long l;
   char *data;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(file, p = (char *)alloca(strlen(file) + 1));
   util_trunc(file = p);
@@ -643,7 +648,7 @@ exhcmd_read(struct he_s *hedit, char *file, long position)
 }
 /* exhcmd_read */
 
-  static char *
+  static const char *
 exhcmd_edit(struct he_s *hedit __unused, char *name)
   /* ARGSUSED */
 {
@@ -651,7 +656,8 @@ exhcmd_edit(struct he_s *hedit __unused, char *name)
   struct passwd *pe;
   int new_buffer_f = 0;
   FILE *fp;
-  char *skip, *p;
+  const char *skip;
+  char *p;
   char *path = 0;
   char *user = 0;
   uid_t uid = getuid();
@@ -708,7 +714,7 @@ exhcmd_edit(struct he_s *hedit __unused, char *name)
 }
 /* exhcmd_edit */
 
-  static char *
+  static const char *
 exhcmd_buffer(struct he_s *hedit, char *name)
 {
   char *ab = alternate_buffer;
@@ -716,7 +722,8 @@ exhcmd_buffer(struct he_s *hedit, char *name)
   struct buffer_s *i;
   char **list;
   char *c;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(name, p = (char *)alloca(strlen(name) + 1));
   util_trunc(name = p);
@@ -783,12 +790,12 @@ exhcmd_buffer(struct he_s *hedit, char *name)
 }
 /* exhcmd_buffer */
 
-  static char *
+  static const char *
 exhcmd_wall(struct he_s *hedit, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   for (i = buffer_list; i; i = i->next) {
@@ -807,12 +814,13 @@ exhcmd_wall(struct he_s *hedit, char *args)
 }
 /* exhcmd_wall */
 
-  static char *
-exhcmd_quit(struct he_s *hedit __unused, char *args)
+  static const char *
+exhcmd_quit(struct he_s *hedit __unused, const char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i, *j;
-  char *skip, *p;
+  const char *skip;
+  char *p;
   int n;
   static int warn_more_files = 1;
 
@@ -844,14 +852,15 @@ close_all_buffers:
 }
 /* exhcmd_quit */
 
-  static char *
+  static const char *
 exhcmd_close(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   int force_f = 0;
   int nclosed = 0;
   int i;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   args = p;
@@ -887,55 +896,55 @@ exhcmd_close(struct he_s *hedit __unused, char *args)
 }
 /* exhcmd_close */
 
-  static char *
+  static const char *
 exhcmd_map(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_COMMAND);
 }
 /* exhcmd_map */
 
-  static char *
+  static const char *
 exhcmd_imap(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_INSERT);
 }
 /* exhcmd_imap */
 
-  static char *
+  static const char *
 exhcmd_vmap(struct he_s *hedit, char *args)
 {
   return exh_map(hedit, args, MAP_VISUAL);
 }
 /* exhcmd_vmap */
 
-  static char *
+  static const char *
 exhcmd_unmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_COMMAND);
 }
 /* exhcmd_unmap */
 
-  static char *
+  static const char *
 exhcmd_iunmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_INSERT);
 }
 /* exhcmd_iunmap */
 
-  static char *
+  static const char *
 exhcmd_vunmap(struct he_s *hedit, char *args)
 {
   return exh_unmap(hedit, args, MAP_VISUAL);
 }
 /* exhcmd_vunmap */
 
-  static char *
+  static const char *
 exhcmd_set(struct he_s *hedit, char *args)
 {
   char *p, *q, *option;
   enum s_option_e type;
   int no_f;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   util_trunc(args = p);
@@ -986,7 +995,7 @@ exhcmd_set(struct he_s *hedit, char *args)
       if (type == S_BOOL)
         s_set_option(option, no_f ? "false" : "true", 0);
       else {
-        char *value = s_get_option(option);
+        const char *value = s_get_option(option);
         if (!*value) value = "<unset>";
         he_message(0, "%s=%s@~", option, value);
       }
@@ -996,13 +1005,14 @@ exhcmd_set(struct he_s *hedit, char *args)
 }
 /* exhcmd_set */
 
-  static char *
+  static const char *
 exhcmd_delete(struct he_s *hedit, char *args, long begin, long end)
   /* ARGSUSED */
 {
   long count = end - begin;
   char *data;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   util_trunc(args = p);
@@ -1027,12 +1037,13 @@ exhcmd_delete(struct he_s *hedit, char *args, long begin, long end)
 }
 /* exhcmd_delete */
 
-  static char *
+  static const char *
 exhcmd_yank(struct he_s *hedit, char *args, long begin, long end)
   /* ARGSUSED */
 {
   long count = end - begin;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   util_trunc(args = p);
@@ -1046,21 +1057,21 @@ exhcmd_yank(struct he_s *hedit, char *args, long begin, long end)
 }
 /* exhcmd_yank */
 
-  static char *
+  static const char *
 exhcmd_version(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
-  char *skip = exh_skipcmd(args, 0);
+  const char *skip = exh_skipcmd(args, 0);
   hexer_version();
   return skip;
 }
 /* exhcmd_version */
 
-  static char *
+  static const char *
 exhcmd_zz(struct he_s *hedit, char *args)
 {
   int k;
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   if ((k = HE_LINE(hedit->position - hedit->screen_offset)) < hx_lines / 2 - 1)
@@ -1072,10 +1083,10 @@ exhcmd_zz(struct he_s *hedit, char *args)
 }
 /* exhcmd_zz */
 
-  static char *
+  static const char *
 exhcmd_zt(struct he_s *hedit, char *args)
 {
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   he_scroll_up(hedit, HE_LINE(hedit->position - hedit->screen_offset));
@@ -1084,10 +1095,10 @@ exhcmd_zt(struct he_s *hedit, char *args)
 }
 /* exhcmd_zt */
 
-  static char *
+  static const char *
 exhcmd_zb(struct he_s *hedit, char *args)
 {
-  char *skip;
+  const char *skip;
 
   skip = exh_skipcmd(args, 0);
   he_scroll_down(hedit,
@@ -1097,13 +1108,13 @@ exhcmd_zb(struct he_s *hedit, char *args)
 }
 /* exhcmd_zb */
 
-  static char *
+  static const char *
 exhcmd_help(struct he_s *hedit, char *args)
 {
   int pid1, pid2, status, x = 0;
   int pipefd[2];
   char *vp[64], *p;
-  char *skip;
+  const char *skip;
   int i;
 
   skip = exh_skipcmd(args, 0);
@@ -1169,13 +1180,14 @@ exit_exhcmd_help:
 }
 /* exhcmd_help */
 
-  static char *
+  static const char *
 exhcmd_exit(struct he_s *hedit, char *args)
 {
   struct buffer_s *i;
   int cant_write_f = 0;
   long k;
-  char *skip, *p;
+  const char *skip;
+  char *p;
 
   skip = exh_skipcmd(args, p = (char *)alloca(strlen(args) + 1));
   util_trunc(args = p);

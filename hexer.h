@@ -126,7 +126,7 @@ extern struct he_message_s *he_messages;
 
 void
 #if USE_STDARG
-he_message( int beep, char *fmt, ... );
+he_message( int beep, const char *fmt, ... );
 #else
 he_message( );
 #endif
@@ -257,16 +257,16 @@ struct buffer_s {
 extern const struct buffer_s     NO_BUFFER;
 extern char             *alternate_buffer;
 extern struct buffer_s  *current_buffer;
-extern char             *he_pagerprg;
+extern const char       *he_pagerprg;
 
 
 /* exh commands
  */
 
-typedef char *(*exh_fn)(struct he_s *, char *, long, long);
+typedef char *(*exh_fn)(struct he_s *, const char *, long, long);
 
 struct exh_cmd_s {
-  char *cmd_name;
+  const char *cmd_name;
   char cmd_char;
   exh_fn cmd;
   int whole_f;
@@ -284,7 +284,7 @@ struct exh_cmd_s {
 #define HE_LINE(x) ((long)(x) >> 4)
 
 int
-he_open_buffer(char *name, char *path);
+he_open_buffer(const char *name, char *path);
 
 int
 he_select_buffer(char *name);
@@ -338,18 +338,18 @@ void
 he_cancel_selection(struct he_s *hedit);
 
 long
-he_search(struct he_s *, char *, char *, int, int, int, long,
+he_search(struct he_s *, const char *, const char *, int, int, int, long,
               char **, long *, long *);
 
 void
 he_search_command(struct he_s *, char *, int);
 
 char *
-he_query_command(char *, char *, int);
+he_query_command(const char *, const char *, int);
 
 int
 #if USE_STDARG
-he_query_yn( int dfl, char *fmt, ... );
+he_query_yn( int dfl, const char *fmt, ... );
 #else
 he_query_yn( );
 #endif

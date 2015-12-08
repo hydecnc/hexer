@@ -1324,7 +1324,7 @@ he_get_counter(hedit)
   long count = -1;
   int key, digit;
   enum mode_e { OCT = 8, DEC = 10, HEX = 16 } mode = DEC;
-  char *fmt = 0, *prefix = 0;
+  const char *fmt = 0, *prefix = 0;
 
   tio_goto_line(hx_lines - 1);
   tio_return();

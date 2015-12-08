@@ -100,7 +100,7 @@ enum t_keys_e {
 
 extern int               hx_columns;
 extern int               hx_lines;
-extern char             *terminal_name;
+extern const char       *terminal_name;
 extern volatile int     *tio_interrupt;
 extern int               tio_tite_f;
 extern void             (*tio_winch)(void);
@@ -229,7 +229,7 @@ tio_testkey(int key);
    * `HXKEY_RETURN', `HXKEY_ESCAPE', `HXKEY_DELETE', `HXKEY_NONE' and `HXKEY_ERROR'.
    */
 
-  char *
+  const char *
 tio_keyname(int key);
   /* Returns the name of the key `key'.  If `key' is a printable character,
    * it is returned as a string.  If `key' is a special key, the name of
@@ -237,7 +237,7 @@ tio_keyname(int key);
    * is returned, else a `\x??' hexadecimal code.
    */
 
-  char *
+  const char *
 tio_keyrep(int key);
   /* Returs a string representation of `key'.  If `key' is not a printable
    * character an escape sequence is generated:
@@ -250,7 +250,7 @@ tio_keyrep(int key);
    * is returned.
    */
 
-  char *
+  const char *
 tio_vkeyrep(int key);
   /* Similar to `tio_keyrep', but returns a long string representation
    * whenever available.
@@ -379,7 +379,7 @@ tio_raw_vprintf(const char *fmt, va_list);
    */
 
   int
-tio_puts(char *s);
+tio_puts(const char *s);
   /* Like `fputs(s, stdout)'.
    */
 
