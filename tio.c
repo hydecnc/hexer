@@ -99,6 +99,14 @@
 #include "set.h"
 #endif
 
+#ifndef __unused
+#ifdef __GNUC__
+#define __unused __attribute__((unused))
+#else  /* __GNUC__ */
+#define __unused
+#endif /* __GNUC__ */
+#endif /* __unused */
+
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
 #if !HAVE_VASPRINTF
@@ -512,7 +520,7 @@ static struct t_keys_s {
   { (enum t_keys_e)'^', &t_key_hat, "hat", "~HAT" },
   { HXKEY_NULL, &t_key_null, "null", "^@" },
   { HXKEY_BREAK, &t_key_break, "break", "~BREAK" },
-  { (enum t_keys_e)0, 0 }
+  { (enum t_keys_e)0, 0, 0, 0 }
 };
 #define HXKEY_ESCAPE_NAME "escape"
 
@@ -2114,7 +2122,7 @@ tio_delete_character(void)
 
 #ifdef SIGWINCH
   static sigtype_t
-sigwinch_handler(int sig)
+sigwinch_handler(int sig __unused)
   /* Signal handler for signal `SIGWINCH'.
    */
 {
