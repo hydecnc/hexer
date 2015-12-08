@@ -149,7 +149,7 @@ exh_map(struct he_s *hedit, char *args, int map)
 /* exh_map */
 
   static char *
-exh_unmap(struct he_s *hedit, char *args, int map)
+exh_unmap(struct he_s *hedit __unused, char *args, int map)
   /* ARGSUSED */
 {
   char *from;
@@ -169,7 +169,7 @@ exh_unmap(struct he_s *hedit, char *args, int map)
 /* exh_unmap */
 
   static char *
-exh_save_buffer(struct he_s *hedit, char *name, long begin, long end, int *error)
+exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end, int *error)
 {
   struct buffer_s *i;
   char *p;
@@ -180,7 +180,9 @@ exh_save_buffer(struct he_s *hedit, char *name, long begin, long end, int *error
   int whole_f = 0;
   char *file = 0;
 
-  if (end >= hedit->buffer->size || end < 0) end = hedit->buffer->size - 1;
+  unsigned end = (s_end > 0 && (unsigned long)s_end < hedit->buffer->size)?
+    (unsigned long)s_end:
+    hedit->buffer->size - 1;
   if (begin == 0 && end == hedit->buffer->size - 1) whole_f = 1;
   while (*name == ' ' || *name == '\t') ++name;
   if (*name == '!') {
@@ -230,7 +232,7 @@ exh_save_buffer(struct he_s *hedit, char *name, long begin, long end, int *error
 /* exh_save_buffer */
 
   static char *
-exh_write(struct he_s *hedit, char *file, long begin, long end, int *error)
+exh_write(struct he_s *hedit, char *file, long s_begin, long s_end, int *error)
 {
   char *p;
   char *skip;
@@ -239,7 +241,10 @@ exh_write(struct he_s *hedit, char *file, long begin, long end, int *error)
   long l;
   int whole_f = 0;
 
-  if (end >= hedit->buffer->size || end < 0) end = hedit->buffer->size - 1;
+  unsigned long begin = (unsigned long)s_begin;
+  unsigned long end = (s_end >= 0 && (unsigned long)s_end < hedit->buffer->size)?
+    (unsigned long)s_end:
+    hedit->buffer->size;
   if (begin == 0 && end == hedit->buffer->size - 1) whole_f = 1;
   while (*file == ' ' || *file == '\t') ++file;
   if (*file == '!') {
@@ -492,7 +497,7 @@ exhcmd_write(struct he_s *hedit, char *file, long begin, long end)
 /* exhcmd_write */
 
   static char *
-exhcmd_skip(struct he_s *hedit, char *args)
+exhcmd_skip(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -519,7 +524,7 @@ exhcmd_skip(struct he_s *hedit, char *args)
 /* exhcmd_skip */
 
   static char *
-exhcmd_next(struct he_s *hedit, char *args)
+exhcmd_next(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -544,7 +549,7 @@ exhcmd_next(struct he_s *hedit, char *args)
 /* exhcmd_next */
 
   static char *
-exhcmd_previous(struct he_s *hedit, char *args)
+exhcmd_previous(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i;
@@ -570,7 +575,7 @@ exhcmd_previous(struct he_s *hedit, char *args)
 /* exhcmd_previous */
 
   static char *
-exhcmd_rewind(struct he_s *hedit, char *args)
+exhcmd_rewind(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   char *ab = alternate_buffer;
@@ -623,7 +628,7 @@ exhcmd_read(struct he_s *hedit, char *file, long position)
     return skip;
   data = (char *)malloc(l);
   fp = fopen(file, "r");
-  if (fread(data, 1, l, fp) != l) {
+  if (fread(data, 1, l, fp) != (unsigned long)l) {
     free(data);
     fclose(fp);
     return skip;
@@ -638,7 +643,7 @@ exhcmd_read(struct he_s *hedit, char *file, long position)
 /* exhcmd_read */
 
   static char *
-exhcmd_edit(struct he_s *hedit, char *name)
+exhcmd_edit(struct he_s *hedit __unused, char *name)
   /* ARGSUSED */
 {
   char *ab = alternate_buffer;
@@ -648,7 +653,7 @@ exhcmd_edit(struct he_s *hedit, char *name)
   char *skip, *p;
   char *path = 0;
   char *user = 0;
-  int uid = getuid();
+  uid_t uid = getuid();
 
   skip = exh_skipcmd(name, p = (char *)alloca(strlen(name) + 1));
   util_trunc(name = p);
@@ -715,7 +720,7 @@ exhcmd_buffer(struct he_s *hedit, char *name)
   skip = exh_skipcmd(name, p = (char *)alloca(strlen(name) + 1));
   util_trunc(name = p);
   if (!*name) { /* list buffers */
-    int name_maxlen = 0;
+    size_t name_maxlen = 0;
     for (i = buffer_list, k = 0; i; i = i->next, ++k)
       if (strlen(i->hedit->buffer_name) > name_maxlen)
         name_maxlen = strlen(i->hedit->buffer_name);
@@ -802,7 +807,7 @@ exhcmd_wall(struct he_s *hedit, char *args)
 /* exhcmd_wall */
 
   static char *
-exhcmd_quit(struct he_s *hedit, char *args)
+exhcmd_quit(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   struct buffer_s *i, *j;
@@ -839,7 +844,7 @@ close_all_buffers:
 /* exhcmd_quit */
 
   static char *
-exhcmd_close(struct he_s *hedit, char *args)
+exhcmd_close(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   int force_f = 0;
@@ -1041,7 +1046,7 @@ exhcmd_yank(struct he_s *hedit, char *args, long begin, long end)
 /* exhcmd_yank */
 
   static char *
-exhcmd_version(struct he_s *hedit, char *args)
+exhcmd_version(struct he_s *hedit __unused, char *args)
   /* ARGSUSED */
 {
   char *skip = exh_skipcmd(args, 0);
