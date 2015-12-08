@@ -50,11 +50,7 @@
 #include "defs.h"
 
 #include <stdio.h>
-#ifdef USE_STDARG
 #include <stdarg.h>
-#else
-#include <varargs.h>
-#endif
 #if HAVE_ALLOCA
 #if NEED_ALLOCA_H
 #include <alloca.h>
@@ -125,11 +121,7 @@ struct he_message_s {
 extern struct he_message_s *he_messages;
 
 void
-#if USE_STDARG
 he_message( int beep, const char *fmt, ... );
-#else
-he_message( );
-#endif
 
 void
 he_refresh_part(struct he_s *hedit, long pos1, long pos2);
@@ -348,11 +340,7 @@ char *
 he_query_command(const char *, const char *, int);
 
 int
-#if USE_STDARG
 he_query_yn( int dfl, const char *fmt, ... );
-#else
-he_query_yn( );
-#endif
 
 int
 he_mainloop(struct he_s *hedit);

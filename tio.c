@@ -185,17 +185,10 @@ int tio_tite_f = 0;
    * terminal.
    */
 
-#if USE_STDARG
 static void tio_error_msg( const char *fmt, ... );
 static void tio_warning_msg( const char *fmt, ... );
 void (*error_msg)( const char *, ... ) = tio_error_msg;
 void (*warning_msg)( const char *, ... ) = tio_warning_msg;
-#else
-static void tio_error_msg( /* const char *fmt, ... */ );
-static void tio_warning_msg( /* const char *fmt, ... */ );
-void (*error_msg)( /* const char *, ... */ ) = tio_error_msg;
-void (*warning_msg)( /* const char *, ... */ ) = tio_warning_msg;
-#endif
 void (*tio_winch)(void);
 
 int hx_lines; /* Number of lines. */
@@ -544,23 +537,12 @@ tio_isprint(int x)
 }
 /* tio_isprint */
 
-#if USE_STDARG
   static void
 tio_error_msg(const char *fmt, ...)
-#else
-  static void
-tio_error_msg(fmt, va_alist)
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   fprintf(stderr, "%s: ", program_name);
   vfprintf(stderr, fmt, ap);
   fprintf(stderr, "\n");
@@ -568,23 +550,12 @@ tio_error_msg(fmt, va_alist)
 }
 /* tio_error_msg */
 
-#if USE_STDARG
   static void
 tio_warning_msg(const char *fmt, ...)
-#else
-  static void
-tio_warning_msg(fmt, va_alist)
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   fprintf(stderr, "%s: warning: ", program_name);
   vfprintf(stderr, fmt, ap);
   fprintf(stderr, "\n");
@@ -626,16 +597,8 @@ tio_listcaps(void)
 /* tio_listcaps */
 #endif
 
-#if USE_STDARG
   static int
 tio_command(const char *cmd, int affcnt, ...)
-#else
-  static int
-tio_command(cmd, affcnt, va_alist)
-  const char *cmd;
-  int affcnt;
-  va_dcl
-#endif
   /* send the command `cmd' to the terminal.
    * return value: 0 if all goes well and -1 on error.
    */
@@ -644,11 +607,7 @@ tio_command(cmd, affcnt, va_alist)
   int arg1, arg2;
 
   if (!cmd) return -1;
-#if USE_STDARG
   va_start(ap, affcnt);
-#else
-  va_start(ap);
-#endif
   arg1 = va_arg(ap, int);
   arg2 = va_arg(ap, int);
   tputs(tgoto(cmd, arg2, arg1), affcnt, outc);
@@ -1976,24 +1935,13 @@ tio_message(char **message, int indent)
 }
 /* tio_message */
 
-#if USE_STDARG
   int
 tio_printf(const char *fmt, ...)
-#else
-  int
-tio_printf(fmt, va_alist)
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
   int rval;
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   rval = tio_vprintf(fmt, ap);
   va_end(ap);
   return rval;
@@ -2027,24 +1975,13 @@ tio_vprintf(const char *fmt, va_list ap)
 }
 /* tio_vprintf */
 
-#if USE_STDARG
   int
 tio_raw_printf(const char *fmt, ...)
-#else
-  int
-tio_raw_printf(fmt, va_alist)
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
   int rval;
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   rval = tio_raw_vprintf(fmt, ap);
   va_end(ap);
   return rval;

@@ -111,11 +111,7 @@ extern struct t_keynames_s {
   char *name;
 } t_keynames[];
 
-#if USE_STDARG
 void (*error_msg)( const char *, ... );
-#else
-void (*error_msg)(const char *, ...);
-#endif
   /* Pointer to the error message function.
    */
 
@@ -352,11 +348,7 @@ tio_message(char **message, int indent);
    */
 
   int
-#if USE_STDARG
 tio_printf( const char *fmt, ... );
-#else
-tio_printf( );
-#endif
 
   int
 tio_vprintf(const char *fmt, va_list);
@@ -367,11 +359,7 @@ tio_vprintf(const char *fmt, va_list);
    */
 
   int
-#if USE_STDARG
 tio_raw_printf( const char *fmt, ... );
-#else
-tio_raw_printf(const char *fmt, ...);
-#endif
 
   int
 tio_raw_vprintf(const char *fmt, va_list);

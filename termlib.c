@@ -495,24 +495,13 @@ vtencode(cmd, ap)
 }
 /* vtencode */
 
-#if USE_STDARG
   static char *
 tencode(char *cmd, ...)
-#else
-  static char *
-tencode(cmd, va_alist)
-  char *cmd;
-  va_dcl
-#endif
 {
   va_list ap;
   char *buf;
 
-#if USE_STDARG
   va_start(ap, cmd);
-#else
-  va_start(ap);
-#endif
   buf = vtencode(cmd, ap);
   va_end(ap);
   return buf;

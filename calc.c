@@ -296,23 +296,12 @@ calc_sprint(char *s, struct calc_object_s object)
 /* calc_print */
 
   static int
-#if USE_STDARG
 calc_error(struct calc_object_s *x, const char *fmt, ...)
-#else
-calc_error(x, fmt, va_alist)
-  struct calc_object_s *x;
-  char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
   char buf[256];
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   vsprintf(buf, fmt, ap);
   if (x->type != CO_ERROR) {
     x->type = CO_ERROR;

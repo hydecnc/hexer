@@ -80,26 +80,14 @@ struct he_message_s *he_messages;
 char *alternate_buffer;
 const char *he_pagerprg;
 
-#if USE_STDARG
   void
 he_message(int beep, const char *fmt, ...)
-#else
-  void
-he_message(beep, fmt, va_alist)
-  int beep;
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
   struct he_message_s *m;
   /* int length; */
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   /* length = tio_nprintf(fmt, ap); */
   m = (struct he_message_s *)malloc(sizeof(struct he_message_s));
   m->next = he_messages;
@@ -537,26 +525,14 @@ he_query_command(prompt, dfl, context)
 }
 /* he_query_command */
 
-#if USE_STDARG
   int
 he_query_yn(int dfl, const char *fmt, ...)
-#else
-  int
-he_query_yn(dfl, fmt, va_alist)
-  int dfl;
-  const char *fmt;
-  va_dcl
-#endif
 {
   va_list ap;
   int key;
   int choice;
 
-#if USE_STDARG
   va_start(ap, fmt);
-#else
-  va_start(ap);
-#endif
   tio_keypad(0);
 restart:
   tio_goto_line(hx_lines - 1);
