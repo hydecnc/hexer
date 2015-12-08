@@ -97,11 +97,11 @@ static char rl_line[LINE_MAXLEN];
                            /* buffer for the current line */
 static char rl_vline[LINE_MAXLEN];
                            /* buffer for the "visible" line */
-static int rl_position;    /* position of the cursor.  the position of the
+static size_t rl_position; /* position of the cursor.  the position of the
                             * cursor is number of the character under the
                             * cursor.  note that escape-sequences are
                             * considered to be a single character. */
-static int rl_offset;      /* number of characters scrolled out to the
+static size_t rl_offset;   /* number of characters scrolled out to the
                             * left, so the first character displayed on
                             * screen is `rl_vline[rl_offset]'. */
 
@@ -334,13 +334,13 @@ exit_rl_query_yn:
 }
 /* rl_query_yn */
 
-  static int
+  static size_t
 rl_get_position(void)
   /* return the position of the cursor in `rl.line'.
    */
 {
-  int i;
-  int position;
+  size_t i;
+  size_t position;
 
   for (i = position = 0; rl.line[i] && position < rl_position; ++i) {
     ++position;
@@ -350,14 +350,14 @@ rl_get_position(void)
 }
 /* rl_get_position */
 
-  static int
+  static size_t
 rl_get_vposition(void)
   /* return the position of the cursor in `rl.vline'.
    */
 {
-  int i;
-  int position;
-  int vposition;
+  size_t i;
+  size_t position;
+  size_t vposition;
   int key;
 
   for (i = position = vposition = 0;
@@ -386,14 +386,14 @@ rl_get_vposition(void)
 }
 /* rl_get_position */
 
-  static int
+  static size_t
 rl_get_length(struct rl_line_s *rrl)
   /* return the number of logical characters in `rrl->line'.  escape sequences
    * are counted as a single character.
    */
 {
-  int i;
-  int length;
+  size_t i;
+  size_t length;
 
   for (i = length = 0; rrl->line[i]; ++i, ++length)
     if (rrl->line[i] == RL_ESC) ++i;
@@ -477,10 +477,10 @@ rl_display_line(int clear_to_eol)
   strncpy(line, rl.vline + rl_offset, hx_columns - rl_prompt_len);
   line[hx_columns - rl_prompt_len - 1] = 0;
   if (rl_offset) tio_printf(RL_LEFT_MORE);
-  if (strlen(rl.vline) - rl_offset >= hx_columns - rl_prompt_len)
+  if ((int)(strlen(rl.vline) - rl_offset) >= hx_columns - rl_prompt_len)
     line[hx_columns - rl_prompt_len - 2] = 0;
   tio_raw_printf("%s", line + !!rl_offset);
-  if (rl_get_vlength(&rl) - rl_offset >= hx_columns - rl_prompt_len)
+  if ((int)(rl_get_vlength(&rl) - rl_offset) >= hx_columns - rl_prompt_len)
     tio_printf(RL_RIGHT_MORE);
   tio_goto_column(rl_prompt_len + rl_get_vposition() - rl_offset);
   return 0;
@@ -490,19 +490,19 @@ rl_display_line(int clear_to_eol)
   static int
 rl_insert(int x)
 {
-  int i;
+  size_t i;
   int last_col;
-  int position = rl_get_position();
-  int vposition;
+  size_t position = rl_get_position();
+  size_t vposition;
   int append = (position == strlen(rl.line));
   char *s = strdup(tio_keyrep(x));
-  int sl = strlen(s);
-  int special_f = 0;
+  size_t sl = strlen(s);
+  size_t special_f = 0;
   int redisplay_f = 0;
 
   if (!tio_isprint(x) || x == RL_ESC || !x) special_f = 1;
-  for (i = strlen(rl.line) - special_f; i >= position; --i)
-    rl.line[i + 1 + special_f] = rl.line[i];
+  for (i = strlen(rl.line) - special_f + 1; i > position; --i)
+    rl.line[i + special_f] = rl.line[i - 1];
   if (special_f && (x == RL_ESC || x > 0xff || !x)) {
     rl.line[position] = RL_ESC;
     rl.line[position + 1] =
@@ -512,7 +512,7 @@ rl_insert(int x)
   rl_make_vline();
   vposition = rl_get_vposition();
   for (i = 0; i < sl; ++i) {
-    if (vposition - rl_offset + 2 >= hx_columns - rl_prompt_len + append) {
+    if ((ssize_t)(vposition - rl_offset + 2) >= hx_columns - rl_prompt_len + append) {
       ++rl_offset;
       ++vposition;
       tio_goto_column(rl_prompt_len);
@@ -570,12 +570,12 @@ rl_insert(int x)
   static int
 rl_delete(int under_cursor)
 {
-  int i;
+  size_t i;
   int last_col;
-  int special_f = 0;
-  int replen;
-  int position = rl_get_position();
-  int vposition;
+  size_t special_f = 0;
+  size_t replen;
+  size_t position = rl_get_position();
+  size_t vposition;
   int key;
 
   if (!under_cursor && !position) return 0;
@@ -602,24 +602,27 @@ rl_delete(int under_cursor)
       --vposition;
       if (vposition < rl_offset + 1 + !!rl_backspace_jump) {
 	if (rl_backspace_jump && rl_offset) {
-	  rl_offset -= rl_backspace_jump;
+	  ssize_t nofs = rl_offset - rl_backspace_jump;
 	  if (rl_backspace_jump == 1) {
-	    if (rl_offset < 0) {
+	    if (nofs < 0) {
 	      rl_offset = 0;
 	      goto l1;
-	    }
+	    } else
+	      rl_offset = nofs;
 	    tio_goto_column(rl_prompt_len + 1);
 	    tio_putchar(rl.vline[rl_offset + 1]);
 	  } else {
-	    if (rl_offset < 0) rl_offset = 0;
+	    if (nofs < 0)
+	      rl_offset = 0;
+	    else
+	      rl_offset = nofs;
 	    rl_display_line(0);
 	  }
 	} else {
-	  --rl_offset;
-	  if (rl_offset < 0) {
-	    rl_offset = 0;
+	  if (rl_offset == 0)
 	    goto l1;
-	  }
+	  else
+	    --rl_offset;
 	}
       } else {
   l1:   tio_goto_column(rl_prompt_len + vposition - rl_offset);
@@ -696,8 +699,8 @@ rl_ck(void)
   /* clear all up to the end of line.
    */
 {
-  int length = strlen(rl.line);
-  int i;
+  size_t length = strlen(rl.line);
+  size_t i;
 
   for (i = rl_get_position(); i < length; ++i) rl.line[i] = 0;
   rl_make_vline();
@@ -711,9 +714,9 @@ rl_cu(void)
   /* clear all up to the beginning of the line.
    */
 {
-  int position = rl_get_position();
-  int length = strlen(rl.line);
-  int i;
+  size_t position = rl_get_position();
+  size_t length = strlen(rl.line);
+  size_t i;
 
   if (position) {
     for (i = 0; i < length - position; ++i)
@@ -742,15 +745,15 @@ rl_begin(void)
   static int
 rl_end(void)
 {
-  int length;
-  int vposition;
+  size_t length;
+  size_t vposition;
 
   length = rl_get_length(&rl);
   rl_position = length;
   vposition = rl_get_vposition();
-  if (rl_offset < vposition - hx_columns + rl_prompt_len + 1) {
-    rl_offset = vposition - hx_columns + rl_prompt_len + 1;
-    if (rl_offset < 0) rl_offset = 0;
+  ssize_t nofs = vposition - hx_columns + rl_prompt_len + 1;
+  if (nofs > 0 && rl_offset < (size_t)nofs) {
+    rl_offset = nofs;
     rl_display_line(1);
   } else
     tio_goto_column(rl_prompt_len + vposition - rl_offset);
@@ -761,9 +764,9 @@ rl_end(void)
 rl_left(void)
 {
   int last_col;
-  int position;
-  int vposition;
-  int skip;
+  size_t position;
+  size_t vposition;
+  size_t skip;
   int key;
   int redisplay_f = 0;
 
@@ -780,11 +783,10 @@ rl_left(void)
   while (skip--) {
     vposition = rl_get_vposition();
     if (vposition < rl_offset + 1) {
-      --rl_offset;
-      if (rl_offset < 0) {
-	rl_offset = 0;
+      if (rl_offset == 0) {
 	tio_left(1);
       } else {
+	--rl_offset;
 	if (!rl_offset) {
 	  tio_goto_column(rl_prompt_len);
 	  tio_putchar(rl.vline[0]);
@@ -821,9 +823,9 @@ rl_right(void)
   int last_col;
   int append = 0;
   int redisplay_f = 0;
-  int skip;
-  int position;
-  int vposition;
+  size_t skip;
+  size_t position;
+  size_t vposition;
   int key;
 
   if (rl_position == rl_get_length(&rl)) return 0;
@@ -839,7 +841,7 @@ rl_right(void)
   vposition = rl_get_vposition();
   while (skip--) {
     append = (position == strlen(rl.line));
-    if (vposition - rl_offset + 1 >= hx_columns - rl_prompt_len + append) {
+    if ((int)(vposition - rl_offset + 1) >= hx_columns - rl_prompt_len + append) {
       ++rl_offset;
       tio_goto_column(rl_prompt_len);
       if (tio_delete_character()) redisplay_f = 1;
@@ -881,7 +883,7 @@ rl_complete(int context, int again)
   char line[1024];
   char *p;
   int i, j;
-  int prefix_len;
+  size_t prefix_len;
   int stop_f = 0;
 
   if (!completer) return 0;
@@ -967,16 +969,17 @@ dont_list:
 	  tio_bell();
       } else {
 	/* comlpete as far as unique */
-	int k = strlen(prefix);
+	size_t k = strlen(prefix);
 	assert(k > prefix_len);
-	for (i = strlen(rl.line) + (j = k - prefix_len);
-             i >= rl_position;
+	size_t i, j;
+	for (i = strlen(rl.line) + (j = k - prefix_len) + 1;
+             i > rl_position;
              --i)
-	  rl.line[i + j] = rl.line[i];
+	  rl.line[i + j - 1] = rl.line[i - 1];
 	for (i = 0; i < j; ++i)
 	  rl.line[rl_position + i] = prefix[prefix_len + i];
 	rl_position += j;
-	while (rl_position - rl_offset + 1 >= hx_columns - rl_prompt_len)
+	while ((int)(rl_position - rl_offset + 1) >= hx_columns - rl_prompt_len)
 	  ++rl_offset;
 	tio_return();
 	tio_puts(rl_prompt);
@@ -985,16 +988,17 @@ dont_list:
       }
     } else { /* exactly one completion */
       int dir_f;
-      j = strlen(*list) - prefix_len + 1;
+      size_t j = strlen(*list) - prefix_len + 1;
+      size_t i;
       dir_f = (*list)[strlen(*list) - 1] == '/';
       if (dir_f) --j;
-      for (i = strlen(rl.line) + j; i >= rl_position; --i)
-	rl.line[i + j] = rl.line[i];
+      for (i = strlen(rl.line) + j + 1; i > rl_position; --i)
+	rl.line[i + j - 1] = rl.line[i - 1];
       for (i = 0; i < j - !dir_f; ++i)
 	rl.line[rl_position + i] = list[0][prefix_len + i];
       if (!dir_f) rl.line[rl_position + i] = ' ';
       rl_position += j;
-      while (rl_position - rl_offset + 1 >= hx_columns - rl_prompt_len)
+      while ((int)(rl_position - rl_offset + 1) >= hx_columns - rl_prompt_len)
 	++rl_offset;
       tio_return();
       tio_puts(rl_prompt);
@@ -1012,12 +1016,12 @@ dont_list:
 rl_verbatim(void)
 {
   int key;
-  int position = rl_get_position();
+  size_t position = rl_get_position();
   int append = (position == strlen(rl.line));
-  int vposition = rl_get_vposition();
+  size_t vposition = rl_get_vposition();
   int last_col;
 
-  if (vposition - rl_offset + 2 >= hx_columns - rl_prompt_len + append) {
+  if ((int)(vposition - rl_offset + 2) >= hx_columns - rl_prompt_len + append) {
     ++rl_offset;
     tio_goto_column(rl_prompt_len);
     if (tio_delete_character())
@@ -1087,7 +1091,7 @@ readline(prompt, default_val, context)
     rl_default = default_val;
     strncpy(rl.line, default_val, LINE_MAXLEN - 1);
     rl_make_vline();
-    if (rl_prompt_len + rl_position > hx_columns - 2)
+    if ((int)(rl_prompt_len + rl_position) > hx_columns - 2)
       rl_offset = hx_columns - 1 - rl_prompt_len - strlen(rl.vline);
     tio_raw_printf("%s", rl.line + rl_offset);
     tio_goto_column(rl_prompt_len + strlen(rl.vline) - rl_offset);
@@ -1118,7 +1122,7 @@ readline(prompt, default_val, context)
       if (!(hist = rl_history_up())) break;
       strcpy(rl.line, hist->line);
       rl_offset = 0;
-      if (rl_prompt_len + rl_position > hx_columns - 2)
+      if ((int)(rl_prompt_len + rl_position) > hx_columns - 2)
         rl_offset = rl_prompt_len + strlen(rl.vline) - hx_columns + 1;
       rl_display_line(1);
       break;
@@ -1127,7 +1131,7 @@ readline(prompt, default_val, context)
       if (!(hist = rl_history_down())) break;
       strcpy(rl.line, hist->line);
       rl_offset = 0;
-      if (rl_prompt_len + rl_position > hx_columns - 2)
+      if ((int)(rl_prompt_len + rl_position) > hx_columns - 2)
         rl_offset = hx_columns - 2 - rl_prompt_len - strlen(rl.vline);
       rl_display_line(1);
       break;
