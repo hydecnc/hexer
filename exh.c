@@ -523,9 +523,7 @@ exh_get_address(struct he_s *hedit, const char *exp, unsigned long *address)
 /* exh_get_address */
 
   int
-exh_command(hedit, cmd)
-  struct he_s *hedit;
-  const char *cmd;
+exh_command(struct he_s *hedit, const char *cmd)
   /* execute the exh-command `cmd' on `hedit'.  multiple commands may be
    * specified (separated by semicolons).
    * note:  if any of the commands changes the current buffer, all successive

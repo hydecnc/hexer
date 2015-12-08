@@ -61,8 +61,7 @@
 #define ishex(x) (isdigit(x) || (tolower(x) >= 'a' && tolower(x) <= 'f'))
 
   int
-util_trunc(s)
-  char *s;
+util_trunc(char *s)
   /* remove trailing whitespace.
    */
 {
@@ -82,8 +81,7 @@ util_pstrcmp(char **a, char **b)
 /* util_pstrcmp */
 
   int
-util_strsort(list)
-  char **list;
+util_strsort(char **list)
   /* a simple bubblesort.
    */
 {

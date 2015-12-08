@@ -59,10 +59,6 @@
 #include "tio.h"
 #include "util.h"
 
-#ifndef USE_PROTOTYPES
-#define USE_PROTOTYPES 1
-#endif
-
 #define LINE_MAXLEN 8192        /* maximum length of the line */
 #define RL_MAX_CONTEXTS 16      /* maximum number of history contexts */
 
@@ -106,11 +102,7 @@ struct rl_line_s {
   char *vline;
 } rl = { rl_line, rl_vline };
 
-#if USE_PROTOTYPES
 char **(*completer)(char *prefix, const char *command, char *line, int context);
-#else
-char **(*completer)();
-#endif
   /* Pointer to the completer function.  If `completer == 0', completion
    * is disabled.
    */
@@ -1055,10 +1047,7 @@ restart:
 /* rl_verbatim */
 
   char *
-readline(prompt, default_val, context)
-  const char *prompt;
-  const char *default_val;
-  int context;
+readline(const char *prompt, const char *default_val, int context)
 {
   int key;
   int escape_f = 0;

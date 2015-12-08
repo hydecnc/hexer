@@ -75,8 +75,7 @@ static const char *false_string = "false";
 static struct option_s *option_first = 0;
 
   long
-s_get_option_integer(option)
-  const char *option;
+s_get_option_integer(const char *option)
 {
   struct option_s *i;
 
@@ -90,8 +89,7 @@ s_get_option_integer(option)
 /* s_get_option_integer */
 
   const char *
-s_get_option_string(option)
-  const char *option;
+s_get_option_string(const char *option)
 {
   struct option_s *i;
 
@@ -105,8 +103,7 @@ s_get_option_string(option)
 /* s_get_option_string */
 
   int
-s_get_option_bool(option)
-  const char *option;
+s_get_option_bool(const char *option)
 {
   struct option_s *i;
 
@@ -120,8 +117,7 @@ s_get_option_bool(option)
 /* s_get_option_bool */
 
   int
-s_delete_option(option)
-  const char *option;
+s_delete_option(const char *option)
 {
   struct option_s *i, *j;
 
@@ -168,9 +164,7 @@ s_append(struct option_s *last,
 /* s_append */
 
   void
-s_set_option_string(option, value)
-  const char *option;
-  const char *value;
+s_set_option_string(const char *option, const char *value)
 {
   struct option_s *i, *j;
 
@@ -186,9 +180,7 @@ s_set_option_string(option, value)
 /* s_set_option_string */
 
   void
-s_set_option_integer(option, value)
-  const char *option;
-  const long value;
+s_set_option_integer(const char *option, const long value)
 {
   struct option_s *i, *j;
 
@@ -204,9 +196,7 @@ s_set_option_integer(option, value)
 /* s_set_option_integer */
 
   void
-s_set_option_bool(option, value)
-  const char *option;
-  const int value;
+s_set_option_bool(const char *option, const int value)
 {
   struct option_s *i, *j;
 
@@ -222,8 +212,7 @@ s_set_option_bool(option, value)
 /* s_set_option_bool */
 
   enum s_option_e
-s_get_type(option)
-  const char *option;
+s_get_type(const char *option)
 {
   struct option_s *i;
 
@@ -234,8 +223,7 @@ s_get_type(option)
 /* s_get_type */
 
   const char *
-s_get_option(option)
-  const char *option;
+s_get_option(const char *option)
 {
   struct option_s *i;
   static char rval[1024];
@@ -264,9 +252,7 @@ s_get_option(option)
 /* s_get_option */
 
   void
-s_set_type(option, type)
-  const char *option;
-  const enum s_option_e type;
+s_set_type(const char *option, const enum s_option_e type)
 {
   switch (type) {
     case S_STRING:
@@ -285,10 +271,7 @@ s_set_type(option, type)
 /* s_set_type */
 
   void
-s_set_option(option, value_string, no_action)
-  const char *option;
-  const char *value_string;
-  int no_action;
+s_set_option(const char *option, const char *value_string, int no_action)
 {
   struct option_s *i;
   int k;
@@ -321,9 +304,7 @@ s_set_option(option, value_string, no_action)
 /* s_set_option */
 
   void
-s_set_action(option, action)
-  const char *option;
-  set_fn action;
+s_set_action(const char *option, set_fn action)
 {
   struct option_s *i;
 
@@ -337,9 +318,7 @@ s_set_action(option, action)
 /* s_set_action */
 
   char **
-s_option_list(prefix, bool_only)
-  const char *prefix;
-  int bool_only;
+s_option_list(const char *prefix, int bool_only)
 {
   struct option_s *i;
   char **list;
@@ -361,7 +340,7 @@ s_option_list(prefix, bool_only)
 /* s_option_list */
 
   char **
-s_option_value_list()
+s_option_value_list(void)
 {
   struct option_s *i;
   char **list;
@@ -385,7 +364,7 @@ s_option_value_list()
 /* s_option_value_list */
     
   void
-s_clear_all()
+s_clear_all(void)
 {
   struct option_s *i, *j;
 

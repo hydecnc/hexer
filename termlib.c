@@ -67,7 +67,7 @@ static const int speeds[] = { 0, 50, 75, 110, 134, 150, 200, 300, 600,
                               1200, 1800, 2400, 4800, 9600 };
 
   static void
-t_tinit()
+t_tinit(void)
   /* initialize the global variables `t_PC' and `t_speed';
    * called by `tgetent()'.
    */
@@ -142,10 +142,7 @@ t_tinit()
 /* t_tinit */
 
   static int
-t_tgetent(tbuf, terminal, fp, i)
-  char *tbuf;
-  char *terminal;
-  FILE *fp;
+t_tgetent(char *tbuf, char *terminal, FILE *fp, int i)
 {
   char *p, *q, c;
   char tnames[1024], *tn;
@@ -268,9 +265,7 @@ t_tgetent(tbuf, terminal, fp, i)
 /* t_tgetent */
 
   int
-tgetent(tbuf, terminal)
-  char *tbuf;
-  char *terminal;
+tgetent(char *tbuf, char *terminal)
 {
   int rval;
 
@@ -281,8 +276,7 @@ tgetent(tbuf, terminal)
 /* tgetent */
 
   static char *
-t_tgetwhatever(id)
-  char *id;
+t_tgetwhatever(char *id)
 {
   char *p;
   int id_len = strlen(id);
@@ -302,16 +296,14 @@ t_tgetwhatever(id)
 /* t_tgetwhatever */
 
   int
-tgetflag(id)
-  char *id;
+tgetflag(char *id)
 {
   return !!t_tgetwhatever(id);
 }
 /* tgetflag */
 
   int
-tgetnum(id)
-  char *id;
+tgetnum(char *id)
 {
   char *p = t_tgetwhatever(id);
 
@@ -321,9 +313,7 @@ tgetnum(id)
 /* tgetnum */
 
   char *
-tgetstr(id, abuf)
-  char *id;
-  char **abuf;
+tgetstr(char *id, char **abuf)
 {
   char *p = t_tgetwhatever(id), *q = *abuf;
 
@@ -359,7 +349,7 @@ tgetstr(id, abuf)
 /* tgetstr */
 
   static char *
-vtencode(cmd, ap)
+vtencode(char *cmd, va_list ap)
   /* Create a terminal command string suitable for `tputs()'.  the
    * `%'-escapes are substituted as listed below:
    *   %%      produce the character %
@@ -379,8 +369,6 @@ vtencode(cmd, ap)
    *   %D      Reverse coding: do a (value - 2 * (value % 16)); no output
    * NOTE:  the escapes %>xy, %i, %n, %B and %D affect all parameters.
    */
-  char *cmd;
-  va_list ap;
 {
   int prm[16], prmn;  /* array of paramters; `prmn' elements. */
   static char buf[256];
@@ -509,8 +497,7 @@ tencode(char *cmd, ...)
 /* tencode */
 
   char *
-tgoto(cm, column, line)
-  char *cm;
+tgoto(char *cm, int column, int line)
 {
   if (cm ? !*cm : 1) return "OOPS";
   return tencode(cm, line, column);
@@ -518,10 +505,7 @@ tgoto(cm, column, line)
 /* tgoto */
 
   int
-tputs(s, affcnt, outc)
-  char *s;
-  int affcnt;
-  int (*outc)( /* int */ );
+tputs(char *s, int affcnt, int (*outc)(int))
 {
   long padding = 0;  /* padding counter multiplied by 10 */
 

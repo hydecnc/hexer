@@ -177,9 +177,7 @@ static const struct hexer_options_s {
  */
 
   int
-he_open_buffer(name, path)
-  const char *name;
-  const char *path;
+he_open_buffer(const char *name, const char *path)
 {
   struct buffer_s *buffer;
   int no_file_f = 0, read_only = 0;
@@ -252,8 +250,7 @@ he_open_buffer(name, path)
 /* he_open_buffer */
 
   int
-he_select_buffer_(buffer)
-  struct buffer_s *buffer;
+he_select_buffer_(struct buffer_s *buffer)
   /* Set `current_buffer' to `buffer'.  The file for `buffer' is loaded if
    * nessecarry.
    */
@@ -330,8 +327,7 @@ he_select_buffer_(buffer)
 /* he_select_buffer_ */
 
   int
-he_select_buffer(name)
-  const char *name;
+he_select_buffer(const char *name)
 {
   struct buffer_s *i;
 
@@ -343,7 +339,7 @@ he_select_buffer(name)
 /* he_select_buffer */
 
   int
-he_alternate_buffer()
+he_alternate_buffer(void)
 {
   char *ab = alternate_buffer;
 
@@ -357,8 +353,7 @@ he_alternate_buffer()
 /* he_alternate_buffer */
 
   int
-he_set_buffer_readonly(name)
-  char *name;
+he_set_buffer_readonly(char *name)
   /* Return values:
    * -1: no buffer named `name'
    * 0:  ok
@@ -375,8 +370,7 @@ he_set_buffer_readonly(name)
 /* he_set_buffer_readonly */
 
   int
-he_buffer_readonly(name)
-  char *name;
+he_buffer_readonly(char *name)
   /* Return values:
    * -1: no buffer named `name'
    * 0:  buffer is read/write
@@ -393,8 +387,7 @@ he_buffer_readonly(name)
 /* he_buffer_readonly */
 
   int
-he_buffer_modified(name)
-  char *name;
+he_buffer_modified(char *name)
   /* Return values:
    * -1: no buffer named `name'
    * 0:  buffer saved
@@ -411,8 +404,7 @@ he_buffer_modified(name)
 /* he_buffer_modified */
 
   int
-he_close_buffer(name)
-  char *name;
+he_close_buffer(char *name)
   /* Close the buffer named `name'. If `name == 0', the current buffer
    * is closed.  The return value is 0 if all goes well, 1 if the named
    * buffer doesn't exist and -1 if the `buffer_list' is empty.
@@ -474,8 +466,7 @@ he_close_buffer(name)
  */
 
   void
-he_status_message(verbose)
-  int verbose;
+he_status_message(int verbose)
   /* display name and size of the current buffer.  if `verbose' is set,
    * the current position is also displayed.
    */
@@ -508,10 +499,7 @@ he_status_message(verbose)
 /* he_status_message */
 
   char *
-he_query_command(prompt, dfl, context)
-  const char *prompt;
-  const char *dfl;
-  int context;
+he_query_command(const char *prompt, const char *dfl, int context)
   /* Convention:
    * `context == 0': exh-command;
    * `context == 1': shell-command;
@@ -627,44 +615,34 @@ rxwrap_tell(void)
 /* rxwrap_tell */
 
   long
-he_search(hedit, exp, replace, direction, wrap, increment, end,
-          replace_str, replace_len, match_len)
-  struct he_s *hedit;
-  const char *exp;
+he_search(struct he_s *hedit, const char *exp, const char *replace, int direction, int wrap, int increment, long end,
+          char **replace_str, long *replace_len, long *match_len)
     /* regular expression.
      */
-  const char *replace;
     /* replace template.  the replace template may contain back references to
      * the regular expression (`\0', ... `\9').
      */
-  int direction;
     /* `direction >= 0': forward search.
      * `direction < 0': reverse search.
      */
-  int wrap;
     /* if `wrap' is set, the search continues from the top of the buffer/file
      * once the bottom has been passed (or vice versa, depending on `direction').
      */
-  int increment;
     /* if `increment' is set, the search starts at `hedit->position + 1'
      * rather than at `hedit->position'.  if the direction is set to reverse
      * search, the `increment' flag has no effect.
      */
-  long end;
     /* if `wrap' is not set and `end' is not negative, the search ends at
      * position `end'.
      */
-  char **replace_str;
     /* if `replace_str' is non-zero and a match was found, the replace
      * string generated from `replace' will be copied to `*replace_str'.
      * the memory for that replace string will be allocated via `malloc()'.
      * NOTE: the replace string won't be terminated with a null character
      *   since it may contain null characters.
      */
-  long *replace_len;
     /* the length of the replace sting is written to `*replace_len'.
      */
-  long *match_len;
     /* the length of the match is written to `*replace_len'.
      */
   /* RETURN VALUE:  if a match was found, the position of the match is
@@ -708,10 +686,7 @@ he_search(hedit, exp, replace, direction, wrap, increment, end,
 /* he_search */
 
   void
-he_search_command(hedit, exp, dir)
-  struct he_s *hedit;
-  char *exp;
-  int dir;
+he_search_command(struct he_s *hedit, char *exp, int dir)
 {
   long position;
   char *rs;
@@ -757,14 +732,14 @@ he_refresh(void)
 /* he_refresh */
 
   void
-hexer_version()
+hexer_version(void)
 {
   he_message(0, "@AbHexer@~ version @U%s@u", HEXER_VERSION);
 }
 /* hexer_version */
 
   void
-hexer_init()
+hexer_init(void)
   /* this function is called by `process_args()' (main.c) before executing
    * the commands given at the command line.
    */
@@ -814,7 +789,7 @@ hexer_init()
 /* hexer_init */
 
   int
-hexer()
+hexer(void)
 {
   int key;
   char *cmd;

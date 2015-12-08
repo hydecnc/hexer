@@ -232,9 +232,7 @@ mungets(int *kkeys)
 /* mungets */
 
   int
-tio_mgetch(map, map_string)
-  int map;
-  char *map_string;
+tio_mgetch(int map, char *map_string)
 {
   int key;
   struct map_s *i;
@@ -308,10 +306,7 @@ tio_mgetch(map, map_string)
 /* tio_mgetch */
 
   int
-tio_map(map, from, to, special_f)
-  int map;
-  char *from, *to;
-  int special_f;
+tio_map(int map, char *from, char *to, int special_f)
   /* define a key mapping from `from' to `to' in keymap `map'.  if `special_f'
    * is set, special characters may also be written in ascii (i.e. "~UP" for
    * cursor up).  `special_f' should be set when reading commands from a file.
@@ -346,10 +341,7 @@ tio_map(map, from, to, special_f)
 /* tio_map */
 
   int
-tio_unmap(map, from, special_f)
-  int map;
-  char *from;
-  int special_f;
+tio_unmap(int map, char *from, int special_f)
   /* remove the mapping `from' from the keymap `map'.  the flag `special_f'
    * works the same as in `tio_map()'.
    */
@@ -374,8 +366,7 @@ tio_unmap(map, from, special_f)
 /* tio_unmap */
 
   char **
-tio_maplist(map)
-  int map;
+tio_maplist(int map)
 {
   unsigned n, k;
   struct map_s *i;

@@ -17,9 +17,7 @@
 
 #if !HAVE_STRCMP
   int
-strcmp(a, b)
-  const char *a;
-  const char *b;
+strcmp(const char *a, const char *b)
 {
   while (*a && *b && *a == *b) ++a, ++b;
   return *a > *b ? 1 : *a < *b ? -1 : 0;
@@ -29,8 +27,7 @@ strcmp(a, b)
 
 #if !HAVE_STRCASECMP
   int
-strcasecmp(s1, s2)
-  const char *s1, *s2;
+strcasecmp(const char *s1, const char *s2)
 {
   while (*s1 && *s2 && tolower(*s1) == tolower(*s2)) ++s1, ++s2;
   return *s1 > *s2 ? 1 : *s1 < *s2 ? -1 : 0;
@@ -40,8 +37,7 @@ strcasecmp(s1, s2)
 
 #if !HAVE_USLEEP
   int
-usleep(usecs)
-  unsigned long usecs;
+usleep(unsigned long usecs)
   /* NOTE: this implementation of `usleep()' is not completely compatible
    *   with the BSD 4.3 `usleep()'-function, since it can be interupted by
    *   an incoming signal.

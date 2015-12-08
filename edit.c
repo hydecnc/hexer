@@ -122,9 +122,7 @@ he_digit(int key)
 
 
   void
-he_refresh_lines(hedit, first, last)
-  struct he_s *hedit;
-  int first, last;
+he_refresh_lines(struct he_s *hedit, int first, int last)
 {
   if (!hedit->refresh.flag) ++hedit->refresh.flag;
   hedit->refresh.first[hedit->refresh.parts] = first;
@@ -135,9 +133,7 @@ he_refresh_lines(hedit, first, last)
 /* he_refresh_lines */
 
   void 
-he_refresh_part(hedit, pos1, pos2)
-  struct he_s *hedit;
-  long pos1, pos2;
+he_refresh_part(struct he_s *hedit, long pos1, long pos2)
 {
   long i, j, k;
   int update_f = 0;
@@ -167,16 +163,14 @@ he_refresh_part(hedit, pos1, pos2)
 /* he_refresh_part */
 
   int
-he_refresh_check(hedit)
-  struct he_s *hedit;
+he_refresh_check(struct he_s *hedit)
 {
   return hedit->refresh.flag || he_messages;
 }
 /* he_refresh_check */
 
   void
-he_refresh_screen(hedit)
-  const struct he_s *hedit;
+he_refresh_screen(const struct he_s *hedit)
 {
   he_refresh_all(current_buffer->hedit);
   he_update_screen(current_buffer->hedit);
@@ -191,8 +185,7 @@ he_refresh_screen(hedit)
 
 
   void
-he_free_command(command)
-  struct he_command_s *command;
+he_free_command(struct he_command_s *command)
   /* Free the memory allocated by `command' and all the following commands
    * in the list.
    */
@@ -212,9 +205,7 @@ he_free_command(command)
 /* he_free_command */
 
   void
-he_compound_comand(hedit, command)
-  struct he_s *hedit;
-  struct he_command_s *command;
+he_compound_comand(struct he_s *hedit, struct he_command_s *command)
 {
   char *buf;
   size_t sz, pos;
@@ -287,12 +278,7 @@ he_compound_comand(hedit, command)
 /* he_compound_comand */
 
   void
-he_subcommand(hedit, type, position, count, data)
-  struct he_s *hedit;
-  int type;
-  unsigned long position;
-  unsigned long count;
-  char *data;
+he_subcommand(struct he_s *hedit, int type, unsigned long position, unsigned long count, char *data)
   /* Update the undo-list of `hedit' by inserting the given subcommand.
    * The command is *not* performed by calling `he_subcommand()'.
    * A sequence of subcommands must be terminated by calling
@@ -338,9 +324,7 @@ he_subcommand(hedit, type, position, count, data)
 /* he_subcommand */
 
   long
-he_do_command(hedit, command)
-  struct he_s *hedit;
-  struct he_command_s *command;
+he_do_command(struct he_s *hedit, struct he_command_s *command)
   /* Perform the compound command `command'.  The return value is the
    * position of the last change made.
    */
@@ -874,8 +858,7 @@ he_line(const struct he_s *hedit, long position)
 /* he_line */
 
   static void
-he_set_cursor(hedit)
-  const struct he_s *hedit;
+he_set_cursor(const struct he_s *hedit)
 {
   int l, c, i;
 
@@ -1028,8 +1011,7 @@ he_end_selection(struct he_s *hedit)
 /* he_end_selection */
 
   void
-he_cancel_selection(hedit)
-  struct he_s *hedit;
+he_cancel_selection(struct he_s *hedit)
   /* Cancel the current selection.
    */
 {
@@ -1046,9 +1028,7 @@ he_cancel_selection(hedit)
 /* he_cancel_selection */
 
   void
-he_select(hedit, begin, end)
-  struct he_s *hedit;
-  unsigned long begin, end;
+he_select(struct he_s *hedit, unsigned long begin, unsigned long end)
 {
   if (hedit->begin_selection >= 0) he_cancel_selection(hedit);
   assert(begin <= end);
@@ -1188,8 +1168,7 @@ he_command(struct he_s *hedit, int key, long count)
    */
 
   static void
-he_visual_mode(hedit)
-  struct he_s *hedit;
+he_visual_mode(struct he_s *hedit)
 {
   int key;
   long anchor = hedit->position;
@@ -1313,8 +1292,7 @@ exit_visual_mode2:
 /* he_visual_mode */
 
   static long
-he_get_counter(hedit)
-  struct he_s *hedit;
+he_get_counter(struct he_s *hedit)
   /* Read a counter from the keyboard.  If this is terminated by pressing
    * <esc>, the return value is -1.  If another non-digit key is read,
    * it is put back via `tio_ungetch()'.  Reading the counter can be
@@ -1449,10 +1427,7 @@ restart:
 /* he_verbatim */
 
   static void
-he_insert_mode(hedit, replace_mode, count)
-  struct he_s *hedit;
-  int replace_mode;
-  long count;
+he_insert_mode(struct he_s *hedit, int replace_mode, long count)
   /* `replace_mode == 0':  Normal insert mode.
    * `replace_mode == 1':  Replace mode.  Characters are appended if the
    *                       end of the buffer is reached.
@@ -1716,9 +1691,7 @@ hx_exit_insert_mode:
 /* he_insert_mode */
 
   void
-he_scroll_down(hedit, count)
-  struct he_s *hedit;
-  int count;
+he_scroll_down(struct he_s *hedit, int count)
 {
   if (!count) return;
   assert(count > 0);
@@ -1749,9 +1722,7 @@ he_scroll_down(hedit, count)
 /* he_scroll_down */
 
   void
-he_scroll_up(hedit, count)
-  struct he_s *hedit;
-  int count;
+he_scroll_up(struct he_s *hedit, int count)
 {
   if (!count) return;
   assert(count > 0);
@@ -1779,8 +1750,7 @@ he_scroll_up(hedit, count)
 /* he_scroll_up */
 
   int
-he_update_screen(hedit)
-  struct he_s *hedit;
+he_update_screen(struct he_s *hedit)
   /* Update the screen.  If the position of the point is inside the
    * window, the `screen_offset' is adjusted and the screen scrolled.
    * If `refresh.flag' is set, the lines specified by `refresh.first'
@@ -1975,8 +1945,7 @@ he_update_screen(hedit)
 /* he_update_screen */
 
   static int
-he_clear_get(command_mode)
-  int command_mode;
+he_clear_get(int command_mode)
   /* Some users tend to hold down keys like cursor keys or page up/down
    * keys when moving through the buffer.  If the screen update is slower
    * than the repeat rate of the keyboard, `he_clear_get()' takes those
@@ -2014,8 +1983,7 @@ he_clear_get(command_mode)
 /* he_clear_get */
 
   int
-he_mainloop(hedit)
-  struct he_s *hedit;
+he_mainloop(struct he_s *hedit)
 {
   long count = -1;
   int key;

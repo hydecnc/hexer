@@ -436,7 +436,7 @@ regex_clear(void)
 /* regex_clear */
 
   int
-regex_reset()
+regex_reset(void)
 {
   rx_error = 0;
 
@@ -445,19 +445,8 @@ regex_reset()
 /* regex_reset */
 
   long
-regex_search(regex, begin, end, start, direction,
-             replace_str, replace_len, match_len)
-  long *regex;
-  long begin;
-  long end;
-  long start;
-  int direction; /* >=0: forward; <0: reverse. */
-  char **replace_str;
-  long *replace_len;  /* the replace-string for the match is written to
-		       * `*replace_str'/`replace_len'.  the memory for
-		       * `*replace_str' is allocated by `regex_match()'
-		       * via `malloc()'. */
-  long *match_len;
+regex_search(long *regex, long begin, long end, long start, int direction,
+             char **replace_str, long *replace_len, long *match_len)
 {
   long position;
   int i;
@@ -729,18 +718,7 @@ fail:
 /* regex_match_ */
 
   int
-regex_match(regex, position, replace_str, replace_len, match_len)
-  long *regex;        /* pointer to the regex-code to be processed. */
-  long position;      /* position in the input stream. */
-  char **replace_str;
-  long *replace_len;  /* if a match is found at `position',
-                       * the replace-string for the match is written to
-		       * `*replace_str'/`replace_len'.  the memory for
-		       * `*replace_str' is allocated by `regex_match()'
-		       * via `malloc()'. */
-  long *match_len;    /* if a match is found at `position',
-                       * the length of the match is written to
-                       * `*match_len'. */
+regex_match(long *regex, long position, char **replace_str, long *replace_len, long *match_len)
 {
   long *pp = regex + *regex;
   int i;
@@ -811,9 +789,7 @@ regex_match(regex, position, replace_str, replace_len, match_len)
 /* regex_match */
 
   long *
-regex_compile(str, replace)
-  const char *str;
-  const char *replace;
+regex_compile(const char *str, const char *replace)
   /* Compile the regular expression `str' and return a pointer to the
    * compiled regex-code.  If `replace' is non-zero, the string `replace'
    * is interpreted as a replace-string, which may contain `\'-escape

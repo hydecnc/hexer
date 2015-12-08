@@ -1219,9 +1219,7 @@ dec:    base = 10, r = p;
 
 #ifdef MYCALC
   int
-main(argc, argv)
-  int argc;
-  char **argv;
+main(int argc, char **argv)
 {
   char buf[256];
   int error_f = 0;
