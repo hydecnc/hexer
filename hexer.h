@@ -263,7 +263,7 @@ extern const char       *he_pagerprg;
 /* exh commands
  */
 
-typedef char *(*exh_fn)(struct he_s *, const char *, long, long);
+typedef const char *(*exh_fn)(struct he_s *, const char *, long, long);
 
 struct exh_cmd_s {
   const char *cmd_name;
@@ -284,10 +284,10 @@ struct exh_cmd_s {
 #define HE_LINE(x) ((long)(x) >> 4)
 
 int
-he_open_buffer(const char *name, char *path);
+he_open_buffer(const char *name, const char *path);
 
 int
-he_select_buffer(char *name);
+he_select_buffer(const char *name);
 
 int
 he_alternate_buffer(void);

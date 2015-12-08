@@ -191,7 +191,7 @@ static const struct hexer_options_s {
   int
 he_open_buffer(name, path)
   const char *name;
-  char *path;
+  const char *path;
 {
   struct buffer_s *buffer;
   int no_file_f = 0, read_only = 0;
@@ -343,7 +343,7 @@ he_select_buffer_(buffer)
 
   int
 he_select_buffer(name)
-  char *name;
+  const char *name;
 {
   struct buffer_s *i;
 

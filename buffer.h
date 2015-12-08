@@ -349,7 +349,7 @@ b_write_buffer_to_file(Buffer *buffer, char *filename);
    */
 
   long
-b_copy_to_file(Buffer *buffer, char *filename,
+b_copy_to_file(Buffer *buffer, const char *filename,
                    unsigned long position, unsigned long count);
   /* Schreibt 'count' Bytes ab der Position 'position' in die Datei
    * 'filename'. Liefert die Anzahl der geschriebenen Bytes und -1 im
@@ -357,7 +357,7 @@ b_copy_to_file(Buffer *buffer, char *filename,
    */
 
   long
-b_paste_from_file(Buffer *buffer, char *filename, unsigned long position);
+b_paste_from_file(Buffer *buffer, const char *filename, unsigned long position);
   /* Der Inhalt der Datei 'filename' wird an der Position 'position' in den
    * Buffer eingefuegt, d.h. es werden keine Daten ueberschrieben.
    */

@@ -586,7 +586,7 @@ b_write_buffer_to_file(Buffer *buffer, char *filename)
 /* b_write_buffer_to_file */
 
   long
-b_copy_to_file(Buffer *buffer, char *filename, unsigned long position, unsigned long count)
+b_copy_to_file(Buffer *buffer, const char *filename, unsigned long position, unsigned long count)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read = 0, bytes_wrote = 0;
@@ -619,7 +619,7 @@ b_copy_to_file(Buffer *buffer, char *filename, unsigned long position, unsigned 
 /* b_copy_to_file */
 
   long
-b_paste_from_file(Buffer *buffer, char *filename, unsigned long position)
+b_paste_from_file(Buffer *buffer, const char *filename, unsigned long position)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read, bytes_wrote = 0;
