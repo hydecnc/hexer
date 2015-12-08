@@ -69,7 +69,7 @@ volatile int caught_sigint;
 
 #ifdef SIGINT
   static sigtype_t
-sigint_handler(int sig)
+sigint_handler(int sig __unused)
 {
   signal(SIGINT, sigint_handler);
   caught_sigint = 1;
@@ -80,7 +80,7 @@ sigint_handler(int sig)
 
 #ifdef SIGTSTP
   static sigtype_t
-sigtstp_handler(int sig)
+sigtstp_handler(int sig __unused)
 {
   signal(SIGTSTP, sigtstp_handler);
   tio_suspend();
@@ -97,7 +97,7 @@ sigtstp_handler(int sig)
 
 #ifdef SIGCONT
   static sigtype_t
-sigcont_handler(int sig)
+sigcont_handler(int sig __unused)
 {
   signal(SIGCONT, sigcont_handler);
   tio_restart();
@@ -109,7 +109,7 @@ sigcont_handler(int sig)
 
 #ifdef SIGPIPE
   static sigtype_t
-sigpipe_handler(int sig)
+sigpipe_handler(int sig __unused)
 {
   signal(SIGPIPE, sigpipe_handler);
 #if 0

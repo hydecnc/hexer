@@ -380,10 +380,10 @@ tio_unmap(map, from, special_f)
 tio_maplist(map)
   int map;
 {
-  int n, k;
+  unsigned n, k;
   struct map_s *i;
   char **from, **to, **list;
-  int from_maxwidth;
+  size_t from_maxwidth;
 
   for (i = map_first[map], n = 0; i; i = i->next, ++n);
   if (!n) {

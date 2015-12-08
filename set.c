@@ -377,7 +377,7 @@ s_option_value_list()
 {
   struct option_s *i;
   char **list;
-  int n, option_maxlen = 0;
+  size_t n, option_maxlen = 0;
 
   for (i = option_first, n = 0; i; i = i->next, ++n)
     if (strlen(i->option) > option_maxlen) option_maxlen = strlen(i->option);
