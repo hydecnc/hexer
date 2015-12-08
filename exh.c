@@ -476,7 +476,7 @@ exh_get_address(struct he_s *hedit, char *exp, long *address)
         p = exh_get_number(p + 1, &n);
         if ((*address = b_goto_line(hedit->buffer, n)) < 0) {
           n = b_no_lines(hedit->buffer);
-          he_message(0, "only 0x%lx (%li) lines", n, n);
+          he_message(0, "only 0x%lx (%lu) lines", n, n);
           p = 0;
         } else
           hedit->position = *address;

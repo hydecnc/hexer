@@ -217,9 +217,14 @@ exh_save_buffer(struct he_s *hedit, char *name, long begin, long end, int *error
   }
   fclose(fp);
   l = b_copy_to_file(i->hedit->buffer, file, begin, end - begin + 1);
-  he_message(0, "wrote `%s' - 0x%lx (%li) bytes", file, l, l);
-  if (whole_f) i->hedit->buffer->modified = 0;
-  if (error) *error = 0;
+  if (l > 0) {
+    he_message(0, "wrote `%s' - 0x%lx (%li) bytes", file, l, l);
+    if (whole_f) i->hedit->buffer->modified = 0;
+    if (error) *error = 0;
+  } else {
+    he_message(1, "could not write `%s'", file);
+    if (error) *error = 1;
+  }
   return skip;
 }
 /* exh_save_buffer */
@@ -261,9 +266,14 @@ exh_write(struct he_s *hedit, char *file, long begin, long end, int *error)
   }
   fclose(fp);
   l = b_copy_to_file(hedit->buffer, file, begin, end - begin + 1);
-  he_message(0, "wrote `%s' - 0x%lx (%li) bytes", file, l, l);
-  if (whole_f) hedit->buffer->modified = 0;
-  if (error) *error = 0;
+  if (l > 0) {
+    he_message(0, "wrote `%s' - 0x%lx (%li) bytes", file, l, l);
+    if (whole_f) hedit->buffer->modified = 0;
+    if (error) *error = 0;
+  } else {
+    he_message(1, "could not write `%s'", file);
+    if (error) *error = 1;
+  }
   return skip;
 }
 /* exh_write */
@@ -418,7 +428,14 @@ substitute:
 	/* create an entry for the undo-list */
         if (match_len) {
           data = (char *)malloc(match_len);
-          b_read(hedit->buffer, data, position, match_len);
+	  if (b_read(hedit->buffer, data, position, match_len) < 0) {
+	    he_message(1, "could not read data from the internal buffer");
+	    free((char *)data);
+	    free((char *)replace_str);
+	    he_cancel_selection(hedit);
+	    he_update_screen(hedit);
+	    goto exit_exh_substitute;
+	  }
           he_subcommand(hedit, 0, position, match_len, data);
         }
         if (replace_len)
@@ -430,9 +447,22 @@ substitute:
           /* if nothing gets replaced by nothing, we won't count that
            * as a substitution, so there won't be an entry in the undo-
            * list if nothing got changed. */
-	if (match_len) b_delete(hedit->buffer, position, match_len);
+	if (match_len)
+	  if (b_delete(hedit->buffer, position, match_len) < 0) {
+	    he_message(1, "could not remove data from the internal buffer");
+	    free((char *)replace_str);
+	    he_cancel_selection(hedit);
+	    he_update_screen(hedit);
+	    goto exit_exh_substitute;
+	  }
 	if (replace_len) {
-          b_insert(hedit->buffer, position, replace_len);
+          if (b_insert(hedit->buffer, position, replace_len) < 0) {
+	    he_message(1, "could not insert data into the internal buffer");
+	    free((char *)replace_str);
+	    he_cancel_selection(hedit);
+	    he_update_screen(hedit);
+	    goto exit_exh_substitute;
+	  }
           b_write(hedit->buffer, replace_str, position, replace_len);
         }
 	if (confirm_f && match_len) {

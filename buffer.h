@@ -143,8 +143,8 @@ Buffer;
 
 extern struct buffer_s  *buffer_list;
 
-  long
-count_lines(char *source, long count);
+  unsigned long
+count_lines(char *source, unsigned long count);
   /* Liest 'count' Zeichen aus 'source' und liefert die Anzahl der
    * Zeilentrenner.
    */
@@ -236,7 +236,7 @@ b_set_size(Buffer *buffer, unsigned long size);
    */
 
   long
-b_read(Buffer *buffer, char *target, long position, long count);
+b_read(Buffer *buffer, char *target, unsigned long position, unsigned long count);
   /* Liest 'count' Bytes ab der Position 'position' nach '*target'.
    * Zurueckgeliefert wird die Anzahl der tatsaechlich gelesenen Bytes.
    * Diese Zahl kann kleiner sein, als 'count', wenn die Position
@@ -245,8 +245,8 @@ b_read(Buffer *buffer, char *target, long position, long count);
    * Es ist keine Fehlerabfrage implementiert.
    */
 
-  long
-b_write(Buffer *buffer, char *source, long position, long count);
+  unsigned long
+b_write(Buffer *buffer, char *source, unsigned long position, unsigned long count);
   /* Schreibt 'count' Bytes aus '*source' ab Position 'position'.
    * Die im Buffer befindlichen Daten werden ueberschrieben (kein Insert).
    * Die Funktion schreibt nicht ueber das Ende des Buffers hinaus (die
@@ -258,7 +258,7 @@ b_write(Buffer *buffer, char *source, long position, long count);
 
   long
 b_write_append(Buffer *buffer, char *source,
-                   long position, long count);
+                   unsigned long position, unsigned long count);
   /* Wie 'b_write', nur dass auch an Positionen jenseits vom Bufferende
    * geschrieben werden kann. In diesem Fall ist der Inhalt des Buffers
    * zwischen dem vorherigen Bufferende und der Position 'position'
@@ -267,13 +267,13 @@ b_write_append(Buffer *buffer, char *source,
    */
 
   long
-b_append(Buffer *buffer, char *source, long count);
+b_append(Buffer *buffer, char *source, unsigned long count);
   /* Haengt `count' Bytes aus `source' an das Bufferende an.  Im Fehlerfall
    * wird -1 zurueckgeliefert, `count' sonst.
    */
 
   long
-b_fill(Buffer *buffer, char c, long position, long count);
+b_fill(Buffer *buffer, char c, unsigned long position, unsigned long count);
   /* Wie 'b_write', nur dass der angegebene Speicherbereich mit dem Zeichen
    * 'c' beschrieben wird. Die Funktion schreibt nicht ueber das Ende des
    * Buffers hinaus und liefert die Anzahl der geschriebenen Zeichen zurueck.
@@ -281,20 +281,20 @@ b_fill(Buffer *buffer, char c, long position, long count);
    */
 
   long
-b_fill_append(Buffer *buffer, char c, long position, long count);
+b_fill_append(Buffer *buffer, char c, unsigned long position, unsigned long count);
   /* Wie 'b_fill', es kann aber auch an Positionen jenseits des Bufferendes
    * geschrieben werden. Der Inhalt des Buffers zwischen vorherigem Bufferende
    * und 'position' ist undefiniert. Im Fehlerfall wird -1 geliefert,
    * 'count' sonst.
    */
 
-  long
-b_count_lines(Buffer *buffer, long position, long count);
+  unsigned long
+b_count_lines(Buffer *buffer, unsigned long position, unsigned long count);
   /* Liefert die Anzahl der Zeilentrenner im angegebenen Bereich.
    */
 
   long
-b_insert(Buffer *buffer, long position, long count);
+b_insert(Buffer *buffer, unsigned long position, unsigned long count);
   /* Vergroessert den Buffer um 'count' Bytes. Ab der Position 'position'
    * wird eine Luecke der Groesse 'count' geschaffen, indem der Inhalt des
    * Buffers ab dieser Position um 'count' Bytes verschoben wird.
@@ -303,7 +303,7 @@ b_insert(Buffer *buffer, long position, long count);
    */
 
   long
-b_delete(Buffer *buffer, long position, long count);
+b_delete(Buffer *buffer, unsigned long position, unsigned long count);
   /* Schneidet ab der Position 'position' 'count' Bytes aus dem Buffer
    * heraus. Der Buffer wird dadurch um 'count' Bytes kleiner. Die Funktion
    * liefert -1 im Fehlerfall und 'count' sonst.
@@ -311,7 +311,7 @@ b_delete(Buffer *buffer, long position, long count);
 
   long
 b_copy(Buffer *target_buffer, Buffer *source_buffer,
-	   long target_position, long source_position, long count);
+	   unsigned long target_position, unsigned long source_position, unsigned long count);
   /* Kopiert aus dem Buffer '*source_buffer' ab der Position 'source_position'
    * 'count' Bytes in den Buffer '*target_buffer' an die Position
    * 'target_position'. Die Funktion schreibt nicht ueber das Ende des
@@ -322,7 +322,7 @@ b_copy(Buffer *target_buffer, Buffer *source_buffer,
 
   long
 b_copy_forward(Buffer *buffer,
-                   long target_position, long source_position, long count);
+                   unsigned long target_position, unsigned long source_position, unsigned long count);
   /* Kopiert innerhalb eines Buffers 'count' Bytes ab 'source_position'
    * nach 'target_position'. Dabei muss 'target_position' groesser als
    * 'source_position' sein. Diese Funktion wird ggf. von 'b_copy()'
@@ -350,40 +350,40 @@ b_write_buffer_to_file(Buffer *buffer, char *filename);
 
   long
 b_copy_to_file(Buffer *buffer, char *filename,
-                   long position, long count);
+                   unsigned long position, unsigned long count);
   /* Schreibt 'count' Bytes ab der Position 'position' in die Datei
    * 'filename'. Liefert die Anzahl der geschriebenen Bytes und -1 im
    * Fehlerfall.
    */
 
   long
-b_paste_from_file(Buffer *buffer, char *filename, long position);
+b_paste_from_file(Buffer *buffer, char *filename, unsigned long position);
   /* Der Inhalt der Datei 'filename' wird an der Position 'position' in den
    * Buffer eingefuegt, d.h. es werden keine Daten ueberschrieben.
    */
 
 
-  long
+  unsigned long
 b_no_lines(Buffer *buffer);
   /* Liefert die Anzahl der Zeilen des Buffers.
    */
 
   long
-b_goto_line(Buffer *buffer, long number);
+b_goto_line(Buffer *buffer, unsigned long number);
   /* Liefert die Byteposition des Anfangs der Zeile 'number'. Falls
    * 'number' eine Zeilennummer groesser/gleich der Zeilenzahl des
    * Buffers ist, wird -1 geliefert.
    */
 
-  long
-b_get_linenumber(Buffer *buffer, long position);
+  unsigned long
+b_get_linenumber(Buffer *buffer, unsigned long position);
   /* Liefert die Nummer der Zeile, in der sich die Position 'position'
    * befindet. Falls 'position' ausserhalb der Buffergrenzen liegt,
    * wird -1 geliefert.
    */
 
   long
-b_line_start(Buffer *buffer, long position);
+b_line_start(Buffer *buffer, unsigned long position);
   /* Liefert die Position des Anfangs der Zeile, in der sich die Position
    * 'position' befindet. Falls 'position' ausserhalb der Buffergrenzen
    * liegt, wird -1 geliefert.
@@ -391,14 +391,14 @@ b_line_start(Buffer *buffer, long position);
    */
 
   long
-b_line_end(Buffer *buffer, long position);
+b_line_end(Buffer *buffer, unsigned long position);
   /* Liefert die Position des Zeilentrenners der Zeile, in der sich
    * die Position 'position' befindet. Falls 'position' ausserhalb der
    * Buffergrenzen liegt, wird -1 geliefert.
    */
 
   long
-b_length_of_line(Buffer *buffer, long number);
+b_length_of_line(Buffer *buffer, unsigned long number);
   /* Liefert die Laenge der Zeile 'number' (incl. Zeilentrenner) und 0,
    * falls diese Zeile nicht existiert.
    * NOTE: Falls 'number' die letzte Zeile im Buffer ist und der Buffer
@@ -407,7 +407,7 @@ b_length_of_line(Buffer *buffer, long number);
    */
 
   long
-b_length_of_text_block(Buffer *buffer, long number, long count);
+b_length_of_text_block(Buffer *buffer, unsigned long number, unsigned long count);
   /* Liefert die Laenge des 'count' Zeilen langen Textblocks ab Zeile
    * 'number' (incl. der Zeilentrenner). Falls die Zeile 'number' nicht
    * existiert, wird 0 geliefert. Falls nach der Zeile 'number' keine
@@ -418,7 +418,7 @@ b_length_of_text_block(Buffer *buffer, long number, long count);
    */
 
   long
-b_read_line(Buffer *buffer, char *line, long number);
+b_read_line(Buffer *buffer, char *line, unsigned long number);
   /* Kopiert die Zeile 'number' nach 'line' und liefert die Laenge
    * der kopierten Zeile (incl. Endezeichen).
    * NOTE: Die Funktion ersetzt den Zeilerntrenner '\n' durch ein
@@ -429,7 +429,7 @@ b_read_line(Buffer *buffer, char *line, long number);
 
   long
 b_read_text_block(Buffer *buffer, char *target,
-                      long number, long count);
+                      unsigned long number, unsigned long count);
   /* Kopiert ab Zeile 'number' (incl.) 'count' Zeilen nach 'target'.
    * Die Zeilentrenner werden mitkopiert, der letzte Zeilentrenner wird
    * durch ein '\0' ersetzt. Liefert die Anzahl der kopierten Bytes (analog
@@ -437,21 +437,21 @@ b_read_text_block(Buffer *buffer, char *target,
    */
 
   long
-b_delete_line(Buffer *buffer, long number);
+b_delete_line(Buffer *buffer, unsigned long number);
   /* Loescht die Zeile 'number' (incl. Zeilentrenner) aus dem Buffer.
    * Liefert die Anzahl der geloeschten Bytes und 0 bei einer ungueltigen
    * Zeilenangabe.
    */
 
   long
-b_delete_text_block(Buffer *buffer, long number, long count);
+b_delete_text_block(Buffer *buffer, unsigned long number, unsigned long count);
   /* Loescht ab Zeile 'number' (incl.) 'count' Zeilen.
    * Liefert die Anzahl der geloeschten Bytes und 0 bei einer ungueltigen
    * Bereichsangabe.
    */
 
   long
-b_clear_line(Buffer *buffer, long number);
+b_clear_line(Buffer *buffer, unsigned long number);
   /* Wie 'b_delete_line()', nur dass der Zeilentrenner nicht mitgeloescht
    * wird. Geliefert wird die Anzahl der geloeschten Bytes + 1 und 0, falls
    * die Zeilenangabe ungueltig war.
@@ -460,7 +460,7 @@ b_clear_line(Buffer *buffer, long number);
    */
 
   long
-b_insert_text_block(Buffer *buffer, char *source, long number);
+b_insert_text_block(Buffer *buffer, char *source, unsigned long number);
   /* Der gegebene Textblock 'source' wird nach der Zeile 'number'
    * eingefuegt. Das Stringende-Zeichen '\0' von 'source' wird dabei in
    * einen Zeilentrenner umgewandelt. Falls 'number' eine negative Zahl

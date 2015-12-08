@@ -84,7 +84,7 @@ Buffer *last_buffer = 0;
 
 #if !HAVE_MEMMOVE
   static void
-b_memmove(char *t, const char *s, const long count)
+b_memmove(char *t, const char *s, const unsigned long count)
 {
   register long i;
 
@@ -107,11 +107,11 @@ b_memmove(char *t, const char *s, const long count)
     last_position = 0, last_number = 1, last_length = -1;                     \
   buffer->modified = 1; }
 
-  long
-count_lines(char *source, long count)
+  unsigned long
+count_lines(char *source, unsigned long count)
 {
   char *i;
-  long j = 0;
+  unsigned long j = 0;
 
   for (i = source; i < source + count; i++) if (*i == '\n') j++;
   return j;
@@ -185,7 +185,7 @@ delete_buffer(Buffer *buffer)
   int
 copy_buffer(Buffer *target, Buffer *source)
   /* NOTE: `copy_buffer()' only copies the contents of `source', i.e.
-   *   the blacksize of `target' is kept unchanged.
+   *   the blocksize of `target' is kept unchanged.
    */
 {
   BufferBlock *i;
@@ -211,7 +211,7 @@ clear_buffer(Buffer *buffer)
 find_block(Buffer *buffer, unsigned long position)
 {
   BufferBlock *i;
-  long block_number;
+  unsigned long block_number;
 
   if (position >= buffer->size) return 0;
   for (i = buffer->first_block, block_number = 1;
@@ -226,7 +226,7 @@ find_block(Buffer *buffer, unsigned long position)
 b_set_size(Buffer *buffer, unsigned long size)
 {
   BufferBlock *i, *j = 0, *k;
-  long block_number;
+  unsigned long block_number;
 
   assert(!buffer->read_only);
   BUFFER_CHANGED(buffer);
@@ -258,27 +258,30 @@ b_set_size(Buffer *buffer, unsigned long size)
 /* b_set_size */
 
   long
-b_read(Buffer *buffer, char *target, long position, long count)
+b_read(Buffer *buffer, char *target, unsigned long position, unsigned long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
+  unsigned long ofs = position % bs;
+  unsigned long r = bs - ofs;
 
-  if (!(block = find_block(buffer, position))) return 0;
+  if (!(block = find_block(buffer, position))) return -1;
   if (count + position > buffer->size) count = buffer->size - position;
-  if (count <= (bs - position % bs)) {
-    b_memmove(target, block->data + position % bs, count);
+  if (count <= r) {
+    b_memmove(target, block->data + ofs, count);
     return count;
   } else {
-    long r = bs - position % bs;
-    b_memmove(target, block->data + position % bs, r);
-    r += b_read(buffer, target + r, position + r, count - r);
-    return r;
+    b_memmove(target, block->data + ofs, r);
+    long more = b_read(buffer, target + r, position + r, count - r);
+    if (more < 0)
+      return more;
+    return r + more;
   }
 }
 /* b_read */
 
-  long
-b_write(Buffer *buffer, char *source, long position, long count)
+  unsigned long
+b_write(Buffer *buffer, char *source, unsigned long position, unsigned long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -291,7 +294,7 @@ b_write(Buffer *buffer, char *source, long position, long count)
     b_memmove(block->data + position % bs, source, count);
     return count;
   } else {
-    long r = bs - position % bs;
+    unsigned long r = bs - position % bs;
     b_memmove(block->data + position % bs, source, r);
     return r + b_write(buffer, source + r, position + r, count - r);
   }
@@ -299,7 +302,7 @@ b_write(Buffer *buffer, char *source, long position, long count)
 /* b_write */
 
   long
-b_write_append(Buffer *buffer, char *source, long position, long count)
+b_write_append(Buffer *buffer, char *source, unsigned long position, unsigned long count)
 {
   assert(!buffer->read_only);
   if (position + count > buffer->size) {
@@ -310,44 +313,49 @@ b_write_append(Buffer *buffer, char *source, long position, long count)
 /* b_write_append */
 
   long
-b_append(Buffer *buffer, char *source, long count)
+b_append(Buffer *buffer, char *source, unsigned long count)
 {
   return b_write_append(buffer, source, buffer->size, count);
 }
 /* b_append */
 
   long
-b_fill(Buffer *buffer, char c, long position, long count)
+b_fill(Buffer *buffer, char c, unsigned long position, unsigned long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
+  unsigned long ofs = position % bs;
+  unsigned long r = bs - ofs;
 
   assert(!buffer->read_only);
   if (count) BUFFER_CHANGED(buffer);
-  if (!(block = find_block(buffer, position))) return 0;
+  if (!(block = find_block(buffer, position))) return -1;
   if (count + position > buffer->size) count = buffer->size - position;
-  if (count <= (bs - position % bs)) {
-    memset(block->data + position % bs, c, count);
+  if (count <= r) {
+    memset(block->data + ofs, c, count);
     return count;
   } else {
-    long r = bs - position % bs;
-    memset(block->data + position % bs, c, r);
-    return r + b_fill(buffer, c, position + r, count - r);
+    memset(block->data + ofs, c, r);
+    long more = b_fill(buffer, c, position + r, count - r);
+    if (more < 0)
+      return more;
+    return r + more;
   }
 }
 /* b_fill */
 
   long
-b_fill_append(Buffer *buffer, char c, long position, long count)
+b_fill_append(Buffer *buffer, char c, unsigned long position, unsigned long count)
 {
   if (position + count > buffer->size)
-    b_set_size(buffer, position + count);
+    if (b_set_size(buffer, position + count) < 0)
+      return -1;
   return b_fill(buffer, c, position, count);
 }
 /* b_fill_append */
 
-  long
-b_count_lines(Buffer *buffer, long position, long count)
+  unsigned long
+b_count_lines(Buffer *buffer, unsigned long position, unsigned long count)
 {
   BufferBlock *block;
   unsigned long bs = buffer->blocksize;
@@ -357,7 +365,7 @@ b_count_lines(Buffer *buffer, long position, long count)
   if (count <= bs - position % bs) 
     return count_lines(block->data + position % bs, count);
   else {
-    long r = bs - position % bs;
+    unsigned long r = bs - position % bs;
     return count_lines(block->data + position % bs, r)
             + b_count_lines(buffer, position + r, count - r);
   }
@@ -365,9 +373,9 @@ b_count_lines(Buffer *buffer, long position, long count)
 /* b_count_lines */
 
   long
-b_insert(Buffer *buffer, long position, long count)
+b_insert(Buffer *buffer, unsigned long position, unsigned long count)
 {
-  long i;
+  unsigned long i;
 
   assert(!buffer->read_only);
   if(b_set_size(buffer, buffer->size + count) < 0) return -1;
@@ -378,24 +386,25 @@ b_insert(Buffer *buffer, long position, long count)
 /* b_insert */
 
   long
-b_delete(Buffer *buffer, long position, long count)
+b_delete(Buffer *buffer, unsigned long position, unsigned long count)
 {
-  long size = buffer->size;
+  unsigned long size = buffer->size;
 
   assert(!buffer->read_only);
-  b_copy(buffer, buffer, position, position + count,
-         buffer->size - position - count);
+  if (b_copy(buffer, buffer, position, position + count,
+         buffer->size - position - count) < 0)
+    return -1;
   if (b_set_size(buffer, buffer->size - count) < 0) return -1;
   return size - buffer->size;
 }
 /* b_delete */
 
   long
-b_copy(Buffer *target_buffer, Buffer *source_buffer, long target_position, long source_position, long count)
+b_copy(Buffer *target_buffer, Buffer *source_buffer, unsigned long target_position, unsigned long source_position, unsigned long count)
 {
   BufferBlock *t_block;
-  long t_offset = target_position % target_buffer->blocksize;
-  long t_blocksize = target_buffer->blocksize;
+  unsigned long t_offset = target_position % target_buffer->blocksize;
+  unsigned long t_blocksize = target_buffer->blocksize;
 
   assert(!target_buffer->read_only);
   if (count) BUFFER_CHANGED(target_buffer);
@@ -414,24 +423,30 @@ b_copy(Buffer *target_buffer, Buffer *source_buffer, long target_position, long 
   } else {
     long r = b_read(source_buffer, t_block->data + t_offset,
                     source_position, t_blocksize - t_offset);
-    if (r >= t_blocksize - t_offset)
-      r += b_copy(target_buffer, source_buffer,
+    if (r > 0 && (unsigned long)r >= t_blocksize - t_offset)
+    {
+      long more = b_copy(target_buffer, source_buffer,
                   target_position + r, source_position + r, count - r);
+      if (more < 0)
+	return more;
+      else
+	r += more;
+    }
     return r;
   }
 }
 /* b_copy */
 
   long
-b_copy_forward(Buffer *buffer, long target_position, long source_position, long count)
+b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long source_position, unsigned long count)
 {
   BufferBlock *t_block, *s_block;
-  long bs = buffer->blocksize;
-  long t_offset = target_position % bs; /* target offset. */
-  long s_offset = source_position % bs; /* source offset. */
-  long tr_offset = (target_position + count - 1) % bs + 1;
+  unsigned long bs = buffer->blocksize;
+  unsigned long t_offset = target_position % bs; /* target offset. */
+  unsigned long s_offset = source_position % bs; /* source offset. */
+  unsigned long tr_offset = (target_position + count - 1) % bs + 1;
     /* target reverse offset. */
-  long sr_offset = (source_position + count) % bs;
+  unsigned long sr_offset = (source_position + count) % bs;
     /* source reverse offset. */
 
   assert(!buffer->read_only);
@@ -456,7 +471,7 @@ b_copy_forward(Buffer *buffer, long target_position, long source_position, long 
     }
     return count;
   } else {
-    long r = tr_offset;
+    unsigned long r = tr_offset;
     if (tr_offset >= sr_offset) {
       if (sr_offset) {
         assert(s_block = find_block(buffer, source_position + count));
@@ -500,7 +515,6 @@ b_clear(Buffer *buffer)
 b_read_buffer_from_file(Buffer *buffer, char *filename)
 {
   BufferBlock *i = 0;
-  long bytes_read = 0;
   char *tmp;
   int file = open(filename, O_RDONLY);
     
@@ -512,6 +526,8 @@ b_read_buffer_from_file(Buffer *buffer, char *filename)
   }
   b_clear(buffer);
   do {
+    ssize_t bytes_read;
+
     tmp = (char *)malloc(buffer->blocksize);
     if (tmp == 0) {
       close(file);
@@ -529,6 +545,7 @@ b_read_buffer_from_file(Buffer *buffer, char *filename)
       }
       buffer->size += bytes_read;
     } else {
+      /* FIXME: handle read errors here */
       free((char *)tmp);
       break;
     }
@@ -542,15 +559,17 @@ b_read_buffer_from_file(Buffer *buffer, char *filename)
 b_write_buffer_to_file(Buffer *buffer, char *filename)
 {
   BufferBlock *i;
-  long bytes_wrote = 0;
-  long bs = buffer->blocksize;
-  long blocks;
+  unsigned long bytes_wrote = 0;
+  unsigned long bs = buffer->blocksize;
+  unsigned long blocks;
   int file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 
+  if (file < 0)
+    return -1;
   for (i = buffer->first_block, blocks = 1;
        i;
        i = i->next_block, blocks++) {
-    long bytes;
+    ssize_t bytes;
     bytes = write(file,
                   i->data,
                   (blocks * bs > buffer->size) ? buffer->size % bs : bs);
@@ -558,6 +577,7 @@ b_write_buffer_to_file(Buffer *buffer, char *filename)
       close(file);
       return -1;
     }
+    /* FIXME: handle short writes */
     bytes_wrote += bytes;
   }
   close(file);
@@ -566,7 +586,7 @@ b_write_buffer_to_file(Buffer *buffer, char *filename)
 /* b_write_buffer_to_file */
 
   long
-b_copy_to_file(Buffer *buffer, char *filename, long position, long count)
+b_copy_to_file(Buffer *buffer, char *filename, unsigned long position, unsigned long count)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read = 0, bytes_wrote = 0;
@@ -581,7 +601,8 @@ b_copy_to_file(Buffer *buffer, char *filename, long position, long count)
     bytes_read =
       b_read(buffer, tmp, position,
 	     (buffer->blocksize < count) ? buffer->blocksize : count);
-    if (write(file, tmp, bytes_read) < 0) {
+    if (bytes_read < 0 || write(file, tmp, bytes_read) < 0) {
+      /* FIXME: handle short writes */
       free((char *)tmp);
       close(file);
       return -1;
@@ -598,7 +619,7 @@ b_copy_to_file(Buffer *buffer, char *filename, long position, long count)
 /* b_copy_to_file */
 
   long
-b_paste_from_file(Buffer *buffer, char *filename, long position)
+b_paste_from_file(Buffer *buffer, char *filename, unsigned long position)
 {
   char *tmp = malloc(buffer->blocksize);
   long bytes_read, bytes_wrote = 0;
@@ -613,6 +634,7 @@ b_paste_from_file(Buffer *buffer, char *filename, long position)
   BUFFER_CHANGED(buffer);
   do {
     bytes_read = read(file, tmp, buffer->blocksize);
+    /* FIXME: handle read errors */
     if (b_insert(buffer, position, bytes_read) < 0) {
       free((char *)tmp);
       close(file);
@@ -631,7 +653,7 @@ b_paste_from_file(Buffer *buffer, char *filename, long position)
 /* The following set of functions is for dealing with text-buffers.
  */
 
-  long
+  unsigned long
 b_no_lines(Buffer *buffer)
 {
   return b_count_lines(buffer, 0, buffer -> size);
@@ -639,20 +661,20 @@ b_no_lines(Buffer *buffer)
 /* b_no_lines */
 
   long
-b_goto_line(Buffer *buffer, long number)
+b_goto_line(Buffer *buffer, unsigned long number)
 {
   BufferBlock *i;
-  long newlines = 0, blocks = 0;
-  char *c;
+  unsigned long newlines = 0, blocks = 0;
 
   if (number == 1) return 0;
-  if (buffer == last_buffer && number == last_number) return last_position;
+  if (buffer == last_buffer && last_number >= 0 && number == (unsigned long)last_number) return last_position;
   for (i = buffer -> first_block; i; i = i -> next_block) {
-    for (c = i -> data; c < i -> data + buffer -> blocksize; c++)
-      if (*c == '\n')
+    size_t ofs;
+    for (ofs = 0; ofs < buffer -> blocksize; ofs++)
+      if (i->data[ofs] == '\n')
         if (++newlines == number - 1) {
-          long block_position = blocks * buffer -> blocksize;
-          last_position = block_position + (long)c - (long)(i -> data) + 1;
+          unsigned long block_position = blocks * buffer -> blocksize;
+          last_position = block_position + ofs + 1;
           last_number = number;
           last_buffer = buffer;
           last_length = -1;
@@ -664,12 +686,13 @@ b_goto_line(Buffer *buffer, long number)
 }
 /* b_goto_line */
 
-  long
-b_get_linenumber(Buffer *buffer, long position)
+/* FIXME: THIS IS TOTALLY INCORRECT and unused, remove it! */
+  unsigned long
+b_get_linenumber(Buffer *buffer, unsigned long position)
 {
-  long number;
+  unsigned long number;
 
-  if (buffer == last_buffer && position == last_position)
+  if (buffer == last_buffer && last_position >= 0 && position == (unsigned long)last_position)
     return last_number;
   number = b_count_lines(buffer, 0, position - 1) - 1;
   if (number > 0) {
@@ -683,73 +706,91 @@ b_get_linenumber(Buffer *buffer, long position)
 /* b_get_linenumber */
 
   long
-b_line_start(Buffer *buffer, long position)
+b_line_start(Buffer *buffer, unsigned long position)
 {
-  const long bs = buffer -> blocksize;
+  const unsigned long bs = buffer -> blocksize;
   BufferBlock *i;
-  char *c;
+  unsigned long ofs;
 
-  if (position < 0) return 0;
   if (!(i = find_block(buffer, position))) return -1;
-  for (c = i -> data + position; c >= i -> data; c--)
-    if (*c == '\n')
-      return (position / bs) * bs + (long)c - (long)(i -> data) + 1;
+  for (ofs = position + 1; ofs > 0; ofs--)
+    if (i->data[ofs - 1] == '\n')
+      return (position / bs) * bs + ofs;
+  if (position < bs)
+    return 0;
   return b_line_start(buffer, (position / bs) * bs - 1);
 }
 /* b_line_start */
 
   long
-b_line_end(Buffer *buffer, long position)
+b_line_end(Buffer *buffer, unsigned long position)
 {
-  const long bs = buffer -> blocksize;
+  const unsigned long bs = buffer -> blocksize;
   BufferBlock *i;
-  char *c;
+  size_t ofs;
 
   if (position >= buffer -> size) return buffer -> size;
   if (!(i = find_block(buffer, position))) return -1;
-  for (c = i -> data + position % bs; c < i -> data + bs; c++)
-    if (*c == '\n')
-      return (position / bs) * bs + (long)c - (long)(i -> data);
+  for (ofs = position % bs; ofs < bs; ofs++)
+    if (i->data[ofs] == '\n')
+      return (position / bs) * bs + ofs;
   return b_line_end(buffer, (position / bs + 1) * bs);
 }
 /* b_line_end */
 
   long
-b_length_of_line(Buffer *buffer, long number)
+b_length_of_line(Buffer *buffer, unsigned long number)
 {
-  long position, length;
+  long position;
 
-  if (buffer == last_buffer && number == last_number && last_length != -1)
+  if (buffer == last_buffer && last_number >= 0 && number == (unsigned long)last_number && last_length != -1)
     return last_length;
   position = b_goto_line(buffer, number);
-  length = b_line_end(buffer, position) - position + 1;
-  return last_length = length;
+  if (position < 0)
+    return position;
+  long end = b_line_end(buffer, position);
+  if (end < 0)
+    return end;
+  last_length = end - position + 1;
+  return last_length;
     /* The values of `last_position' and `last_number' have been set already
      * by `b_goto_line()'. */
 }
 /* b_length_of_line */
 
   long
-b_length_of_text_block(Buffer *buffer, long number, long count)
+b_length_of_text_block(Buffer *buffer, unsigned long number, unsigned long count)
 {
-  long start, end;
+  long start;
+  unsigned long end;
 
   start = b_goto_line(buffer, number);
+  if (start < 0)
+    return start;
   end = start;
   for (; count > 0 && end != buffer -> size; count--) {
-    end = b_line_end(buffer, end) + 1;
+    long nend = b_line_end(buffer, end);
+    if (nend < 0)
+      return nend;
+    end = nend + 1;
   }
   return end - start;
 }
 /* b_length_of_text_block */
 
   long
-b_read_line(Buffer *buffer, char *line, long number)
+b_read_line(Buffer *buffer, char *line, unsigned long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
-  long bytes_read = b_read(buffer, line, position, length);
+  long bytes_read;
 
+  assert(number > 0);
+  if (position < 0 || length < 0)
+    return -1;
+  bytes_read = b_read(buffer, line, position, length);
+  if (bytes_read < 0)
+    return bytes_read;
   if (bytes_read < length) bytes_read++;
   line[bytes_read - 1] = '\0';
   return bytes_read; 
@@ -757,58 +798,79 @@ b_read_line(Buffer *buffer, char *line, long number)
 /* b_read_line */
 
   long
-b_read_text_block(Buffer *buffer, char *target, long number, long count)
+b_read_text_block(Buffer *buffer, char *target, unsigned long number, unsigned long count)
 {
-  long start = b_goto_line(buffer, number);
-  long end = start;
+  long start = b_goto_line(buffer, number), length;
+  unsigned long end;
   long bytes_read;
 
-  bytes_read = b_read(buffer, target, start,
-                      b_length_of_text_block(buffer, number, count));
-  if (bytes_read < end - start) bytes_read++;
+  if (start < 0)
+    return start;
+  end = start;
+  length = b_length_of_text_block(buffer, number, count);
+  if (length < 0)
+    return length;
+  bytes_read = b_read(buffer, target, start, length);
+  if (bytes_read < 0)
+    return bytes_read;
+  if ((unsigned long)bytes_read < end - start) bytes_read++;
   target[bytes_read - 1] = '\0';
   return bytes_read;
 }
 /* b_read_text_block */
 
   long
-b_delete_line(Buffer *buffer, long number)
+b_delete_line(Buffer *buffer, unsigned long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
 
+  if (position < 0 || length < 0)
+    return -1;
   return b_delete(buffer, position, length);
 }
 /* b_delete_line */
   
   long
-b_delete_text_block(Buffer *buffer, long number, long count)
+b_delete_text_block(Buffer *buffer, unsigned long number, unsigned long count)
 {
   long start = b_goto_line(buffer, number);
-  long end = start;
+  unsigned long end;
 
-  for (; count > 0; count--) end = b_line_end(buffer, end) + 1;
+  if (start < 0)
+    return start;
+  end = start;
+  for (; count > 0; count--) {
+    long nend = b_line_end(buffer, end);
+    if (nend < 0)
+      return nend;
+    end = nend + 1;
+  }
   return b_delete(buffer, start, end - start);
 }
 /* b_delete_text_block */
 
   long
-b_clear_line(Buffer *buffer, long number)
+b_clear_line(Buffer *buffer, unsigned long number)
 {
   long position = b_goto_line(buffer, number);
   long length = b_length_of_line(buffer, number);
 
+  if (position < 0 || length < 0)
+    return -1;
   return b_delete(buffer, position, length ? length - 1 : 0);
 }
 /* b_clear_line */
 
   long
-b_insert_text_block(Buffer *buffer, char *source, long number)
+b_insert_text_block(Buffer *buffer, char *source, unsigned long number)
 {
-  long position, bytes_inserted;
+  long position = b_goto_line(buffer, number);
+  long bytes_inserted;
 
-  bytes_inserted = b_insert(buffer, position = b_goto_line(buffer, number),
-                            strlen(source) + 1);
+  if (position < 0)
+    return position;
+  bytes_inserted = b_insert(buffer, position, strlen(source) + 1);
   if (bytes_inserted < 0) return -1;
   source[bytes_inserted - 1] = '\n';
   return b_write(buffer, source, position, bytes_inserted);
