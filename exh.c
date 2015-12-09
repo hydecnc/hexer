@@ -70,7 +70,6 @@
 #include "util.h"
 
 #define EXH_DEFAULT_SHELL "/bin/sh"
-#define EXH_DEFAULT_PAGER "more"
 #define EXIT_EXEC_FAILED 27
 
 #ifndef ERESTARTSYS
@@ -97,7 +96,7 @@ exh_shell_command(const char * const command, int pager_f)
                      * is `EXH_DEFAULT_SHELL'. */
                     /* if `pager != 0' the output is piped into the
                      * pager specified by the "PAGER" environment.  the
-                     * default pager is `EXH_DEFAULT_PAGER'. */
+                     * default pager is `HE_DEFAULT_PAGER'. */
   /* we won't use the "-c"-switch (available for most shells), instead we'll
    * gonna pipe the command into the shell.
    */
@@ -114,7 +113,7 @@ exh_shell_command(const char * const command, int pager_f)
   tio_flush();
   if (!(*shell = getenv("SHELL"))) *shell = strdup(EXH_DEFAULT_SHELL);
   *shell = strdup(*shell);
-  if (!(*pager = getenv("PAGER"))) *pager = strdup(EXH_DEFAULT_PAGER);
+  if (!(*pager = getenv("PAGER"))) *pager = strdup(HE_DEFAULT_PAGER);
   *pager = strdup(*pager);
   /* break `*shell' and `*pager' down into whitespace separated
    * substrings.  it is *not* possible to mask whitespace characters in any

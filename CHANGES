@@ -13,6 +13,11 @@ Change log for hexer, the multi-view binary editor
 	- fix a signed/unsigned char bug when reading the swapfile
 	- merge early when marking screen lines for refreshing
 	  (reported by Jonathan Neuschäfer <j.neuschaefer@gmx.net>)
+	- let the editor use the HE_DEFAULT_PAGER value from defs.h as
+	  a last-resort fallback (nothing in the environment, etc)
+	  (reported by Jakub Wilk <jwilk@debian.org>)
+	- allow the default pager value to be overridden at build time
+	  (reported by Jakub Wilk <jwilk@debian.org>)
 
 0.1.8	2014/09/11
 	- fix a crash when inserting or replacing a half-byte

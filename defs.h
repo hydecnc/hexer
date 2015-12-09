@@ -38,7 +38,9 @@
 /* hexer:
  */
 #define HE_ANYCHAR '.'
+#ifndef HE_DEFAULT_PAGER
 #define HE_DEFAULT_PAGER "more"
+#endif
 #define HEXERINIT_FILE ".hexerrc"
 #define TIO_READWAIT_TIMEOUT -1
 
