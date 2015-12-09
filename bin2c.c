@@ -190,6 +190,7 @@ main(int argc, char **argv)
   }
   fprintf(out, "/* end of %s.c */\n\n", name);
   fclose(in);
+  fclose(out);
   return 0;
 }
 /* main */
