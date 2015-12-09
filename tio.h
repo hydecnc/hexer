@@ -119,7 +119,7 @@ void (*error_msg)( const char *, ... );
 tio_isprint(int x);
 
   int
-tio_init(char *program_name);
+tio_init(const char *program_name);
   /* Initialize.  This function should be called before any other
    * `tio_*'-function.  `program_name' should be the name of the application.
    */

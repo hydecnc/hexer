@@ -45,7 +45,7 @@
 extern const char *exh_initialize[];
 
 int		 exh_command(struct he_s *hedit, const char *cmd);
-char		**exh_completer(char *, const char *, char *, int);
+char		**exh_completer(const char *, const char *, char *, int);
 
 const char	*exh_skip_expression(const char *, char);
 const char	*exh_skip_replace(const char *, char);

@@ -90,7 +90,7 @@ const char *exh_initialize[] = {
 };
 
   static int
-exh_shell_command(const char *command, int pager_f)
+exh_shell_command(const char * const command, int pager_f)
                     /* command to be executed by the shell specified by
                      * the "SHELL" environment variable.  the default shell
                      * is `EXH_DEFAULT_SHELL'. */
@@ -523,7 +523,7 @@ exh_get_address(struct he_s *hedit, const char *exp, unsigned long *address)
 /* exh_get_address */
 
   int
-exh_command(struct he_s *hedit, const char *cmd)
+exh_command(struct he_s * const hedit, const char * const cmd)
   /* execute the exh-command `cmd' on `hedit'.  multiple commands may be
    * specified (separated by semicolons).
    * note:  if any of the commands changes the current buffer, all successive
@@ -654,7 +654,7 @@ exit_exh_command:
  */
 
   static char **
-exh_cpl_file_list(char *prefix)
+exh_cpl_file_list(const char * const prefix)
 {
   int i;
   DIR *dp;
@@ -765,7 +765,7 @@ empty_list:
 /* exh_cpl_file_list */
 
   static char **
-exh_cpl_command_list(char *prefix)
+exh_cpl_command_list(const char * const prefix)
 {
   int i, j;
   int plen = strlen(prefix);
@@ -801,7 +801,7 @@ exh_cpl_command_list(char *prefix)
 /* exh_cpl_command_list */
 
   static char **
-exh_cpl_buffer_list(char *prefix)
+exh_cpl_buffer_list(const char * const prefix)
 {
   struct buffer_s *i;
   char **list;
@@ -825,7 +825,7 @@ exh_cpl_buffer_list(char *prefix)
 /* exh_cpl_buffer_list */
 
   static char **
-exh_cpl_file_and_buffer_list(char *prefix)
+exh_cpl_file_and_buffer_list(const char * const prefix)
 {
   char **list1 = exh_cpl_file_list(prefix);
   char **list2 = exh_cpl_buffer_list(prefix);
@@ -853,7 +853,7 @@ exh_cpl_file_and_buffer_list(char *prefix)
 /* exh_cpl_file_and_buffer_list */
 
   static char **
-exh_cpl_option_list(char *prefix)
+exh_cpl_option_list(const char *prefix)
 {
   char **list, **i;
   int j, k;
@@ -874,7 +874,7 @@ exh_cpl_option_list(char *prefix)
 /* exh_cpl_option_list */
 
   char **
-exh_completer(char *prefix, const char *command, char *line __unused, int context)
+exh_completer(const char * const prefix, const char * const command, char * const line __unused, const int context)
   /* we're looking for completions of `prefix'; `command' is the
    * command-string that `prefix' is the argument of; `line' is the
    * complete line before the cursor.
@@ -883,7 +883,7 @@ exh_completer(char *prefix, const char *command, char *line __unused, int contex
 {
   int expect = -1;
   int i, j, k;
-  char **(*completer[16])(char *);
+  char **(*completer[16])(const char *);
   completer[0] = exh_cpl_command_list;
   completer[1] = exh_cpl_file_list;
   completer[2] = exh_cpl_buffer_list;

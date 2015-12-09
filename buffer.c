@@ -123,7 +123,7 @@ count_lines(char *source, unsigned long count)
  */
 
   BufferBlock *
-new_buffer_block(unsigned long blocksize, char *data)
+new_buffer_block(const unsigned long blocksize, char * const data)
 {
   BufferBlock *new_block;
 
@@ -140,7 +140,7 @@ new_buffer_block(unsigned long blocksize, char *data)
 /* new_buffer_block */
 
   void
-delete_buffer_block(BufferBlock *block)
+delete_buffer_block(BufferBlock * const block)
 {
   free((char *)block->data);
   free((char *)block);
@@ -169,7 +169,7 @@ new_buffer(struct BufferOptions *arg_options)
 /* new_buffer */
 
   int
-delete_buffer(Buffer *buffer)
+delete_buffer(Buffer * const buffer)
 {
   BufferBlock *i, *j;
 
@@ -496,7 +496,7 @@ b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long sour
 /* b_copy_forward */
 
   void
-b_clear(Buffer *buffer)
+b_clear(Buffer * const buffer)
 {
   BufferBlock *i, *j;
 
@@ -512,7 +512,7 @@ b_clear(Buffer *buffer)
 /* b_clear */
 
   long
-b_read_buffer_from_file(Buffer *buffer, char *filename)
+b_read_buffer_from_file(Buffer * const buffer, const char * const filename)
 {
   BufferBlock *i = 0;
   char *tmp;

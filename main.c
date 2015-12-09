@@ -114,7 +114,7 @@ static char *startup_commands[HEXER_MAX_STARTUP_COMMANDS];
 static int startup_commands_n = 0;
 
   static int
-process_args(int argc, char **argv)
+process_args(const int argc, char * const argv[])
 {
   int c, i;
   int exit_f = 0;
@@ -213,7 +213,7 @@ setup_screen(void)
 /* setup_screen */
 
   int
-main(int argc, char **argv)
+main(const int argc, char * const argv[])
 {
   int exit_f;
 

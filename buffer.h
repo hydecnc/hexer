@@ -335,7 +335,7 @@ b_clear(Buffer *buffer);
    */
 
   long
-b_read_buffer_from_file(Buffer *buffer, char *filename);
+b_read_buffer_from_file(Buffer *buffer, const char *filename);
   /* Liest die Datei in den Buffer. Der bisherige Inhalt des Buffers wird
    * dabei geloescht. Die Funktion liefert die Anzahl der gelesenen Bytes
    * und -1 im Fehlerfall. Ob der Inhalt des Buffers im Fehlerfall erhalten

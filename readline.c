@@ -102,7 +102,7 @@ struct rl_line_s {
   char *vline;
 } rl = { rl_line, rl_vline };
 
-char **(*completer)(char *prefix, const char *command, char *line, int context);
+char **(*completer)(const char *prefix, const char *command, char *line, int context);
   /* Pointer to the completer function.  If `completer == 0', completion
    * is disabled.
    */

@@ -122,7 +122,7 @@ he_digit(int key)
 
 
   void
-he_refresh_lines(struct he_s *hedit, int first, int last)
+he_refresh_lines(struct he_s * const hedit, const int first, const int last)
 {
   if (!hedit->refresh.flag) ++hedit->refresh.flag;
   hedit->refresh.first[hedit->refresh.parts] = first;
@@ -133,7 +133,7 @@ he_refresh_lines(struct he_s *hedit, int first, int last)
 /* he_refresh_lines */
 
   void 
-he_refresh_part(struct he_s *hedit, long pos1, long pos2)
+he_refresh_part(struct he_s * const hedit, long pos1, long pos2)
 {
   long i, j, k;
   int update_f = 0;
@@ -185,7 +185,7 @@ he_refresh_screen(const struct he_s *hedit)
 
 
   void
-he_free_command(struct he_command_s *command)
+he_free_command(struct he_command_s * const command)
   /* Free the memory allocated by `command' and all the following commands
    * in the list.
    */

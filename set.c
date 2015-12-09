@@ -89,7 +89,7 @@ s_get_option_integer(const char *option)
 /* s_get_option_integer */
 
   const char *
-s_get_option_string(const char *option)
+s_get_option_string(const char * const option)
 {
   struct option_s *i;
 
@@ -132,8 +132,8 @@ s_delete_option(const char *option)
 /* s_delete_option */
 
   static void
-s_append(struct option_s *last,
-         const char *option,
+s_append(struct option_s * const last,
+         const char * const option,
          const enum s_option_e type, ...)
 {
   va_list ap;
@@ -164,7 +164,7 @@ s_append(struct option_s *last,
 /* s_append */
 
   void
-s_set_option_string(const char *option, const char *value)
+s_set_option_string(const char * const option, const char * const value)
 {
   struct option_s *i, *j;
 
@@ -180,7 +180,7 @@ s_set_option_string(const char *option, const char *value)
 /* s_set_option_string */
 
   void
-s_set_option_integer(const char *option, const long value)
+s_set_option_integer(const char * const option, const long value)
 {
   struct option_s *i, *j;
 
@@ -196,7 +196,7 @@ s_set_option_integer(const char *option, const long value)
 /* s_set_option_integer */
 
   void
-s_set_option_bool(const char *option, const int value)
+s_set_option_bool(const char * const option, const int value)
 {
   struct option_s *i, *j;
 
@@ -252,7 +252,7 @@ s_get_option(const char *option)
 /* s_get_option */
 
   void
-s_set_type(const char *option, const enum s_option_e type)
+s_set_type(const char * const option, const enum s_option_e type)
 {
   switch (type) {
     case S_STRING:
@@ -271,7 +271,7 @@ s_set_type(const char *option, const enum s_option_e type)
 /* s_set_type */
 
   void
-s_set_option(const char *option, const char *value_string, int no_action)
+s_set_option(const char * const option, const char * const value_string, const int no_action)
 {
   struct option_s *i;
   int k;
@@ -304,7 +304,7 @@ s_set_option(const char *option, const char *value_string, int no_action)
 /* s_set_option */
 
   void
-s_set_action(const char *option, set_fn action)
+s_set_action(const char * const option, const set_fn action)
 {
   struct option_s *i;
 

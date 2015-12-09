@@ -81,7 +81,7 @@ char *alternate_buffer;
 const char *he_pagerprg;
 
   void
-he_message(int beep, const char *fmt, ...)
+he_message(const int beep, const char * const fmt, ...)
 {
   va_list ap;
   struct he_message_s *m;
@@ -177,7 +177,7 @@ static const struct hexer_options_s {
  */
 
   int
-he_open_buffer(const char *name, const char *path)
+he_open_buffer(const char * const name, const char * const path)
 {
   struct buffer_s *buffer;
   int no_file_f = 0, read_only = 0;
@@ -250,7 +250,7 @@ he_open_buffer(const char *name, const char *path)
 /* he_open_buffer */
 
   int
-he_select_buffer_(struct buffer_s *buffer)
+he_select_buffer_(const struct buffer_s * const buffer)
   /* Set `current_buffer' to `buffer'.  The file for `buffer' is loaded if
    * nessecarry.
    */
@@ -327,7 +327,7 @@ he_select_buffer_(struct buffer_s *buffer)
 /* he_select_buffer_ */
 
   int
-he_select_buffer(const char *name)
+he_select_buffer(const char * const name)
 {
   struct buffer_s *i;
 
@@ -353,7 +353,7 @@ he_alternate_buffer(void)
 /* he_alternate_buffer */
 
   int
-he_set_buffer_readonly(char *name)
+he_set_buffer_readonly(const char * const name)
   /* Return values:
    * -1: no buffer named `name'
    * 0:  ok
@@ -404,7 +404,7 @@ he_buffer_modified(char *name)
 /* he_buffer_modified */
 
   int
-he_close_buffer(char *name)
+he_close_buffer(const char * const name)
   /* Close the buffer named `name'. If `name == 0', the current buffer
    * is closed.  The return value is 0 if all goes well, 1 if the named
    * buffer doesn't exist and -1 if the `buffer_list' is empty.

@@ -285,7 +285,7 @@ int
 he_alternate_buffer(void);
 
 int
-he_set_buffer_readonly(char *name);
+he_set_buffer_readonly(const char *name);
   /* Return values:
    * -1: no buffer named `name'
    * 0:  ok
@@ -308,7 +308,7 @@ he_buffer_modified(char *name);
    */
 
 int
-he_close_buffer(char *name);
+he_close_buffer(const char *name);
   /* Close the buffer named `name'. If `name == 0', the current buffer
    * is closed.  The return value is 0 if all goes well, 1 if the named
    * buffer doesn't exist and -1 if the `buffer_list' is empty.
@@ -324,7 +324,7 @@ void
 he_select(struct he_s *hedit, unsigned long begin, unsigned long end);
 
 int
-he_select_buffer_(struct buffer_s *);
+he_select_buffer_(const struct buffer_s *);
 
 void
 he_cancel_selection(struct he_s *hedit);

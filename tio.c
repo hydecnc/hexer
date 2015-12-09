@@ -538,7 +538,7 @@ tio_isprint(int x)
 /* tio_isprint */
 
   static void
-tio_error_msg(const char *fmt, ...)
+tio_error_msg(const char * const fmt, ...)
 {
   va_list ap;
 
@@ -551,7 +551,7 @@ tio_error_msg(const char *fmt, ...)
 /* tio_error_msg */
 
   static void
-tio_warning_msg(const char *fmt, ...)
+tio_warning_msg(const char * const fmt, ...)
 {
   va_list ap;
 
@@ -598,7 +598,7 @@ tio_listcaps(void)
 #endif
 
   static int
-tio_command(const char *cmd, int affcnt, ...)
+tio_command(const char * const cmd, const int affcnt, ...)
   /* send the command `cmd' to the terminal.
    * return value: 0 if all goes well and -1 on error.
    */
@@ -616,7 +616,7 @@ tio_command(const char *cmd, int affcnt, ...)
 /* tio_command */
 
   int
-tio_init(char *prog)
+tio_init(const char * const prog)
   /* Initialize.  This function should be called before any other
    * `tio_*'-function.  `prog' should be the name of the application.
    * If you call `tio_init()' with `prog == 0', the program name is set
@@ -904,7 +904,7 @@ tio_end_application(void)
 /* tio_end_application */
 
   void
-tio_keypad(int on)
+tio_keypad(const int on)
   /* Set the keypad mode.
    * on=0: numeric keypad.
    * on=1: application keypad.  Select this mode if you want to use the
@@ -1299,7 +1299,7 @@ tio_keyscan(int *key, char *s, int mode)
 /* tio_keyscan */
 
   int
-tio_echo(int on)
+tio_echo(const int on)
   /* on=1:  characters are echoed as they are typed.
    * on=0:  characters are not echoed.
    * Thie echo-option has no effect on other `tio_*'-functions,
@@ -1354,13 +1354,13 @@ tio_last_line(void)
 /* tio_last_line */
 
   void
-tio_goto_line(int line)
+tio_goto_line(const int p_line)
   /* Move cursor to line `line'.
    */
 {
   char *cmd;
 
-  if (line > hx_lines - 1) line = hx_lines - 1;
+  const int line = p_line > hx_lines - 1? hx_lines - 1: p_line;
   if (t_goto_line)
     tio_command(t_goto_line, 1, line);
   else {
@@ -1936,7 +1936,7 @@ tio_message(char **message, int indent)
 /* tio_message */
 
   int
-tio_printf(const char *fmt, ...)
+tio_printf(const char * const fmt, ...)
 {
   va_list ap;
   int rval;
@@ -1949,7 +1949,7 @@ tio_printf(const char *fmt, ...)
 /* tio_printf */
 
   int
-tio_vprintf(const char *fmt, va_list ap)
+tio_vprintf(const char * const fmt, va_list ap)
   /* Similar to `printf()'.  `tio_printf()' understands the same @-commands
    * as `tio_display()'.  Note that @-commands in strings inserted via %s
    * are executed.  Use `tio_raw_printf()' if you don't wan't @-commands to

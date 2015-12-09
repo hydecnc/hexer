@@ -46,7 +46,7 @@
 #ifndef _READLINE_H_
 #define _READLINE_H_
 
-extern char **(*completer)(char *prefix, const char *command,
+extern char **(*completer)(const char *prefix, const const char *command,
                                char *line, int context);
 
 extern int rl_backspace_jump;

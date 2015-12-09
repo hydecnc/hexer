@@ -276,10 +276,10 @@ tgetent(char *tbuf, char *terminal)
 /* tgetent */
 
   static char *
-t_tgetwhatever(char *id)
+t_tgetwhatever(const char * const id)
 {
-  char *p;
-  int id_len = strlen(id);
+  const char *p;
+  const size_t id_len = strlen(id);
 
   for (p = t_termcap_entry;;) {
     while (*p == ':') ++p;
@@ -303,7 +303,7 @@ tgetflag(char *id)
 /* tgetflag */
 
   int
-tgetnum(char *id)
+tgetnum(const char * const id)
 {
   char *p = t_tgetwhatever(id);
 
@@ -349,7 +349,7 @@ tgetstr(char *id, char **abuf)
 /* tgetstr */
 
   static char *
-vtencode(char *cmd, va_list ap)
+vtencode(const char * const cmd, va_list ap)
   /* Create a terminal command string suitable for `tputs()'.  the
    * `%'-escapes are substituted as listed below:
    *   %%      produce the character %
@@ -484,7 +484,7 @@ vtencode(char *cmd, va_list ap)
 /* vtencode */
 
   static char *
-tencode(char *cmd, ...)
+tencode(const char * const cmd, ...)
 {
   va_list ap;
   char *buf;
@@ -497,7 +497,7 @@ tencode(char *cmd, ...)
 /* tencode */
 
   char *
-tgoto(char *cm, int column, int line)
+tgoto(const char * const cm, const int column, const int line)
 {
   if (cm ? !*cm : 1) return "OOPS";
   return tencode(cm, line, column);
@@ -505,7 +505,7 @@ tgoto(char *cm, int column, int line)
 /* tgoto */
 
   int
-tputs(char *s, int affcnt, int (*outc)(int))
+tputs(const char * const s, const int affcnt, int (* const outc)(int))
 {
   long padding = 0;  /* padding counter multiplied by 10 */
 
