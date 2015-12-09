@@ -173,7 +173,7 @@ exh_unmap(struct he_s *hedit __unused, const char *args, int map)
 /* exh_unmap */
 
   static const char *
-exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end, int *error)
+exh_save_buffer(struct he_s *hedit, char *name)
 {
   struct buffer_s *i;
   char *p;
@@ -181,13 +181,8 @@ exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end,
   int force_f = 0;
   FILE *fp;
   long l;
-  int whole_f = 0;
   char *file = 0;
 
-  unsigned end = (s_end > 0 && (unsigned long)s_end < hedit->buffer->size)?
-    (unsigned long)s_end:
-    hedit->buffer->size - 1;
-  if (begin == 0 && end == hedit->buffer->size - 1) whole_f = 1;
   while (*name == ' ' || *name == '\t') ++name;
   if (*name == '!') {
     force_f = 1;
@@ -207,29 +202,24 @@ exh_save_buffer(struct he_s *hedit, char *name, unsigned long begin, long s_end,
       }
     if (!i) {
       he_message(0, "@Abno buffer named@~ `%s'", name);
-      if (error) *error = 1;
       return skip;
     }
   }
   if (i->hedit->read_only && !force_f) {
     he_message(0, "@Abread only buffer@~ - use @U:w!@~ to override");
-    if (error) *error = 1;
     return skip;
   }
   if (!(fp = fopen(file, "w"))) {
     he_message(0, "@Abcan't open@~ `%s'", file);
-    if (error) *error = 1;
     return skip;
   }
   fclose(fp);
-  l = b_copy_to_file(i->hedit->buffer, file, begin, end - begin + 1);
+  l = b_copy_to_file(i->hedit->buffer, file, 0, hedit->buffer->size);
   if (l > 0) {
     he_message(0, "wrote `%s' - 0x%lx (%li) bytes", file, l, l);
-    if (whole_f) i->hedit->buffer->modified = 0;
-    if (error) *error = 0;
+    i->hedit->buffer->modified = 0;
   } else {
     he_message(1, "could not write `%s'", file);
-    if (error) *error = 1;
   }
   return skip;
 }
@@ -810,7 +800,7 @@ exhcmd_wall(struct he_s *hedit, const char *args, long begin __unused, long end 
   skip = exh_skipcmd(args, 0);
   for (i = buffer_list; i; i = i->next) {
     if (i->loaded_f ? i->hedit->buffer->modified : 0) {
-      exh_save_buffer(hedit, i->hedit->buffer_name, 0, -1, 0);
+      exh_save_buffer(hedit, i->hedit->buffer_name);
 #if 0
       l = b_write_buffer_to_file(i->hedit->buffer, i->path);
       if (l < 0)
