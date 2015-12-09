@@ -66,6 +66,7 @@
 #include "calc.h"
 #include "readline.h"
 #include "tio.h"
+#include "util.h"
 
 #define CALC_STACKSIZE 1024
 
@@ -305,7 +306,7 @@ calc_error(struct calc_object_s *x, const char *fmt, ...)
   vsprintf(buf, fmt, ap);
   if (x->type != CO_ERROR) {
     x->type = CO_ERROR;
-    x->u.s = strdup(buf);
+    x->u.s = strdup_fatal(buf);
   }
   va_end(ap);
   return 0;
@@ -341,9 +342,9 @@ calc_assign(struct calc_object_s x, struct calc_object_s y)
       i->object = y;
       return 0;
     }
-  i = (struct calc_variable_s *)malloc(sizeof *i);
+  i = (struct calc_variable_s *)malloc_fatal(sizeof *i);
   i->object = y;
-  i->name = strdup(x.u.s);
+  i->name = strdup_fatal(x.u.s);
   i->next = calc_variable_list;
   calc_variable_list = i;
   return 0;
@@ -1042,7 +1043,7 @@ dec:    base = 10, r = p;
     } else if (isalpha(*p) || *p == '_' || *p == '$') {
       for (q = p + 1; isalnum(*q) || *q == '_' || *q == '$'; ++q);
       x.type = CO_VARIABLE;
-      x.u.s = strdup(p);
+      x.u.s = strdup_fatal(p);
       x.u.s[q - p] = 0;
       p = q;
     } else {

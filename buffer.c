@@ -128,14 +128,11 @@ new_buffer_block(const unsigned long blocksize, char * const data)
 {
   BufferBlock *new_block;
 
-  if (!(new_block = (BufferBlock *)malloc(sizeof(BufferBlock)))) return 0;
+  new_block = (BufferBlock *)malloc_fatal(sizeof(BufferBlock));
   new_block->next_block = 0;
 
   if (data != 0) new_block->data = data;
-  else if (!(new_block->data = (char *)malloc(blocksize))) {
-    free((char *)new_block);
-    return 0;
-  }
+  else new_block->data = (char *)malloc_fatal(blocksize);
   return new_block;
 }
 /* new_buffer_block */
@@ -159,7 +156,7 @@ new_buffer(struct BufferOptions *arg_options)
   struct BufferOptions options;
   
   options = arg_options ? *arg_options : b_default_options;
-  if (!(new_buf = (Buffer *)malloc(sizeof(Buffer)))) return 0;
+  new_buf = (Buffer *)malloc_fatal(sizeof(Buffer));
   new_buf->first_block = 0;
   new_buf->size = 0;
   new_buf->blocksize = options.blocksize;
@@ -470,11 +467,7 @@ b_read_buffer_from_file(Buffer * const buffer, const char * const filename)
   do {
     ssize_t bytes_read;
 
-    tmp = (char *)malloc(buffer->blocksize);
-    if (tmp == 0) {
-      close(file);
-      return -1;
-    }
+    tmp = (char *)malloc_fatal(buffer->blocksize);
     bytes_read = read(file, tmp, buffer->blocksize);
     if (bytes_read > 0)	{
       if (buffer->first_block == 0) {
@@ -533,12 +526,12 @@ b_write_buffer_to_file(Buffer *buffer, char *filename)
   long
 b_copy_to_file(Buffer *buffer, const char *filename, unsigned long position, unsigned long count)
 {
-  char *tmp = malloc(buffer->blocksize);
+  char *tmp = malloc_fatal(buffer->blocksize);
   long bytes_read = 0, bytes_wrote = 0;
   int file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 
-  if (file < 0 || !tmp) {
-    if (tmp) free((char *)tmp);
+  if (file < 0) {
+    free((char *)tmp);
     if (file >= 0) close(file);
     return -1;
   }
@@ -565,13 +558,13 @@ b_copy_to_file(Buffer *buffer, const char *filename, unsigned long position, uns
   long
 b_paste_from_file(Buffer *buffer, const char *filename, unsigned long position)
 {
-  char *tmp = malloc(buffer->blocksize);
+  char *tmp = malloc_fatal(buffer->blocksize);
   long bytes_read, bytes_wrote = 0;
   int file = open(filename, O_RDONLY);
   
   assert(!buffer->read_only);
-  if (file < 0 || !tmp) {
-    if (tmp) free((char *)tmp);
+  if (file < 0) {
+    free((char *)tmp);
     if (file >= 0) close(file);
     return -1;
   }

@@ -432,7 +432,7 @@ substitute:
         end -= match_len - replace_len;
 	/* create an entry for the undo-list */
         if (match_len) {
-          data = (char *)malloc(match_len);
+          data = (char *)malloc_fatal(match_len);
 	  if (b_read(hedit->buffer, data, position, match_len) < 0) {
 	    he_message(1, "could not read data from the internal buffer");
 	    free((char *)data);
@@ -628,7 +628,7 @@ exhcmd_read(struct he_s *hedit, const char *file, long position, long end __unus
   l = b_paste_from_file(hedit->buffer, file, position);
   if (l == -1)
     return skip;
-  data = (char *)malloc(l);
+  data = (char *)malloc_fatal(l);
   fp = fopen(file, "r");
   if (fread(data, 1, l, fp) != (unsigned long)l) {
     free(data);
@@ -676,7 +676,7 @@ exhcmd_edit(struct he_s *hedit __unused, const char *name, long begin __unused, 
   if (he_select_buffer(name) < 0) {
     new_buffer_f = 1;
     if (*name == '~') {
-      user = strdup(name + 1);
+      user = strdup_fatal(name + 1);
       for (p = user; *p && *p != '/'; ++p);
       *p = 0;
       if (*user) {
@@ -686,7 +686,7 @@ exhcmd_edit(struct he_s *hedit __unused, const char *name, long begin __unused, 
         for (setpwent(); (pe = getpwent());)
           if (uid == pe->pw_uid) break;
       if (pe) {
-        pathbuf = (char *)malloc(strlen(name) + strlen(pe->pw_dir) + 4);
+        pathbuf = (char *)malloc_fatal(strlen(name) + strlen(pe->pw_dir) + 4);
         strcpy(pathbuf, pe->pw_dir);
         strcat(pathbuf, name + strlen(user) + 1);
 	path = pathbuf;
@@ -732,9 +732,9 @@ exhcmd_buffer(struct he_s *hedit, const char *name, long begin __unused, long en
     for (i = buffer_list, k = 0; i; i = i->next, ++k)
       if (strlen(i->hedit->buffer_name) > name_maxlen)
         name_maxlen = strlen(i->hedit->buffer_name);
-    list = (char **)malloc((k + 1) * sizeof(char *));
+    list = (char **)malloc_fatal((k + 1) * sizeof(char *));
     for (i = buffer_list, k = 0; i; i = i->next, ++k) {
-      list[k] = (char *)malloc(strlen(i->hedit->buffer_name) + 512);
+      list[k] = (char *)malloc_fatal(strlen(i->hedit->buffer_name) + 512);
       sprintf(list[k], " `%s' ", i->hedit->buffer_name);
       c = list[k] + strlen(list[k]);
       for (j = name_maxlen - strlen(i->hedit->buffer_name); j >= 0; --j)
@@ -1018,7 +1018,7 @@ exhcmd_delete(struct he_s *hedit, const char *args, long begin, long end)
   util_trunc(p);
   args = p;
   if (!count) return skip;
-  data = (char *)malloc(count);
+  data = (char *)malloc_fatal(count);
   b_read(hedit->buffer, data, begin, count);
   if (!kill_buffer)
     kill_buffer = new_buffer(0);

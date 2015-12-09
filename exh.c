@@ -111,10 +111,10 @@ exh_shell_command(const char * const command, int pager_f)
   tio_suspend();
   tio_clear();
   tio_flush();
-  if (!(*shell = getenv("SHELL"))) *shell = strdup(EXH_DEFAULT_SHELL);
-  *shell = strdup(*shell);
-  if (!(*pager = getenv("PAGER"))) *pager = strdup(HE_DEFAULT_PAGER);
-  *pager = strdup(*pager);
+  if (!(*shell = getenv("SHELL"))) *shell = strdup_fatal(EXH_DEFAULT_SHELL);
+  *shell = strdup_fatal(*shell);
+  if (!(*pager = getenv("PAGER"))) *pager = strdup_fatal(HE_DEFAULT_PAGER);
+  *pager = strdup_fatal(*pager);
   /* break `*shell' and `*pager' down into whitespace separated
    * substrings.  it is *not* possible to mask whitespace characters in any
    * way. */
@@ -265,8 +265,8 @@ exh_subshell(void)
   tio_suspend();
   tio_clear();
   tio_flush();
-  if (!(*shell = getenv("SHELL"))) *shell = strdup(EXH_DEFAULT_SHELL);
-  *shell = strdup(*shell);
+  if (!(*shell = getenv("SHELL"))) *shell = strdup_fatal(EXH_DEFAULT_SHELL);
+  *shell = strdup_fatal(*shell);
   /* break `*shell' down into whitespace separated substrings.
    * it is *not* possible to mask whitespace characters in any way. */
   for (i = 0; *shell[i]; shell[++i] = p) {
@@ -678,7 +678,7 @@ exh_cpl_file_list(const char * const prefix)
   /* check if the `prefix' starts with a "~user/"-abbrev..
    */
   if (*prefix == '~') {
-    user = strdup(prefix + 1);
+    user = strdup_fatal(prefix + 1);
     for (p = user; *p && *p != '/'; ++p);
     if (!*p) {
       /* hmm... the username `user' is possibly incomplete.  check how many
@@ -690,13 +690,13 @@ exh_cpl_file_list(const char * const prefix)
       setpwent();
       /* make the list.
        */
-      *(list = (char **)malloc(sizeof(char *) * ++i)) = 0;
+      *(list = (char **)malloc_fatal(sizeof(char *) * ++i)) = 0;
       for (i = 0; (pe = getpwent());)
         if (*user ? !strncmp(pe->pw_name, user, strlen(user)) : 1) {
           *d_name = '~';
           strcpy(d_name + 1, pe->pw_name);
           strcat(d_name, "/");
-          list[i++] = strdup(d_name);
+          list[i++] = strdup_fatal(d_name);
         }
       list[i] = 0;
       endpwent();
@@ -736,20 +736,20 @@ exh_cpl_file_list(const char * const prefix)
     strcat(d_name, de->d_name);
     if (!strncmp(d_name, prefix, plen)) ++i;
   }
-  list = (char **)malloc(sizeof(char *) * ++i);
+  list = (char **)malloc_fatal(sizeof(char *) * ++i);
   for (rewinddir(dp), i = 0; (de = readdir(dp));) {
     struct stat st;
     char *rp;
     strcpy(d_name, dirname);
     strcat(d_name, de->d_name);
     if (!strncmp(d_name, prefix, plen)) {
-      rp = (char *)malloc(strlen(path) + strlen(de->d_name) + 4);
+      rp = (char *)malloc_fatal(strlen(path) + strlen(de->d_name) + 4);
       strcpy(rp, path);
       strcat(rp, "/");
       strcat(rp, de->d_name);
       if (!stat(rp, &st)) if (S_ISDIR(st.st_mode)) strcat(d_name, "/");
       free(rp);
-      list[i++] = strdup(d_name);
+      list[i++] = strdup_fatal(d_name);
     }
   }
   list[i] = 0;
@@ -759,7 +759,7 @@ exit:
   return list;
 empty_list:
   if (user) free(user);
-  *(list = (char **)malloc(sizeof(char *))) = 0;
+  *(list = (char **)malloc_fatal(sizeof(char *))) = 0;
   return list;
 }
 /* exh_cpl_file_list */
@@ -777,18 +777,18 @@ exh_cpl_command_list(const char * const prefix)
         && exh_commands[i].cmd_char
         && (plen ? exh_commands[i].cmd_char == *prefix : 1)) ++j;
   }
-  list = (char **)malloc((j + 1) * sizeof(char *));
+  list = (char **)malloc_fatal((j + 1) * sizeof(char *));
   if (j) {
     for (i = 0, j = 0; exh_commands[i].cmd_name; ++i) {
       if (!strncmp(exh_commands[i].cmd_name, prefix, plen)) {
 	list[j] =
-          (char *)malloc(strlen(exh_commands[i].cmd_name) + 1);
+          (char *)malloc_fatal(strlen(exh_commands[i].cmd_name) + 1);
 	strcpy(list[j++], exh_commands[i].cmd_name);
       }
       if (exh_commands[i].cmd_name[0] != exh_commands[i].cmd_char
           && exh_commands[i].cmd_char
           && (plen ? exh_commands[i].cmd_char == *prefix : 1)) {
-        list[j] = (char *)malloc(2);
+        list[j] = (char *)malloc_fatal(2);
         list[j][0] = exh_commands[i].cmd_char;
         list[j++][1] = 0;
       }
@@ -810,11 +810,11 @@ exh_cpl_buffer_list(const char * const prefix)
 
   for (j = 0, i = buffer_list; i; i = i->next)
     if (!strncmp(i->hedit->buffer_name, prefix, plen)) ++j;
-  list = (char **)malloc((j + 1) * sizeof(char *));
+  list = (char **)malloc_fatal((j + 1) * sizeof(char *));
   if (j) {
     for (j = 0, i = buffer_list; i; i = i->next)
       if (!strncmp(i->hedit->buffer_name, prefix, plen)) {
-	list[j] = (char *)malloc(strlen(i->hedit->buffer_name) + 1);
+	list[j] = (char *)malloc_fatal(strlen(i->hedit->buffer_name) + 1);
 	strcpy(list[j++], i->hedit->buffer_name);
       }
     list[j] = 0;
@@ -840,7 +840,7 @@ exh_cpl_file_and_buffer_list(const char * const prefix)
   for (i = 0; list1[i]; ++i);
   for (j = k = 0; list2[j]; ++j) if (list2[j] != (char *)1) ++k;
   
-  list1 = (char **)realloc(list1, (i + k + 1) * sizeof(char *));
+  list1 = (char **)realloc_fatal(list1, (i + k + 1) * sizeof(char *));
   for (j = k = i; list2[j - i]; ++j)
     if (list2[j - i] != (char *)1) {
       list1[k] = list2[j - i];
@@ -863,7 +863,7 @@ exh_cpl_option_list(const char *prefix)
   i = list = s_option_list(prefix, no_f);
   if (no_f) {
     while (*i) {
-      *i = (char *)realloc(*i, k = strlen(*i) + 2);
+      *i = (char *)realloc_fatal(*i, k = strlen(*i) + 2);
       for (j = k; j >= 0; --j) (*i)[j] = (*i)[j - 2];
       **i = 'n', (*i)[1] = 'o';
       ++i;
@@ -930,7 +930,7 @@ exh_completer(const char * const prefix, const char * const command, char * cons
   }
 exit_exh_competer:
   if (expect < 0) {
-    char **list = (char **)malloc(sizeof(char *));
+    char **list = (char **)malloc_fatal(sizeof(char *));
     *list = 0;
     return list;
   } else

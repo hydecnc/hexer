@@ -56,6 +56,7 @@
 #include "buffer.h"
 #include "hexer.h"
 #include "set.h"
+#include "util.h"
 
 struct option_s {
   char option[256];
@@ -140,7 +141,7 @@ s_append(struct option_s * const last,
   struct option_s *i;
 
   va_start(ap, type);
-  i = (struct option_s *)malloc(sizeof(struct option_s));
+  i = (struct option_s *)malloc_fatal(sizeof(struct option_s));
   i->type = type;
   i->next = 0;
   strcpy(i->option, option);
@@ -326,11 +327,11 @@ s_option_list(const char *prefix, int bool_only)
 
   for (i = option_first, n = 0; i; i = i->next)
     if (!strncmp(i->option, prefix, strlen(prefix))) ++n;
-  list = (char **)malloc((n + 1) * sizeof(char *));
+  list = (char **)malloc_fatal((n + 1) * sizeof(char *));
   for (i = option_first, n = 0; i; i = i->next)
     if (!strncmp(i->option, prefix, strlen(prefix)))
       if (!bool_only || i->type == S_BOOL) {
-        list[n] = (char *)malloc(strlen(i->option) + 1);
+        list[n] = (char *)malloc_fatal(strlen(i->option) + 1);
         strcpy(list[n], i->option);
         ++n;
       }
@@ -348,9 +349,9 @@ s_option_value_list(void)
 
   for (i = option_first, n = 0; i; i = i->next, ++n)
     if (strlen(i->option) > option_maxlen) option_maxlen = strlen(i->option);
-  list = (char **)malloc((n + 1) * sizeof(char *));
+  list = (char **)malloc_fatal((n + 1) * sizeof(char *));
   for (i = option_first, n = 0; i; i = i->next, ++n) {
-    list[n] = (char *)malloc(option_maxlen + 4
+    list[n] = (char *)malloc_fatal(option_maxlen + 4
                              + strlen(s_get_option(i->option)));
     memset(list[n], ' ', option_maxlen + 2);
     strcpy(list[n], i->option);

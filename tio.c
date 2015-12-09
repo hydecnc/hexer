@@ -94,6 +94,7 @@
 
 #include "defs.h"
 #include "tio.h"
+#include "util.h"
 
 #if USE_SET
 #include "set.h"
@@ -104,7 +105,7 @@ int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 #if !HAVE_VASPRINTF
 static int my_vasprintf(char ** const dst, const char * const fmt, va_list v)
 {
-  char * const p = malloc(2048);
+  char * const p = malloc_fatal(2048);
   const int n = vsnprintf(p, 2048, fmt, v);
   if (n < 0 || n >= 2048) {
     free(p);
@@ -1563,7 +1564,7 @@ tio_puts(const char *s)
   if (t_line < 0) tio_goto_line(0);
   if (t_column < 0) tio_goto_column(0);
   c1 = s;
-  c2 = out = (char *)malloc(strlen(s) + 1);
+  c2 = out = (char *)malloc_fatal(strlen(s) + 1);
   for (; *c1; ++c1) {
     mask_f = 0;
     switch (*c1) {
@@ -1817,7 +1818,7 @@ tio_display(char *text, int indent_arg)
   int i, j;
   int lin, col;
   int eol_f, back_f, absolute_f;
-  char *s = (char *)malloc(strlen(text) + 1);
+  char *s = (char *)malloc_fatal(strlen(text) + 1);
   static int indent = 0;
   int maxcol = hx_columns - 1;
 

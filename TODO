@@ -1,3 +1,2 @@
 To-do list for hexer, the simple binary editor:
-- check for malloc()/realloc()/strdup() result in almost all of the code!
 - check for errors from the hexer internal routines, too

@@ -65,6 +65,7 @@
 
 #include "config.h"
 #include "defs.h"
+#include "util.h"
 
 #undef EOF
 
@@ -380,7 +381,7 @@ regex_ref(int slot)
   position = rx_store_begin[slot];
   count = rx_store_end[slot] - position;
   if (!rx_store_match[slot] && count) {
-    rx_store_match[slot] = malloc(count);
+    rx_store_match[slot] = malloc_fatal(count);
     rx_seek(position);
     rx_read(rx_store_match[slot], count);
     return rx_store_match[slot];
@@ -654,7 +655,7 @@ regex_match_(long *regex, long position, int *parstack, int *parsp)
 	if (max < 0) max = rx_maxmatch;
 	if (max > min) {
 	  long *stack, sp;
-	  stack = (long *)malloc((max - min + 1) * sizeof(long));
+	  stack = (long *)malloc_fatal((max - min + 1) * sizeof(long));
 	  for (sp = 0; max < 0 ? 1 : i < max; ++i) {
 	    if (!regex_match_(pp, p, local_parstack, &local_parsp)) break;
 	    stack[sp++] = p;
@@ -727,7 +728,7 @@ regex_match(long *regex, long position, char **replace_str, long *replace_len, l
   if (regex_match_(regex + 1, position, 0, &zero)) {
     *match_len = rx_match_skip - position;
     if (!*pp) {
-      *replace_str = (char *)malloc(1);
+      *replace_str = (char *)malloc_fatal(1);
       **replace_str = 0;
       *replace_len = 0;
     } else {
@@ -759,7 +760,7 @@ regex_match(long *regex, long position, char **replace_str, long *replace_len, l
       }
       assert(!*pp);
       cp = *replace_str =
-        (char *)malloc(*replace_len + !*replace_len);
+        (char *)malloc_fatal(*replace_len + !*replace_len);
       for (pp = pp_rec;;) {
 	long reflen;
 	if (*pp == (long)EOX) break;
@@ -902,10 +903,10 @@ compile:
   if (regex_size) {
     regex_size <<= 1;
     regex =
-      (long *)realloc(regex, regex_size * regex_blocksize * sizeof(long));
+      (long *)realloc_fatal(regex, regex_size * regex_blocksize * sizeof(long));
   } else
     ++regex_size, regex =
-      (long *)malloc(regex_blocksize * sizeof(long));
+      (long *)malloc_fatal(regex_blocksize * sizeof(long));
 
   par[0] = regex + 1;
   branch[0] = regex + 1;
@@ -1483,7 +1484,7 @@ compile:
    */
   cp = replace;
   escape = 0;
-  s = (char *)malloc(strlen(replace) + 1);
+  s = (char *)malloc_fatal(strlen(replace) + 1);
   j = 0;
   while (*cp) {
     switch (*cp++) {

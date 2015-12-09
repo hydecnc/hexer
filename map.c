@@ -54,6 +54,7 @@
 
 #include "buffer.h"
 #include "hexer.h"
+#include "util.h"
 
 #undef TIO_MAP
 #define TIO_MAP 1
@@ -120,7 +121,7 @@ key_strrep(const int *ks)
       key = *i;
     n += strlen(tio_keyrep(key));
   }
-  s = t = (char *)malloc(n + 1);
+  s = t = (char *)malloc_fatal(n + 1);
   for (i = ks; *i; ++i) {
     if (*i == MAP_ESC)
       key = *++i + HXKEY_BIAS;
@@ -141,7 +142,7 @@ key_strrep_simple(ks)
 {
   char *s, *t;
 
-  s = t = (char *)malloc(key_strlen(ks) + 1);
+  s = t = (char *)malloc_fatal(key_strlen(ks) + 1);
   for (; *ks; ++ks) if (*ks < 0x100) *t++ = *ks; else *t++ = 0xff;
   *t = 0;
   return s;
@@ -331,7 +332,7 @@ tio_map(int map, char *from, char *to, int special_f)
       key_strcpy(i->to, kto);
       return 0;
     }
-  i = (struct map_s *)malloc(sizeof(struct map_s));
+  i = (struct map_s *)malloc_fatal(sizeof(struct map_s));
   i->next = 0;
   key_strcpy(i->from, kfrom);
   key_strcpy(i->to, kto);
@@ -375,12 +376,12 @@ tio_maplist(int map)
 
   for (i = map_first[map], n = 0; i; i = i->next, ++n);
   if (!n) {
-    *(list = (char **)malloc(sizeof(char *))) = 0;
+    *(list = (char **)malloc_fatal(sizeof(char *))) = 0;
     return list;
   }
   from = (char **)alloca(n * sizeof(char *));
   to = (char **)alloca(n * sizeof(char *));
-  list = (char **)malloc((n + 1) * sizeof(char *));
+  list = (char **)malloc_fatal((n + 1) * sizeof(char *));
   for (i = map_first[map], k = 0; i; i = i->next, ++k) {
     from[k] = key_strrep(i->from);
     to[k] = key_strrep(i->to);
@@ -390,7 +391,7 @@ tio_maplist(int map)
     if (strlen(from[k]) > from_maxwidth) from_maxwidth = strlen(from[k]);
   from_maxwidth += 2;
   for (k = 0; k < n; ++k) {
-    list[k] = (char *)malloc(from_maxwidth + strlen(to[k]) + 2);
+    list[k] = (char *)malloc_fatal(from_maxwidth + strlen(to[k]) + 2);
     strcpy(list[k], from[k]);
     memset(list[k] + strlen(list[k]), ' ', from_maxwidth - strlen(list[k]));
     strcpy(list[k] + from_maxwidth, to[k]);
@@ -422,7 +423,7 @@ tio_mapentry(map, from)
     if (!key_strcmp(i->from, kfrom)) {
       length = strlen(sfrom = key_strrep(i->from))
                + strlen(sto = key_strrep(i->to)) + 3;
-      rep = (char *)malloc(length);
+      rep = (char *)malloc_fatal(length);
       strcpy(rep, sfrom);
       strcat(rep, "  ");
       strcat(rep, sto);

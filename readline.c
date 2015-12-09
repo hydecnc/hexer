@@ -155,11 +155,11 @@ rl_history_init(int max)
 
   for (i = 0; i < RL_MAX_CONTEXTS; ++i) {
     rl_history[i] =
-      (struct rl_line_s *)malloc(max * sizeof(struct rl_line_s));
+      (struct rl_line_s *)malloc_fatal(max * sizeof(struct rl_line_s));
     for (j = 0; j < max; ++j) {
-      rl_history[i][j].line = (char *)malloc(1);
+      rl_history[i][j].line = (char *)malloc_fatal(1);
       *rl_history[i][j].line = 0;
-      rl_history[i][j].vline = (char *)malloc(1);
+      rl_history[i][j].vline = (char *)malloc_fatal(1);
       *rl_history[i][j].vline = 0;
     }
     rl_history_c[i] = 1;
@@ -189,12 +189,12 @@ rl_history_add(struct rl_line_s line)
       rl_history[rl_current_context][i] =
         rl_history[rl_current_context][i + 1];
     rl_history[rl_current_context][i].line =
-      (char *)malloc(strlen(line.line) + 1);
+      (char *)malloc_fatal(strlen(line.line) + 1);
   } else {
     i = rl_history_c[rl_current_context] - 1;
     ++rl_history_c[rl_current_context];
     rl_history[rl_current_context][i].line =
-      (char *)realloc(rl_history[rl_current_context][i].line,
+      (char *)realloc_fatal(rl_history[rl_current_context][i].line,
                       strlen(line.line) + 1);
   }
   strcpy(rl_history[rl_current_context][i].line, line.line);
@@ -247,7 +247,7 @@ rl_history_set(struct rl_line_s line)
    */
 {
   rl_history[rl_current_context][rl_index].line =
-    (char *)realloc(rl_history[rl_current_context][rl_index].line,
+    (char *)realloc_fatal(rl_history[rl_current_context][rl_index].line,
                     strlen(line.line) + 1);
   strcpy(rl_history[rl_current_context][rl_index].line, line.line);
 }
@@ -483,7 +483,7 @@ rl_insert(int x)
   size_t position = rl_get_position();
   size_t vposition;
   int append = (position == strlen(rl.line));
-  char *s = strdup(tio_keyrep(x));
+  char *s = strdup_fatal(tio_keyrep(x));
   size_t sl = strlen(s);
   size_t special_f = 0;
   int redisplay_f = 0;
@@ -931,7 +931,7 @@ rl_complete(int context, int again)
           util_strsort(list);
 	  k = (n - 1) / m + 1; /* number of lines */
 	  /* rearrange the list sorted in hx_columns */
-	  list2 = (char **)malloc(m * k * sizeof(char *));
+	  list2 = (char **)malloc_fatal(m * k * sizeof(char *));
 	  memset(list2, 0, m * k * sizeof(char *));
 	  for (i = 0, j = 0; list[i]; ++i) {
 	    list2[m * (i % k) + j] = list[i];

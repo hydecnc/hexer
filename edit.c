@@ -61,6 +61,7 @@
 #include "edit.h"
 #include "readline.h"
 #include "tio.h"
+#include "util.h"
 
 int he_hex_column[] = { 12, 15, 18, 21, 24, 27, 30, 33,
                         37, 40, 43, 46, 49, 52, 55, 58 };
@@ -372,14 +373,14 @@ he_subcommand(struct he_s *hedit, int type, unsigned long position, unsigned lon
     command = 0;
   } else { /* (type >= 0) */
     if (!command) {
-      command = (struct he_command_s *)malloc(sizeof(*command));
+      command = (struct he_command_s *)malloc_fatal(sizeof(*command));
       again = 1;
       last_position = position;
       i = command;
     } else {
       if (again) if (position != last_position) again = 0;
       for (i = command; i->next_subcommand; i = i->next_subcommand);
-      i->next_subcommand = (struct he_command_s *)malloc(sizeof(*command));
+      i->next_subcommand = (struct he_command_s *)malloc_fatal(sizeof(*command));
       i = i->next_subcommand;
     }
     i->next_subcommand = 0;
@@ -484,7 +485,7 @@ he_read_command(struct he_s *hedit)
   }
   if (fgetc(hedit->undo.swapfile) == EOF)
     return 0;
-  c = command = (struct he_command_s *)malloc(sizeof(struct he_command_s));
+  c = command = (struct he_command_s *)malloc_fatal(sizeof(struct he_command_s));
   for (i = 1; c; ++i) {
     int n;
     c->next_command = 0;
@@ -499,12 +500,12 @@ he_read_command(struct he_s *hedit)
     if (fread(bigendian, 4, 1, hedit->undo.swapfile) != 1)
       return 0;
     c->count = he_bigendian_to_ulong(bigendian);
-    c->data = (char *)malloc(c->count);
+    c->data = (char *)malloc_fatal(c->count);
     if (fread(c->data, 1, c->count, hedit->undo.swapfile) != c->count)
       return 0;
     if (i < n_subcommands) {
       c->next_subcommand =
-        (struct he_command_s *)malloc(sizeof(struct he_command_s));
+        (struct he_command_s *)malloc_fatal(sizeof(struct he_command_s));
       c = c->next_subcommand;
     } else {
       c->next_subcommand = 0;
@@ -639,13 +640,13 @@ he_again(struct he_s *hedit, long position)
        * be necessary to adjust `j->count' in `command2'.
        */
       struct he_command_s *command2, *j;
-      command2 = (struct he_command_s *)malloc(sizeof(struct he_command_s));
+      command2 = (struct he_command_s *)malloc_fatal(sizeof(struct he_command_s));
       for (i = command, j = command2; i;) {
         *j = *i;
         j->next_command = 0;
         j->prev_command = 0;
         if (i->count) {
-          j->data = (char *)malloc(i->count);
+          j->data = (char *)malloc_fatal(i->count);
           if (i->type) /* insert */
             memcpy(j->data, i->data, i->count);
           else { /* delete */
@@ -654,14 +655,14 @@ he_again(struct he_s *hedit, long position)
 	      assert(0); /* FIXME: better handling */
 	    } else if ((unsigned long)x < j->count) {
               /* `x > j->count' is impossible here. */
-              j->data = (char *)realloc(j->data, x);
+              j->data = (char *)realloc_fatal(j->data, x);
               j->count = x;
             }
           }
         }
         if (i->next_subcommand) {
           j->next_subcommand =
-            (struct he_command_s *)malloc(sizeof(struct he_command_s));
+            (struct he_command_s *)malloc_fatal(sizeof(struct he_command_s));
           j = j->next_subcommand;
           i = i->next_subcommand;
         } else
@@ -699,7 +700,7 @@ he_delete(struct he_s *hedit, long count, int dont_save)
       count = hedit->buffer->size - start;
   }
   if (!count) return;
-  data = (char *)malloc(count);
+  data = (char *)malloc_fatal(count);
   b_read(hedit->buffer, data, start, count);
   if (!dont_save) {
     if (!kill_buffer)
@@ -731,7 +732,7 @@ he_paste(struct he_s *hedit, long count)
   if (kill_buffer ? !(c = kill_buffer->size) : 1) return;
   if (count < 1) count = 1;
   while (count--) {
-    data = (char *)malloc(c);
+    data = (char *)malloc_fatal(c);
     b_read(kill_buffer, data, 0, c);
     b_insert(hedit->buffer, hedit->position, c);
     b_write(hedit->buffer, data, hedit->position, c);
@@ -755,8 +756,8 @@ he_paste_over(struct he_s *hedit, long count)
   if (kill_buffer ? !(c = kill_buffer->size) : 1) return;
   if (count < 1) count = 1;
 
-  data_insert = (char *)malloc(c * count);
-  data_delete = (char *)malloc(c * count);
+  data_insert = (char *)malloc_fatal(c * count);
+  data_delete = (char *)malloc_fatal(c * count);
   b_read(kill_buffer, data_insert, 0, c);
   for (i = 1; i < count; ++i) memcpy(data_insert + c * i, data_insert, c);
   bytes_deleted = b_read(hedit->buffer, data_delete,
@@ -764,7 +765,7 @@ he_paste_over(struct he_s *hedit, long count)
   b_write_append(hedit->buffer, data_insert, hedit->position, c * count);
   if (bytes_deleted < c * count)
     data_delete =
-      (char *)realloc(data_delete, bytes_deleted + !bytes_deleted);
+      (char *)realloc_fatal(data_delete, bytes_deleted + !bytes_deleted);
   he_subcommand(hedit, 0, hedit->position, bytes_deleted, data_delete);
   he_subcommand(hedit, 1, hedit->position, c * count, data_insert);
   he_subcommand(hedit, -1, 0, 0, 0);
@@ -1529,11 +1530,11 @@ he_insert_mode(struct he_s *hedit, int replace_mode, long count)
           /* Moving the cursor eliminates the counter.
            */
         if (i != hedit->position && insert->size) {
-          data = (char *)malloc(insert->size);
+          data = (char *)malloc_fatal(insert->size);
           b_read(insert, data, 0, insert->size);
           if (replace_mode && replace->size) {
             char *data_replace;
-            data_replace = (char *)malloc(replace->size);
+            data_replace = (char *)malloc_fatal(replace->size);
             b_read(replace, data_replace, 0, replace->size);
             he_subcommand(hedit, 0, position, replace->size, data_replace);
             b_clear(replace);
@@ -1707,7 +1708,7 @@ hx_exit_insert_mode:
       if (replace_mode) {
         b_insert(hedit->buffer, position, replace->size);
         b_copy(hedit->buffer, replace, position, 0, replace->size);
-        data_replace = (char *)malloc(replace->size * count);
+        data_replace = (char *)malloc_fatal(replace->size * count);
         replace_size2 =
           b_read(hedit->buffer, data_replace, position, replace->size * count);
 	if (replace_size2 < 0) {
@@ -1715,13 +1716,13 @@ hx_exit_insert_mode:
 	} else if ((unsigned long)replace_size2 < replace->size * count)
           /* We don't want to eat up more memory than needed.
            */
-          data_replace = (char *)realloc(data_replace, (unsigned long)replace_size2);
+          data_replace = (char *)realloc_fatal(data_replace, (unsigned long)replace_size2);
         b_delete(hedit->buffer, position, replace_size2);
         he_subcommand(hedit, 0, position, replace_size2, data_replace);
       }
-      data = (char *)malloc(insert->size);
+      data = (char *)malloc_fatal(insert->size);
       b_read(insert, data, 0, insert->size);
-      data = (char *)realloc(data, insert->size * count);
+      data = (char *)realloc_fatal(data, insert->size * count);
       for (c = insert->size * (count - 1); c > 0; c -= insert->size)
         memcpy(data + c, data, insert->size);
       b_insert(hedit->buffer, position, insert->size * count);
@@ -1734,11 +1735,11 @@ hx_exit_insert_mode:
       } else
         he_refresh_part(hedit, hedit->position, hedit->buffer->size - 1);
     } else {
-      data = (char *)malloc(insert->size);
+      data = (char *)malloc_fatal(insert->size);
       b_read(insert, data, 0, insert->size);
       if (replace_mode)
         if (replace->size) {
-          data_replace = (char *)malloc(replace->size);
+          data_replace = (char *)malloc_fatal(replace->size);
           b_read(replace, data_replace, 0, replace->size);
           he_subcommand(hedit, 0, position, replace->size, data_replace);
         }

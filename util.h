@@ -50,4 +50,31 @@ int		 util_strsort(char **);
 int		 util_trunc(char *);
 int		 write_buf(int, const char *, size_t);
 
+static inline void *
+malloc_fatal(const size_t size)
+{
+  void * const p = malloc(size);
+  if (p == NULL)
+    abort();
+  return p;
+}
+
+static inline void *
+realloc_fatal(void * const p, const size_t size)
+{
+  void * const newp = realloc(p, size);
+  if (newp == NULL)
+    abort();
+  return newp;
+}
+
+static inline char *
+strdup_fatal(const char * const s)
+{
+  char * const news = strdup(s);
+  if (news == NULL)
+    abort();
+  return news;
+}
+
 #endif /* _UTIL_H_ */

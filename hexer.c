@@ -89,11 +89,11 @@ he_message(const int beep, const char * const fmt, ...)
 
   va_start(ap, fmt);
   /* length = tio_nprintf(fmt, ap); */
-  m = (struct he_message_s *)malloc(sizeof(struct he_message_s));
+  m = (struct he_message_s *)malloc_fatal(sizeof(struct he_message_s));
   m->next = he_messages;
   m->beep = beep;
-  /* m->message = (char *)malloc(length + 1); */
-  m->message = (char *)malloc(512); /* FIXME */
+  /* m->message = (char *)malloc_fatal(length + 1); */
+  m->message = (char *)malloc_fatal(512); /* FIXME */
   vsprintf(m->message, fmt, ap);
   he_messages = m;
   va_end(ap);
@@ -206,13 +206,13 @@ he_open_buffer(const char * const name, const char * const path)
         return -1;
       }
   }
-  *(buffer = (struct buffer_s *)malloc(sizeof(struct buffer_s))) = NO_BUFFER;
-  buffer->hedit = (struct he_s *)malloc(sizeof(struct he_s));
+  *(buffer = (struct buffer_s *)malloc_fatal(sizeof(struct buffer_s))) = NO_BUFFER;
+  buffer->hedit = (struct he_s *)malloc_fatal(sizeof(struct he_s));
   memset(buffer->hedit, 0, sizeof (struct he_s));
   buffer->hedit->begin_selection = -1;
   buffer->hedit->end_selection = -1;
   buffer->hedit->insert_position = -1;
-  buffer->hedit->buffer_name = strdup(name);
+  buffer->hedit->buffer_name = strdup_fatal(name);
   if (path && !no_file_f) {
     if (!(fp = fopen(path, "r"))) {
       he_message(1, "`%s': @Ab%s@~", path, strerror(errno));
@@ -228,13 +228,13 @@ he_open_buffer(const char * const name, const char * const path)
     buffer->visited_f = 1;
   }
   if (path) {
-    buffer->path = strdup(path);
+    buffer->path = strdup_fatal(path);
     if (!getcwd(cwd, PATH_MAX)) {
       he_message(0, "@Abcan't get cwd: %s@~", strerror(errno));
-      buffer->fullpath = strdup(path);
+      buffer->fullpath = strdup_fatal(path);
     } else {
       buffer->fullpath =
-        (char *)malloc(strlen(path) + strlen(cwd) + 2);
+        (char *)malloc_fatal(strlen(path) + strlen(cwd) + 2);
       sprintf(buffer->fullpath, "%s/%s", cwd, path);
     }
   }
@@ -273,7 +273,7 @@ he_select_buffer_(const struct buffer_s * const buffer)
     }
     /* check out if we can open a swapfile */
     i->hedit->swapfile =
-      (char *)malloc(strlen(hexer_ext) + strlen(i->path) + 1);
+      (char *)malloc_fatal(strlen(hexer_ext) + strlen(i->path) + 1);
     strcpy(i->hedit->swapfile, i->path);
     strcat(i->hedit->swapfile, hexer_ext);
     if (access(i->hedit->swapfile, R_OK)) {
@@ -291,7 +291,7 @@ he_select_buffer_(const struct buffer_s * const buffer)
       he_message(1, "@Abwarning: swapfile@~ `%s' @Abexists@~",
                  i->hedit->swapfile);
       i->hedit->swapfile =
-        (char *)realloc(i->hedit->swapfile,
+        (char *)realloc_fatal(i->hedit->swapfile,
                       strlen(i->hedit->swapfile) + strlen(swap_template) + 1);
         strcat(i->hedit->swapfile, swap_template);
       if ((swapfd = mkstemp(i->hedit->swapfile)) < 0)
