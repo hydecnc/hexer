@@ -154,7 +154,7 @@ tio_get(void);
   /* Read a character from the keyboard.  `tio_getch()' waits for input,
    * `tio_get()' returns `HXKEY_NONE' (0) if no input is available.
    * The functions return the following special keys:
-   *   HXKEY_ERROR                an error occured while waiting for input.
+   *   HXKEY_ERROR                an error occurred while waiting for input.
    *                            NOTE: Changing the size of the window causes
    *                              `tio_getch()' to return `HXKEY_ERROR'.
    *   HXKEY_NONE                 no key.
@@ -492,13 +492,13 @@ tio_delete_character(void);
 
   int
 tio_readwait(int timeout);
-  /* Wait until input is availabe on `stdin' using `select()'.
+  /* Wait until input is available on `stdin' using `select()'.
    * The `timeout' is measured in microseconds.  If `timeout' is a negative
-   * value, `tio_readwait()' blocks until input is availabe.  If
+   * value, `tio_readwait()' blocks until input is available.  If
    * `timeout == 0', `tio_readwait()' will return immeiately.
    * Return values:
    *  1  Success.  Data available on `stdin'.
-   *  0  Timeout.  No input availabe.
+   *  0  Timeout.  No input available.
    *  -1 Error.  See `select(2)'.
    * If `tio_readwait()' is interrupted by a signal, -1 is returned and
    * `errno' is set to `EINTR'.

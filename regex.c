@@ -213,7 +213,7 @@ static long rx_match_skip;
    */
 
 int rx_nomagic = 0;
-  /* `rx_nomagic == 1': all special characters exept `*' and `[' have to be
+  /* `rx_nomagic == 1': all special characters except `*' and `[' have to be
    *   prefixed with `\'.
    */
 int rx_allmagic = 0;

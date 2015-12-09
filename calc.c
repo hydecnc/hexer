@@ -1185,7 +1185,7 @@ dec:    base = 10, r = p;
         x.u.uo = OP_PARCLOSE;
         break;
       default:
-        calc_error(stack + sp++, "unexpected caracter %c (0x%x)",
+        calc_error(stack + sp++, "unexpected character %c (0x%x)",
                    isprint(*p) ? *p : ' ', (int)(unsigned char)*p);
         return -1;
       }

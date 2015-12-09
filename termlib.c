@@ -370,7 +370,7 @@ vtencode(const char * const cmd, va_list ap)
    * NOTE:  the escapes %>xy, %i, %n, %B and %D affect all parameters.
    */
 {
-  int prm[16], prmn;  /* array of paramters; `prmn' elements. */
+  int prm[16], prmn;  /* array of parameters; `prmn' elements. */
   static char buf[256];
   char *cp = cmd; /* command pointer */
   char *bp = buf; /* buffer pointer */

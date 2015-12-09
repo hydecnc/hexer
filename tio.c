@@ -1004,12 +1004,12 @@ tio_getch_(void)
   tio_unget_count = 0;
 
   /* Try to read one character from the input stream.  If the terminal is not
-   * in keypad transmit mode, the caracter is returned.
+   * in keypad transmit mode, the character is returned.
    */
   switch (tio_read(cbuf, 1)) {
   case -1:
     return (int)HXKEY_ERROR;
-      /* The occurence of an error in `tio_read()' is likely to be caused by
+      /* The occurrence of an error in `tio_read()' is likely to be caused by
        * the signal `SIGWINCH', indicating that the size of the window has
        * changed.
        */
