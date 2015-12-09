@@ -122,14 +122,83 @@ he_digit(int key)
 /* he_digit */
 
 
+static int refresh_mergeable(const int last1, const int first2, const int last2, int * const nlast)
+{
+  if (last1 == -1) {
+    *nlast = -1;
+    return 1;
+  } else if (first2 == 0 || last1 >= first2 - 1) {
+    *nlast = last2 == -1? -1:
+      last2 > last1? last2: last1;
+    return 1;
+  }
+  return 0;
+}
+
   void
 he_refresh_lines(struct he_s * const hedit, const int first, const int last)
 {
-  if (!hedit->refresh.flag) ++hedit->refresh.flag;
-  hedit->refresh.first[hedit->refresh.parts] = first;
-  hedit->refresh.last[hedit->refresh.parts] = last;
-  ++hedit->refresh.parts;
-  assert(hedit->refresh.parts <= HE_REFRESH_MAX_PARTS);
+  struct he_refresh_s * const refresh = &hedit->refresh;
+  if (!refresh->flag) refresh->flag = 1;
+
+  /* Find out which part this should be inserted before. */
+  const size_t parts = refresh->parts;
+  size_t next;
+  for (next = 0; next < parts; next++)
+    if (refresh->first[next] >= first)
+      break;
+  int nlast;
+  size_t merge_first;
+  if (next > 0 &&
+    refresh_mergeable(refresh->last[next - 1], first, last, &nlast)) {
+    /* It overlaps with the previous one. */
+    refresh->last[next - 1] = nlast;
+    merge_first = next - 1;
+  } else if (next < parts &&
+    refresh_mergeable(last, refresh->first[next], refresh->last[next], &nlast)) {
+    /* It overlaps with the next one. */
+    if (refresh->first[next] > first)
+      refresh->first[next] = first;
+    refresh->last[next] = nlast;
+    merge_first = next;
+  } else {
+    /* Make room for one more! */
+    assert(parts < HE_REFRESH_MAX_PARTS);
+    memmove(refresh->first + next + 1, refresh->first + next,
+      (parts - next) * sizeof(refresh->first[0]));
+    memmove(refresh->last + next + 1, refresh->last + next,
+      (parts - next) * sizeof(refresh->last[0]));
+    refresh->first[next] = first;
+    refresh->last[next] = last;
+    refresh->parts++;
+    return;
+  }
+
+  /**
+   * Right, we extended some refresh entry, let's see how much further
+   * we can go.
+   */
+  for (next = merge_first + 1; next < parts; next++) {
+    if (!refresh_mergeable(refresh->last[merge_first],
+      refresh->first[next], refresh->last[next], &nlast))
+      break;
+    refresh->last[merge_first] = nlast;
+  }
+  /* If we merged at least one, move the rest back.
+   * Right now 'next' points to the first one that could not be merged at
+   * the end of 'merge_first'.
+   */
+  const size_t removed = next - (merge_first + 1);
+  if (removed > 0) {
+    const size_t left = parts - next;
+    if (left > 0) {
+      memmove(refresh->first + merge_first + 1, refresh->first + next,
+	left * sizeof(refresh->first[0]));
+      memmove(refresh->last + merge_first + 1, refresh->last + next,
+	left * sizeof(refresh->last[0]));
+    }
+    refresh->parts -= removed;
+  }
 }
 /* he_refresh_lines */
 
