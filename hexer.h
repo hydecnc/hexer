@@ -121,7 +121,7 @@ struct he_message_s {
 extern struct he_message_s *he_messages;
 
 void
-he_message( int beep, const char *fmt, ... );
+he_message( int beep, const char *fmt, ... ) __printflike(2, 3);
 
 void
 he_refresh_part(struct he_s *hedit, long pos1, long pos2);
@@ -340,7 +340,7 @@ char *
 he_query_command(const char *, const char *, int);
 
 int
-he_query_yn( int dfl, const char *fmt, ... );
+he_query_yn( int dfl, const char *fmt, ... ) __printflike(2, 3);
 
 int
 he_mainloop(struct he_s *hedit);

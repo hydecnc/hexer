@@ -11,8 +11,10 @@
 #ifndef __unused
 #ifdef __GNUC__
 #define __unused __attribute__((unused))
+#define __printflike(x, y) __attribute__((format(printf, x, y)))
 #else  /* __GNUC__ */
 #define __unused
+#define __printflike(x, y)
 #endif /* __GNUC__ */
 #endif /* __unused */
 

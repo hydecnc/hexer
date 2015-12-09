@@ -197,10 +197,10 @@ int tio_tite_f = 0;
    * terminal.
    */
 
-static void tio_error_msg( const char *fmt, ... );
-static void tio_warning_msg( const char *fmt, ... );
-void (*error_msg)( const char *, ... ) = tio_error_msg;
-void (*warning_msg)( const char *, ... ) = tio_warning_msg;
+static void tio_error_msg( const char *fmt, ... ) __printflike(1, 2);
+static void tio_warning_msg( const char *fmt, ... ) __printflike(1, 2);
+void (*error_msg)( const char *, ... ) __printflike(1, 2) = tio_error_msg;
+void (*warning_msg)( const char *, ... ) __printflike(1, 2) = tio_warning_msg;
 void (*tio_winch)(void);
 
 int hx_lines; /* Number of lines. */

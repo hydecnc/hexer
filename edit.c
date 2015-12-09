@@ -1287,7 +1287,7 @@ exit_visual_mode2:
   tio_set_cursor(1); /* normal cursor. */
   f = hedit->refresh.message_f;
   he_update_screen(hedit);
-  if (!f) he_message(0, "");
+  if (!f) he_message(0, " ");
 }
 /* he_visual_mode */
 
@@ -1369,7 +1369,7 @@ he_get_counter(struct he_s *hedit)
       if (indent < 0) indent = 0;
       tio_return();
       tio_right(indent);
-      tio_printf(arg);
+      tio_printf("%s", arg);
       tio_clear_to_eol();
     } else {
       int indent = 60;
@@ -1379,7 +1379,7 @@ he_get_counter(struct he_s *hedit)
       if (indent < 0) indent = 0;
       tio_return();
       tio_right(indent);
-      tio_printf(prefix);
+      tio_printf("%s", prefix);
       tio_clear_to_eol();
     }
     tio_flush();

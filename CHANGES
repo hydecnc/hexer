@@ -7,6 +7,7 @@ Change log for hexer, the multi-view binary editor
 	  (reported by Daniel Schepler <dschepler@gmail.com>)
 	- remove some unused functions
 	- simplify exh_save_buffer(): it's only used on the whole file
+	- declare some functions as printf-like
 
 0.1.8	2014/09/11
 	- fix a crash when inserting or replacing a half-byte

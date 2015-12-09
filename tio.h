@@ -111,7 +111,7 @@ extern struct t_keynames_s {
   char *name;
 } t_keynames[];
 
-void (*error_msg)( const char *, ... );
+void (*error_msg)( const char *, ... ) __printflike(1, 2);
   /* Pointer to the error message function.
    */
 
@@ -348,7 +348,7 @@ tio_message(char **message, int indent);
    */
 
   int
-tio_printf( const char *fmt, ... );
+tio_printf( const char *fmt, ... ) __printflike(1, 2);
 
   int
 tio_vprintf(const char *fmt, va_list);
@@ -359,7 +359,7 @@ tio_vprintf(const char *fmt, va_list);
    */
 
   int
-tio_raw_printf( const char *fmt, ... );
+tio_raw_printf( const char *fmt, ... ) __printflike(1, 2);
 
   int
 tio_raw_vprintf(const char *fmt, va_list);
