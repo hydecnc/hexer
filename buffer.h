@@ -188,28 +188,6 @@ delete_buffer(Buffer *buffer);
   /* Destruktor fuer 'Buffer'.
    */
 
-  int
-copy_buffer(Buffer *target, Buffer *source);
-  /* Kopierfunktion fuer 'Buffer'. Es wird nur eine *inhaltliche*n Kopie
-   * des Buffers angelegt, d.h. die Blockgroessen von '*target' und
-   * '*source' bleiben unveraendert.
-   * target:
-   *   Zeiger auf den Zielbuffer.
-   * source:
-   *   Zeiger auf den Quellbuffer.
-   * Rueckgabe:
-   *   Immer 0. Eine Fehlerabfrage ist noch nicht implementiert.
-   *   (Im Fehlerfall sollte -1 geliefert werden.)
-   * BEMERKUNG: Der Zielbuffer '*target' muss existieren, d.h. die Funktion
-   *   darf nicht als Konstruktor missbraucht werden.
-   */
-
-  void
-clear_buffer(Buffer *buffer);
-  /* Loescht den Buffer '*buffer', d.h. buffer zeigt nach dem Aufruf auf
-   * einen leeren Buffer. (Diese Funktion ruft einfach nur 'b_clear()' auf.
-   */
-
   BufferBlock *
 find_block(Buffer *buffer, unsigned long position);
   /* Liefert einen Zeiger auf den BufferBlock des Buffers '*buffer', in dem
@@ -270,22 +248,6 @@ b_write_append(Buffer *buffer, char *source,
 b_append(Buffer *buffer, char *source, unsigned long count);
   /* Haengt `count' Bytes aus `source' an das Bufferende an.  Im Fehlerfall
    * wird -1 zurueckgeliefert, `count' sonst.
-   */
-
-  long
-b_fill(Buffer *buffer, char c, unsigned long position, unsigned long count);
-  /* Wie 'b_write', nur dass der angegebene Speicherbereich mit dem Zeichen
-   * 'c' beschrieben wird. Die Funktion schreibt nicht ueber das Ende des
-   * Buffers hinaus und liefert die Anzahl der geschriebenen Zeichen zurueck.
-   * Eine Fehlerabfrage ist nicht implementiert.
-   */
-
-  long
-b_fill_append(Buffer *buffer, char c, unsigned long position, unsigned long count);
-  /* Wie 'b_fill', es kann aber auch an Positionen jenseits des Bufferendes
-   * geschrieben werden. Der Inhalt des Buffers zwischen vorherigem Bufferende
-   * und 'position' ist undefiniert. Im Fehlerfall wird -1 geliefert,
-   * 'count' sonst.
    */
 
   unsigned long
@@ -373,100 +335,6 @@ b_goto_line(Buffer *buffer, unsigned long number);
   /* Liefert die Byteposition des Anfangs der Zeile 'number'. Falls
    * 'number' eine Zeilennummer groesser/gleich der Zeilenzahl des
    * Buffers ist, wird -1 geliefert.
-   */
-
-  unsigned long
-b_get_linenumber(Buffer *buffer, unsigned long position);
-  /* Liefert die Nummer der Zeile, in der sich die Position 'position'
-   * befindet. Falls 'position' ausserhalb der Buffergrenzen liegt,
-   * wird -1 geliefert.
-   */
-
-  long
-b_line_start(Buffer *buffer, unsigned long position);
-  /* Liefert die Position des Anfangs der Zeile, in der sich die Position
-   * 'position' befindet. Falls 'position' ausserhalb der Buffergrenzen
-   * liegt, wird -1 geliefert.
-   * Ausnahme: Fuer negative Werte von 'position' wird immer 0 geliefert.
-   */
-
-  long
-b_line_end(Buffer *buffer, unsigned long position);
-  /* Liefert die Position des Zeilentrenners der Zeile, in der sich
-   * die Position 'position' befindet. Falls 'position' ausserhalb der
-   * Buffergrenzen liegt, wird -1 geliefert.
-   */
-
-  long
-b_length_of_line(Buffer *buffer, unsigned long number);
-  /* Liefert die Laenge der Zeile 'number' (incl. Zeilentrenner) und 0,
-   * falls diese Zeile nicht existiert.
-   * NOTE: Falls 'number' die letzte Zeile im Buffer ist und der Buffer
-   *   *nicht* mit einem Zeilentrenner endet, tut die Funktion so, als
-   *   waere der Zeilentrenner vorhanden.
-   */
-
-  long
-b_length_of_text_block(Buffer *buffer, unsigned long number, unsigned long count);
-  /* Liefert die Laenge des 'count' Zeilen langen Textblocks ab Zeile
-   * 'number' (incl. der Zeilentrenner). Falls die Zeile 'number' nicht
-   * existiert, wird 0 geliefert. Falls nach der Zeile 'number' keine
-   * wieteren 'count - 1' Zeilen existieren, werden die nicht existierenden
-   * Zeilen als Zeilen der Laenge 0 aufgefasst.
-   * NOTE: Zeilen, die nur aus einem Zeilentrenner bestehen, sind Zeilen
-   *   der Laenge 1.
-   */
-
-  long
-b_read_line(Buffer *buffer, char *line, unsigned long number);
-  /* Kopiert die Zeile 'number' nach 'line' und liefert die Laenge
-   * der kopierten Zeile (incl. Endezeichen).
-   * NOTE: Die Funktion ersetzt den Zeilerntrenner '\n' durch ein
-   *   Stringende-Zeichen '\0', d.h. der Rueckgabewert der Funktion
-   *   'b_length_of_line()' kann fuer den betreffenden 'malloc()'-Aufruf
-   *   verwendet werden.
-   */
-
-  long
-b_read_text_block(Buffer *buffer, char *target,
-                      unsigned long number, unsigned long count);
-  /* Kopiert ab Zeile 'number' (incl.) 'count' Zeilen nach 'target'.
-   * Die Zeilentrenner werden mitkopiert, der letzte Zeilentrenner wird
-   * durch ein '\0' ersetzt. Liefert die Anzahl der kopierten Bytes (analog
-   * zu 'b_lenght_of_text_block()').
-   */
-
-  long
-b_delete_line(Buffer *buffer, unsigned long number);
-  /* Loescht die Zeile 'number' (incl. Zeilentrenner) aus dem Buffer.
-   * Liefert die Anzahl der geloeschten Bytes und 0 bei einer ungueltigen
-   * Zeilenangabe.
-   */
-
-  long
-b_delete_text_block(Buffer *buffer, unsigned long number, unsigned long count);
-  /* Loescht ab Zeile 'number' (incl.) 'count' Zeilen.
-   * Liefert die Anzahl der geloeschten Bytes und 0 bei einer ungueltigen
-   * Bereichsangabe.
-   */
-
-  long
-b_clear_line(Buffer *buffer, unsigned long number);
-  /* Wie 'b_delete_line()', nur dass der Zeilentrenner nicht mitgeloescht
-   * wird. Geliefert wird die Anzahl der geloeschten Bytes + 1 und 0, falls
-   * die Zeilenangabe ungueltig war.
-   * NOTE: Falls eine Zeile nur den Zeilentrenner enthaelt, wird eine 1
-   * geliefert.
-   */
-
-  long
-b_insert_text_block(Buffer *buffer, char *source, unsigned long number);
-  /* Der gegebene Textblock 'source' wird nach der Zeile 'number'
-   * eingefuegt. Das Stringende-Zeichen '\0' von 'source' wird dabei in
-   * einen Zeilentrenner umgewandelt. Falls 'number' eine negative Zahl
-   * ist, wird der Textblock am Ende des Buffers angehaengt, falls 'number'
-   * ausserhalb des Buffers liegt, wird  das als Fehler interpretiert.
-   * Geliefert wird die Anzahl der eingefuegten Bytes und -1 im Fehlerfall. 
    */
 
 /* In diesem Zusammenhang sind weitere Funktionen geplant, die den gelesenen
