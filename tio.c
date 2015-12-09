@@ -102,7 +102,19 @@
 int tio_readwait_timeout = TIO_READWAIT_TIMEOUT;
 
 #if !HAVE_VASPRINTF
-static char printfbuf[2048];
+static int my_vasprintf(char ** const dst, const char * const fmt, va_list v)
+{
+  char * const p = malloc(2048);
+  const int n = vsnprintf(p, 2048, fmt, v);
+  if (n < 0 || n >= 2048) {
+    free(p);
+    return -1;
+  }
+  *dst = p;
+  return n;
+}
+#undef vasprintf
+#define vasprintf(dst, fmt, v) my_vasprintf((dst), (fmt), (v))
 #endif
 
 volatile int *tio_interrupt;
@@ -1959,18 +1971,11 @@ tio_vprintf(const char * const fmt, va_list ap)
   char *s;
   int rval;
 
-#if HAVE_VASPRINTF
   rval = vasprintf(&s, fmt, ap);
-#else
-  rval = vsnprintf(printfbuf, sizeof(printfbuf), fmt, ap);
-  s = printfbuf;
-#endif
   if (rval == -1)
     return rval;
   tio_display(s, 0);
-#if HAVE_VASPRINTF
   free((char *)s);
-#endif
   return rval;
 }
 /* tio_vprintf */
@@ -1996,18 +2001,11 @@ tio_raw_vprintf(const char *fmt, va_list ap)
   char *s;
   int rval;
 
-#if HAVE_VASPRINTF
   rval = vasprintf(&s, fmt, ap);
-#else
-  rval = snprintf(printfbuf, sizeof(printfbuf), fmt, ap);
-  s = printfbuf;
-#endif
   if (rval == -1)
     return rval;
   tio_puts(s);
-#if HAVE_VASPRINTF
   free((char *)s);
-#endif
   return rval;
 }
 /* tio_raw_vprintf */

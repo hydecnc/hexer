@@ -2,6 +2,7 @@ Change log for hexer, the multi-view binary editor
 
 0.1.9	not yet ;)
 	- fix a lot of C compiler warnings
+	- provide a better vasprintf() simulation to fix a display bug
 
 0.1.8	2014/09/11
 	- fix a crash when inserting or replacing a half-byte
