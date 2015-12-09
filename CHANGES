@@ -10,6 +10,7 @@ Change log for hexer, the multi-view binary editor
 	- declare some functions as printf-like
 	- handle short reads/writes and read/write errors
 	- bump the year on my copyright notice
+	- fix a signed/unsigned char bug when reading the swapfile
 
 0.1.8	2014/09/11
 	- fix a crash when inserting or replacing a half-byte

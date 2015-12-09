@@ -100,12 +100,13 @@ he_bigendian(unsigned long x)
   static unsigned long
 he_bigendian_to_ulong(char *bigendian)
 {
+  const unsigned char * const be = (const unsigned char *)bigendian;
   unsigned long x;
 
-  x = (unsigned long)bigendian[3]
-      + ((unsigned long)bigendian[2] << 8)
-      + ((unsigned long)bigendian[1] << 16)
-      + ((unsigned long)bigendian[0] << 24);
+  x = (unsigned long)be[3]
+      + ((unsigned long)be[2] << 8)
+      + ((unsigned long)be[1] << 16)
+      + ((unsigned long)be[0] << 24);
   return x;
 }
 /* he_bigendian_to_long */
