@@ -49,6 +49,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "buffer.h"
 #include "hexer.h"
@@ -116,6 +117,20 @@ strerror(int errnum)
   return (errbuf);
 }
 #endif /* HAVE_STRERROR */
+
+int
+write_buf(const int fd, const char * const buf, const size_t len)
+{
+  size_t written = 0;
+
+  while (written < len) {
+    const size_t n = write(fd, buf + written, len - written);
+    if (n < 1)
+      return -1;
+    written += n;
+  }
+  return written;
+}
 
 /* end of util.c */
 

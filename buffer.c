@@ -57,6 +57,7 @@
 
 #include "buffer.h"
 #include "defs.h"
+#include "util.h"
 
 struct BufferOptions b_default_options = {
   BUFFER_BLOCKSIZE,
@@ -457,6 +458,7 @@ b_read_buffer_from_file(Buffer * const buffer, const char * const filename)
   BufferBlock *i = 0;
   char *tmp;
   int file = open(filename, O_RDONLY);
+  int err_f = 0;
     
   assert(!buffer->read_only);
   BUFFER_CHANGED(buffer);
@@ -485,12 +487,16 @@ b_read_buffer_from_file(Buffer * const buffer, const char * const filename)
       }
       buffer->size += bytes_read;
     } else {
-      /* FIXME: handle read errors here */
+      err_f = bytes_read < 0;
       free((char *)tmp);
       break;
     }
   } while (1);
   close(file);
+  if (err_f) {
+    b_clear(buffer);
+    return -1;
+  }
   return buffer->size;
 }
 /* b_read_buffer_from_file */
@@ -510,14 +516,13 @@ b_write_buffer_to_file(Buffer *buffer, char *filename)
        i;
        i = i->next_block, blocks++) {
     ssize_t bytes;
-    bytes = write(file,
+    bytes = write_buf(file,
                   i->data,
                   (blocks * bs > buffer->size) ? buffer->size % bs : bs);
     if (bytes < 0) {
       close(file);
       return -1;
     }
-    /* FIXME: handle short writes */
     bytes_wrote += bytes;
   }
   close(file);
@@ -541,8 +546,7 @@ b_copy_to_file(Buffer *buffer, const char *filename, unsigned long position, uns
     bytes_read =
       b_read(buffer, tmp, position,
 	     (buffer->blocksize < count) ? buffer->blocksize : count);
-    if (bytes_read < 0 || write(file, tmp, bytes_read) < 0) {
-      /* FIXME: handle short writes */
+    if (bytes_read < 0 || write_buf(file, tmp, bytes_read) < 0) {
       free((char *)tmp);
       close(file);
       return -1;
@@ -574,8 +578,7 @@ b_paste_from_file(Buffer *buffer, const char *filename, unsigned long position)
   BUFFER_CHANGED(buffer);
   do {
     bytes_read = read(file, tmp, buffer->blocksize);
-    /* FIXME: handle read errors */
-    if (b_insert(buffer, position, bytes_read) < 0) {
+    if (bytes_read < 0 || b_insert(buffer, position, bytes_read) < 0) {
       free((char *)tmp);
       close(file);
       return -1;

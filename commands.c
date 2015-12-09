@@ -1155,12 +1155,8 @@ exhcmd_help(struct he_s *hedit, const char *args, long begin __unused, long end 
     close(pipefd[1]);
     goto exit_exhcmd_help;
   } else if (!pid2) { /* child */
-    size_t len, n;
-    ssize_t res;
-
-    for (n = 0, len = strlen(helptext); n < len; n += res)
-      if ((res = write(pipefd[1], helptext + n, len - n)) == -1)
-	exit(1);
+    if (write_buf(pipefd[1], helptext, strlen(helptext)) < 0)
+      exit(1);
     close(pipefd[1]);
     exit(0);
   }

@@ -67,6 +67,7 @@
 #include "regex.h"
 #include "set.h"
 #include "tio.h"
+#include "util.h"
 
 #define EXH_DEFAULT_SHELL "/bin/sh"
 #define EXH_DEFAULT_PAGER "more"
@@ -143,8 +144,8 @@ exh_shell_command(const char * const command, int pager_f)
         close(pipe2[0]);
         close(pipe2[1]);
         /* send the command to the shell */
-        if (write(pipe1[1], command, strlen(command)) != (ssize_t)strlen(command) ||
-	    write(pipe1[1], "\n", 1) != 1) {
+        if (write_buf(pipe1[1], command, strlen(command)) < 0 ||
+	    write_buf(pipe1[1], "\n", 1) < 0) {
 	  close(pipe1[1]);
 	  he_message(1, "couldn't send the `%s' command to the pager", command);
 	  close(pipe2[0]);
@@ -197,8 +198,8 @@ exh_shell_command(const char * const command, int pager_f)
         exit(EXIT_EXEC_FAILED);
       }
     } else { /* !pager_f */
-      if (write(pipe1[1], command, strlen(command)) != (ssize_t)strlen(command) ||
-	  write(pipe1[1], "\n", 1) != 1) {
+      if (write_buf(pipe1[1], command, strlen(command)) < 0 ||
+	  write_buf(pipe1[1], "\n", 1) < 0) {
 	close(pipe1[1]);
 	he_message(1, "couldn't send command `%s' to pager", command);
       } else {

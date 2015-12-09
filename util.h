@@ -48,5 +48,6 @@ char		*strerror(int);
 
 int		 util_strsort(char **);
 int		 util_trunc(char *);
+int		 write_buf(int, const char *, size_t);
 
 #endif /* _UTIL_H_ */
