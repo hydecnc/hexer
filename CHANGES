@@ -1,6 +1,6 @@
 Change log for hexer, the multi-view binary editor
 
-0.2.0	not yet ;)
+0.2.0	2015/12/09
 	- fix a lot of C compiler warnings
 	- provide a better vasprintf() simulation to fix a display bug
 	- use sigemptyset() instead of a direct assignment to sigset_t
