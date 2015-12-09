@@ -785,7 +785,7 @@ tio_init(const char * const prog)
 #ifdef SA_INTERRUPT
     static struct sigaction act;
     act.sa_handler = sigwinch_handler;
-    act.sa_mask = 0;
+    sigemptyset(&act.sa_mask);
     act.sa_flags = SA_INTERRUPT;
     sigaction(SIGWINCH, &act, 0);
 #else
