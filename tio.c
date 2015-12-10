@@ -1688,6 +1688,7 @@ tio_normal(void)
 tio_reset_attributes(void)
 {
   tio_command(t_all_off, 1);
+  tio_clear_to_eol();
 }
 /* tio_reset_attributes */
 
