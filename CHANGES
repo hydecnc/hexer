@@ -1,5 +1,7 @@
 Change log for hexer, the multi-view binary editor
 
+0.2.2	not yet ;)
+
 0.2.1	2015/12/10
 	- fix some more typographical errors
 	- abort on memory allocation failures (malloc(), realloc(),
