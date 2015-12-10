@@ -603,7 +603,7 @@ check_terminal:
   command[i] = 0;
 
   if (!*command) {
-    /* no command.  go to the given address, if two adresses were selected,
+    /* no command.  go to the given address, if two addresses were selected,
      * select the specified area.  */
     if (end > begin) { /* area */
       he_select(hedit, begin, end);

@@ -443,7 +443,7 @@ static struct t_strings_s {
 
 static struct t_require_s {
   const char *required[T_REQ_MAX_CAPS];
-    /* A null-terminated list of string capabisities.  At least one of the
+    /* A null-terminated list of string capabilities.  At least one of the
      * capabilities in the list has to be present in the termcap entry.
      * At most `T_REQ_MAX_CAPS' capabilities may be listed.
      */
@@ -936,7 +936,7 @@ tio_keypad(const int on)
 /* tio_keypad */
 
 /* The functions `tio_read()' and `tio_unread()' are an interface to the
- * standard input stream (stdin).  It is possibe to unread an arbitrary
+ * standard input stream (stdin).  It is possible to unread an arbitrary
  * number of characters (at most 4096).  `tio_read()' and `tio_unread()'
  * are called by `tio_getch_()'.
  */
@@ -1045,7 +1045,7 @@ tio_getch_(void)
   }
 
   /* If the read character is a prefix of a known key string, characters
-   * are read from the input stream until a key string is recoginzed,
+   * are read from the input stream until a key string is recognized,
    * the read string is no longer a prefix of a known key string or no
    * characters arrived for `t_timeout' tenths of a second.
    */
@@ -1315,11 +1315,11 @@ tio_keyscan(int *key, char *s, int mode)
 tio_echo(const int on)
   /* on=1:  characters are echoed as they are typed.
    * on=0:  characters are not echoed.
-   * Thie echo-option has no effect on other `tio_*'-functions,
+   * The echo-option has no effect on other `tio_*'-functions,
    * i.e. `tio_getch()' won't ever echo the character it reads.
    * RETURN VALUE:  `tio_echo()' returns the previous echo-state; that is
    *   1 if echo was set and 0 if echo was clear.
-   * NOTE:  You may want to turn of the echo if your program is makeing
+   * NOTE:  You may want to turn of the echo if your program is making
    *   several successive calls to `tio_getch()', so the characters typed
    *   between two calls to `tio_getch()' won't be echoed on the screen.
    */

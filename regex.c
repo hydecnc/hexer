@@ -1210,7 +1210,7 @@ compile:
 	    rx_error = (int)E_unmatched_closing_parenthesis;
 	    break;
 	  }
-	  /* if `i' is set, `j' holds the uniqe length of all branches. */
+	  /* if `i' is set, `j' holds the unique length of all branches. */
 	  if (i) {
 	    BRANCH_LEN_INC(j);
 	  } else {

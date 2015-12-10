@@ -500,7 +500,7 @@ tio_readwait(int timeout);
   /* Wait until input is available on `stdin' using `select()'.
    * The `timeout' is measured in microseconds.  If `timeout' is a negative
    * value, `tio_readwait()' blocks until input is available.  If
-   * `timeout == 0', `tio_readwait()' will return immeiately.
+   * `timeout == 0', `tio_readwait()' will return immediately.
    * Return values:
    *  1  Success.  Data available on `stdin'.
    *  0  Timeout.  No input available.

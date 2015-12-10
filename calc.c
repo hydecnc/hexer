@@ -930,7 +930,7 @@ exec: z = stack[sp - 3];
 exit_calc_reduce:
   return error_f ? -1 : reduce_f;
 
-eval: /* evaluate a parenthesed expression */
+eval: /* evaluate a parenthesized expression */
   if (sp > 1 && y.type == CO_UNARY_OPERATOR ? y.u.uo == OP_PAROPEN : 0) {
     calc_clear_stack(2);
     calc_error(stack + sp++, "empty parentheses");

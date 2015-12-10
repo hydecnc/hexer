@@ -1,6 +1,6 @@
 /* map.c	8/19/1995
  * Map some key-sequences to some key-sequences, version 0.3
- * Requieres: tio.o
+ * Requires: tio.o
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio

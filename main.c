@@ -98,7 +98,7 @@ static struct option longopts[] = {
   { "readonly", 0, 0, 'R' },
   { "view", 0, 0, 'v' },
   { "recover", 1, 0, 'r' },  /* recover from the given file. */
-  { "command", 1, 0, 'c' },  /* the given comand is executed in the first
+  { "command", 1, 0, 'c' },  /* the given command is executed in the first
                               * buffer. */
   { "help", 0, 0, 'h' },     /* print a short help message to `stdout'. */
   { "tite", 0, 0, 't' },     /* tite - turn off the ti/te sequence. */

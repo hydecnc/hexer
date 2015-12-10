@@ -57,7 +57,7 @@
  * 'b_default_options' (Modul buffer.o) festgelegt. Die Initialisierung
  * erfolgt mit Werten, die in 'defs.h' definiert sind.
  * Diese globale Variable *kann* vom user veraendert werden;
- * ich empfehle, dies nur in der Funtion 'main()' zu tun, um seltsame
+ * ich empfehle, dies nur in der Funktion 'main()' zu tun, um seltsame
  * Seiteneffekte zu vermeiden.
  */
 struct BufferOptions
@@ -72,7 +72,7 @@ struct BufferOptions
      * ----+---------------+----------------------------------------------
      * 0   | B_READ_ONLY   | Falls auf einen read-only Buffer ein
      *     |               | Schreibzugriff stattfindet, wird ein
-     *     |               | assertation failure ausgeloest.
+     *     |               | assertion failure ausgeloest.
      *     |               | Eine Optimierung der Lesezugriffe auf einen
      *     |               | read-only Buffer mit Paging ist geplant.
      * 8   | B_PAGING      | Bloecke werden bei Bedarf auf die Platte

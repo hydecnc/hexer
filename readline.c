@@ -956,7 +956,7 @@ dont_list:
 	} else
 	  tio_bell();
       } else {
-	/* comlpete as far as unique */
+	/* complete as far as unique */
 	size_t k = strlen(prefix);
 	assert(k > prefix_len);
 	size_t i, j;

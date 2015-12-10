@@ -39,7 +39,7 @@ strcasecmp(const char *s1, const char *s2)
   int
 usleep(unsigned long usecs)
   /* NOTE: this implementation of `usleep()' is not completely compatible
-   *   with the BSD 4.3 `usleep()'-function, since it can be interupted by
+   *   with the BSD 4.3 `usleep()'-function, since it can be interrupted by
    *   an incoming signal.
    */
 {

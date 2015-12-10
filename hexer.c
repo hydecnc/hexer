@@ -252,7 +252,7 @@ he_open_buffer(const char * const name, const char * const path)
   int
 he_select_buffer_(const struct buffer_s * const buffer)
   /* Set `current_buffer' to `buffer'.  The file for `buffer' is loaded if
-   * nessecarry.
+   * necessary.
    */
 {
   struct buffer_s *i;
