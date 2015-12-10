@@ -445,6 +445,11 @@ tio_normal(void);
    */
 
   void
+tio_reset_attributes(void);
+  /* Reset all display attributes.
+   */
+
+  void
 tio_set_cursor(int mode);
   /* Set the visibility of the cursor.
    * `mode == 0':  invisible.

@@ -240,6 +240,7 @@ main(const int argc, char * const argv[])
   tio_goto_line(hx_lines - 1);
   tio_return();
   tio_end_application();
+  tio_reset_attributes();
   tio_reset();
   return 0;
 }
