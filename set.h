@@ -10,14 +10,14 @@
  * are met:
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
- *    If you modify any part of HEXER and resitribute it, you must add
+ *    If you modify any part of HEXER and redistribute it, you must add
  *    a notice to the `README' file and the modified source files containing
  *    information about the  changes you made.  I do not want to take
  *    credit or be blamed for your modifications.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- *    If you modify any part of HEXER and resitribute it in binary form,
+ *    If you modify any part of HEXER and redistribute it in binary form,
  *    you must supply a `README' file containing information about the
  *    changes you made.
  * 3. The name of the developer may not be used to endorse or promote
