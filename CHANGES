@@ -3,6 +3,8 @@ Change log for hexer, the multi-view binary editor
 0.2.2	not yet ;)
 	- reset the terminal color attributes on exit
 	  (reported by Jakub Wilk <jwilk@debian.org>)
+	- also reset the attributes on suspend (Ctrl-Z) and restore
+	  them on resume
 
 0.2.1	2015/12/10
 	- fix some more typographical errors

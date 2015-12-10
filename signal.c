@@ -88,6 +88,7 @@ sigtstp_handler(int sig __unused)
   tio_return();
   tio_clear_to_eol();
   tio_printf("@AbStopped@~.  Type `fg' to restart @Abhexer@~.\n");
+  tio_reset_attributes();
   tio_flush();
   kill(0, SIGSTOP);
   return SIG_RVAL;

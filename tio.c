@@ -2153,6 +2153,7 @@ tio_restart(void)
   if (t_application_mode_recover) tio_start_application();
   tcsetattr(0, TCSANOW, &ts_recover);
   tio_init(0);
+  tio_normal();
 }
 /* tio_restart */
 
