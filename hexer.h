@@ -52,7 +52,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#if NEED_ALLOCA_H
+#if HAVE_ALLOCA_H
 #include <alloca.h>
 #else
 /**
