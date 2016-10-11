@@ -35,30 +35,6 @@ strcasecmp(const char *s1, const char *s2)
 /* strcasecmp */
 #endif
 
-#if !HAVE_USLEEP
-  int
-usleep(unsigned long usecs)
-  /* NOTE: this implementation of `usleep()' is not completely compatible
-   *   with the BSD 4.3 `usleep()'-function, since it can be interrupted by
-   *   an incoming signal.
-   */
-{
-#ifdef FD_ZERO
-  struct timeval tv;
-
-  tv.tv_sec = usecs / 1000000;
-  tv.tv_usec = usecs & 1000000;
-  select(0, 0, 0, 0, &tv);
-#else
-  struct pollfd fd;
-
-  poll(&fd, 0, usecs > 1999 ? usecs / 1000 : 1);
-#endif
-  return 0;
-}
-/* usleep */
-#endif
-
 /* end of port.c */
 
 

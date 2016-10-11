@@ -62,14 +62,7 @@ CTAGS = ctags -tawf tags
 OBJECTS = buffer.o tio.o edit.o main.o hexer.o readline.o regex.o port.o \
           exh.o set.o map.o signal.o util.o commands.o helptext.o calc.o
 
-all: config.check $(HEXER)
-
-config.check:
-	@{  if [ ! -f config.h ]; then \
-	      echo '***' Please read the file README on how to configure and; \
-	      echo '***' compile hexer.\  Thank you.; \
-	      exit 1; \
-	    fi; }
+all: $(HEXER)
 
 $(HEXER): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
@@ -83,8 +76,35 @@ bin2c: bin2c.c
 helptext.c: help.txt bin2c
 	./bin2c -n helptext -o $@ help.txt
 
-.c.o:
+.c.o:	config.h
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+%.o:	%.c config.h
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
+config.h:
+	[ ! -e config.h.auto ] || rm config.h.auto
+	for item in \
+		STRCMP		\
+		STRCASECMP	\
+		SIGTYPE_INT	\
+		MEMMOVE		\
+		FLOAT_H		\
+		ALLOCA_H	\
+		STRERROR	\
+		VASPRINTF	\
+	    ; do \
+		echo "Testing for $$item"; \
+		if $(CC) $(CPPFLAGS) $(CFLAGS) -D"TEST_$$item" -c -o config-test.o -Werror config-test.c; then \
+			value=1; \
+		else \
+			value=0; \
+		fi; \
+		echo "- result: $$value"; \
+		printf "#define HAVE_%s\\t%d\\n" "$$item" "$$value" >> config.h.auto; \
+	done
+	[ ! -e config.h ] || rm config.h
+	mv config.h.auto config.h
 
 tags: *.c *.h
 	-@{ \
@@ -98,7 +118,7 @@ tags: *.c *.h
 
 dep: depend
 
-depend: *.c *.h
+depend: *.c *.h config.h
 	-rm -f Makefile~
 	sed '/\#\#\# DO NOT DELETE THIS LINE \#\#\#/q' \
 	  < Makefile > Makefile~
@@ -115,6 +135,8 @@ depend: *.c *.h
 
 clean:
 	rm -f $(HEXER) $(MYC) gen_testfile $(OBJECTS) bin2c
+	rm -f config-test.o
+	rm -f config.h
 	rm -f helptext.c TESTFILE
 	rm -f tags core *.bak
 

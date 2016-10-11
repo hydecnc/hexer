@@ -14,13 +14,6 @@ INSTALL:
 	- To unpack hexer (you've probably done this already), type
 		gunzip < hexer-1.0.0.tar.gz | tar -xvf -
 	  Change into the newly-created hexer-1.0.0/ subdirectory.
-	- There are several configuration files named `config.xxx' where
-	  xxx is the name of the operation system or build environment.
-	  Please try the build with config.posix first (except on GNU/Linux
-	  systems where config.linux enables some optimizations).  Only try
-	  some of the other config.* files if hexer cannot be built or does
-	  not run properly; in that case, please let the author know!
-	- Skim trough `config.h' and `Makefile'.
 	- Type `make'.
 	- If you want a command line version of the builtin calculator "myc",
 	  type `make myc'.
