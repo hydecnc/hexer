@@ -16,6 +16,9 @@ Change log for hexer, the multi-view binary editor
 	  works with termios anyway
 	- drop the config.* files and autogenerate config.h
 	- fix the build of the myc command-line calculator
+	- assume a POSIX environment and declare some of the configuration
+	  settings as deprecated; no tests are done for them, and
+	  the deactivated tests will be removed in a future Hexer release
 
 0.2.3	2015/12/10
 	- build with large file support on Linux
