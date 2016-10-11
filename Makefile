@@ -67,7 +67,7 @@ all: $(HEXER)
 $(HEXER): $(OBJECTS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJECTS) $(LDLIBS)
 
-$(MYC): calc.c
+$(MYC): calc.c config.h
 	$(CC) $(LDFLAGS) $(CPPFLAGS) $(CFLAGS) -DMYCALC=1 -o $@ calc.c -lm
 
 bin2c: bin2c.c

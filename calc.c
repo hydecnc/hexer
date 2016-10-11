@@ -293,7 +293,28 @@ calc_sprint(char *s, struct calc_object_s object)
   }
   return s;
 }
-/* calc_print */
+/* calc_sprint */
+
+#if DEBUG || MYCALC
+  static void
+calc_print(struct calc_object_s x)
+{
+  char result[256];
+  calc_sprint(result, x);
+  printf("%s", result);
+}
+
+  static void
+calc_stack(void)
+{
+  size_t i;
+  for (i = 0; i < sp; i++)
+  {
+    calc_print(stack[i]);
+    putchar('\n');
+  }
+}
+#endif
 
   static int
 calc_error(struct calc_object_s *x, const char *fmt, ...)
@@ -1240,7 +1261,7 @@ main(int argc, char **argv)
       /* search for error objects on the stack */
       for (i = sp - 1; i >= 0; --i)
         if (stack[i].type == CO_ERROR) {
-          calc_print(stack[i], 0);
+          calc_print(stack[i]);
           ++error_f;
           putchar('\n');
         }
@@ -1254,12 +1275,12 @@ main(int argc, char **argv)
       else {
         if (stack[0].type == CO_VARIABLE) calc_evaluate(stack);
         if (stack[0].type == CO_ERROR)
-          calc_print(stack[0], 0);
+          calc_print(stack[0]);
         else if (!CO_VALUE(stack[0]))
           printf("syntax error");
         else {
           if (argc == 1) printf("$%i = ", ++calc_command_counter);
-          calc_print(stack[0], 0);
+          calc_print(stack[0]);
           x.type = CO_VARIABLE;
           x.u.s = (char *)alloca(256);
           sprintf(x.u.s, "$%i", calc_command_counter);
