@@ -13,8 +13,7 @@ Please read the files `COPYRIGHT' and `hexer.doc'.
 INSTALL:
 	- To unpack hexer (you've probably done this already), type
 		gunzip < hexer-1.0.0.tar.gz | tar -xvf -
-	  where xxx is the version number.  This will create a subdirectory
-	  `hexer-xxx'.  Change into that directory.
+	  Change into the newly-created hexer-1.0.0/ subdirectory.
 	- There are several configuration files named `config.xxx' where
 	  xxx is the name of the operation system or build environment.
 	  Please try the build with config.posix first (except on GNU/Linux
