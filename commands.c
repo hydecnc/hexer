@@ -45,7 +45,6 @@
 
 #include "config.h"
 
-#include <alloca.h>
 #include <assert.h>
 #include <pwd.h>
 #include <string.h>

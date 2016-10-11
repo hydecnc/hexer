@@ -51,8 +51,20 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+
 #if NEED_ALLOCA_H
 #include <alloca.h>
+#else
+/**
+ * Sigh, some platforms insist on hiding alloca(3) with _POSIX_C_SOURCE or
+ * _XOPEN_SOURCE, so we'll just have to declare it ourselves.
+ */
+#if defined(__GNUC__) && __GNUC__ >= 2 || defined(__INTEL_COMPILER)
+#undef  alloca
+#define alloca(sz) __builtin_alloca(sz)
+#else
+void *alloca(size_t size);
+#endif
 #endif
 
 #define TIO_MAP 1
