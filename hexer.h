@@ -51,12 +51,8 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-#if HAVE_ALLOCA
 #if NEED_ALLOCA_H
 #include <alloca.h>
-#endif
-#else
-char *alloca(size_t);
 #endif
 
 #define TIO_MAP 1

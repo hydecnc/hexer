@@ -8,7 +8,6 @@
 #define HAVE_NCURSES         0
 #define HAVE_USLEEP          0
 #define HAVE_FLOAT_H         0
-#define HAVE_ALLOCA          0
 #define NEED_ALLOCA_H        0
 #define HAVE_STRERROR        0
 #define HAVE_VASPRINTF       0
