@@ -3,12 +3,7 @@ README for Hexer version 1.0.0
 Hexer is a multi buffer editor for binary files for UN*X that displays its
 buffer(s) as hex dump.  The user interface is kept similar to vi/ex.
 
-The following systems are supported:
-
- - SunOS 4.x.x
- - Linux
- - FreeBSD
- - Irix
+All POSIX-compatible environments should be supported.
 
 If you port Hexer to a different platform, please send an email-message
 telling what changes you made (if any).
@@ -21,10 +16,11 @@ INSTALL:
 	  where xxx is the version number.  This will create a subdirectory
 	  `hexer-xxx'.  Change into that directory.
 	- There are several configuration files named `config.xxx' where
-	  xxx is the name of the operation system.  Check if there's a
-	  config-file for your system and copy it to `config.h'.  If there's
-	  no config-file for your system, you can use `config.any' and
-	  modify it appropriately.
+	  xxx is the name of the operation system or build environment.
+	  Please try the build with config.posix first (except on GNU/Linux
+	  systems where config.linux enables some optimizations).  Only try
+	  some of the other config.* files if hexer cannot be built or does
+	  not run properly; in that case, please let the author know!
 	- Skim trough `config.h' and `Makefile'.
 	- Type `make'.
 	- If you want a command line version of the builtin calculator "myc",

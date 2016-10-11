@@ -1,6 +1,8 @@
 /* Configuration file for SunOS
  */
 
+#warning The settings in this file have not been tested for a long time and are deprecated; if config.posix does not work, please contact the author!
+
 #define HAVE_STRCMP          1
 #define HAVE_STRCASECMP      1
 #define HAVE_SIGTYPE_INT     0
