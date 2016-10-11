@@ -44,10 +44,6 @@
 #define HEXERINIT_FILE ".hexerrc"
 #define TIO_READWAIT_TIMEOUT -1
 
-#if !HAVE_CONST
-#define const
-#endif
-
 /* end of defs.h */
 
 
