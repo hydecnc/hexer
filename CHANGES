@@ -4,6 +4,7 @@ Change log for hexer, the multi-view binary editor
 	- drop support for ancient compilers that do not support
 	  the "const" keyword or do not provide the alloca() function
 	- fix the build on systems that do not need or have alloca.h
+	- fix an overzealous double const
 
 0.2.3	2015/12/10
 	- build with large file support on Linux
