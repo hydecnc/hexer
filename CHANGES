@@ -12,6 +12,8 @@ Change log for hexer, the multi-view binary editor
 	- clarify a README comment about the unpacked subdirectory
 	- drop the HAVE_NCURSES configuration setting, the support for
 	  changing the foreground and background color is autodeteted
+	- drop the config.bsd file altogether, it has become identical to
+	  config.posix now
 	- drop the bundled termlib implementation, require termcap support
 
 0.2.3	2015/12/10
