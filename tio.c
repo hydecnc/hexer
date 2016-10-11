@@ -69,11 +69,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/time.h>
-#ifndef BSD
-#include <termio.h>
-#else
 #include <termios.h>
-#endif
 #include <unistd.h>
 #include <fcntl.h>
 #include <signal.h>

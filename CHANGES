@@ -15,6 +15,8 @@ Change log for hexer, the multi-view binary editor
 	- drop the config.bsd file altogether, it has become identical to
 	  config.posix now
 	- drop the bundled termlib implementation, require termcap support
+	- drop the stubs for old-style termio support, the hexer code only
+	  works with termios anyway
 
 0.2.3	2015/12/10
 	- build with large file support on Linux
