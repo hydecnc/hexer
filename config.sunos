@@ -7,7 +7,6 @@
 #define HAVE_STRCASECMP      1
 #define HAVE_SIGTYPE_INT     0
 #define HAVE_MEMMOVE         0
-#define HAVE_NCURSES         0
 #define HAVE_USLEEP          1
 #define HAVE_FLOAT_H         0
 #define HAVE_ALLOCA_H        1

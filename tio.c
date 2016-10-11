@@ -88,10 +88,6 @@
 #define USE_SET 1
 #endif
 
-#ifndef HAVE_NCURSES
-#define HAVE_NCURSES 0
-#endif
-
 #include "defs.h"
 #include "tio.h"
 #include "util.h"
@@ -1719,11 +1715,7 @@ tio_have_color(void)
   /* returns a non-zero value if color is available, 0 else.
    */
 {
-#if !HAVE_NCURSES
-  return 0;
-#else
   return !!t_setab && !!t_setaf;
-#endif
 }
 /* tio_have_color */
 
@@ -1740,9 +1732,7 @@ tio_set_fg(int color)
   /* set the foreground color to `color'.
    */
 {
-#if HAVE_NCURSES
   tio_command(t_setaf, 1, color);
-#endif
   t_fg = color;
 }
 /* tio_set_af */
@@ -1752,9 +1742,7 @@ tio_set_bg(int color)
   /* set the background color to `color'.
    */
 {
-#if HAVE_NCURSES
   tio_command(t_setab, 1, color);
-#endif
   t_bg = color;
 }
 /* tio_set_ab */

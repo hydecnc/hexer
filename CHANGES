@@ -10,6 +10,8 @@ Change log for hexer, the multi-view binary editor
 	  make(1) implementations that do not pass CPPFLAGS.
 	- deprecate config.* except for config.posix and config.linux
 	- clarify a README comment about the unpacked subdirectory
+	- drop the HAVE_NCURSES configuration setting, the support for
+	  changing the foreground and background color is autodeteted
 
 0.2.3	2015/12/10
 	- build with large file support on Linux
