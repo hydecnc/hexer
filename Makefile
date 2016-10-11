@@ -91,6 +91,9 @@ bin2c: bin2c.c
 helptext.c: help.txt bin2c
 	./bin2c -n helptext -o $@ help.txt
 
+.c.o:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+
 tags: *.c *.h
 	-@{ \
 	  echo Creating tags...; \
