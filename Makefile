@@ -15,18 +15,11 @@ MANDIR ?= $(PREFIX)/man/man1
 #  -- Which terminal library? --
 #  (It's probably save to leave the following lines unchanged.)
 #
-#  Use the following two lines, if you want to use the termcap-library.
-#LTERMLIB ?=
+#  Use the following line if you want to use the termcap library.
 #LTERMCAP ?= -ltermcap
 #
-#  Uncomment these if you want to use curses.
-LTERMLIB ?=
+#  ...or this one if you want to use curses.
 LTERMCAP ?= -lcurses
-#
-#  Uncomment the following two lines if you want to use the termlib code
-#  supplied with the package (not recommended).
-#LTERMLIB = termlib.o
-#LTERMCAP =
 
 CPPFLAGS_STD ?= -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
 		-D_FILE_OFFSET_BITS=64
@@ -67,8 +60,7 @@ MYC = myc
 CTAGS = ctags -tawf tags
 
 OBJECTS = buffer.o tio.o edit.o main.o hexer.o readline.o regex.o port.o \
-          exh.o set.o map.o signal.o util.o commands.o helptext.o calc.o \
-	  $(LTERMLIB)
+          exh.o set.o map.o signal.o util.o commands.o helptext.o calc.o
 
 all: config.check $(HEXER)
 
@@ -114,10 +106,8 @@ depend: *.c *.h
 	-echo '#' Dependencies: >> Makefile~
 	-echo >> Makefile~
 	@{ for i in *.c; do \
-	      if [ "$$i" != 'termlib.c' ]; then \
 	      echo $(CC) -MM $(CPPFLAGS) $$i '>>' Makefile~; \
 	      $(CC) -MM $(CPPFLAGS) $$i >> Makefile~; \
-	      fi \
 	    done; }
 	-echo >> Makefile~
 	mv -f Makefile~ Makefile

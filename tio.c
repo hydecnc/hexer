@@ -4,7 +4,7 @@
  * This file provides a set of functions for manipulating a terminal screen
  * and reading from the keyboard.
  * Required:
- *   libtermcap.a or termlib.o
+ *   libtermcap.a
  *   set.o (only if `USE_SET' is set)
  */
 
