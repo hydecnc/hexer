@@ -1,6 +1,8 @@
 Change log for hexer, the multi-view binary editor
 
 1.0.1	not yet
+	- update the date in the manual page for the typographical
+	  errors fixed in 1.0.0.
 
 1.0.0	2016/10/12
 	- drop support for ancient compilers that do not support
