@@ -26,7 +26,7 @@ CPPFLAGS_STD ?= -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
-CPPFLAGS += $(CPPFLAGS_STD) -DHEXER_VERSION=\"1.0.0.rc1\"
+CPPFLAGS += $(CPPFLAGS_STD) -DHEXER_VERSION=\"1.0.0\"
 
 #  -- Which compiler? --
 CC ?= cc
