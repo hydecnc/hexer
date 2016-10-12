@@ -23,14 +23,14 @@
 #endif
 
 #if defined(TEST_SIGTYPE_INT)
-int handler(void)
+static int handler(void)
 {
 	return 1;
 }
 #endif
 
 #if defined(TEST_VASPRINTF)
-char *run_vasprintf(char * const dst, ...)
+static char *run_vasprintf(char * const dst, ...)
 {
 	char *res;
 	va_list v;
