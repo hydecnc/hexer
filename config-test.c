@@ -30,16 +30,17 @@ static int handler(void)
 #endif
 
 #if defined(TEST_VASPRINTF)
-static char *run_vasprintf(char * const dst, ...)
+static const char *run_vasprintf(char * const dst, ...)
 {
 	char *res;
+	int ret;
 	va_list v;
 
 	va_start(v, dst);
-	vasprintf(&res, "%d", v);
+	ret = vasprintf(&res, "%d", v);
 	va_end(v);
 
-	return (res);
+	return (ret == -1? "0": res);
 }
 #endif
 
