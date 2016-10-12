@@ -225,10 +225,10 @@ EDITOR COMMANDS
            In  Insert Mode the bytes you type are inserted at the
            current position of the cursor.  At any time, you  can
            toggle  the  active column (hex column or text column)
-           by pressing the TAB-key.  If the hex column is  active
+           by pressing the TAB key.  If the hex column is  active
            the bytes are entered as two digit hex numbers, if the
            text column is active, the bytes are entered as  ASCII
-           text.  The Delete- or BackSpace-key deletes the previ-
+           text.  The Delete or BackSpace key deletes the previ-
            ously inserted byte.  If the hex column is active, the
            previously inserted nibble (hex digit) is deleted.  It
            is not possible to delete more bytes  than  have  been
@@ -530,7 +530,7 @@ COMMAND LINE EDITING
 
        TAB    Try  to complete currently typed word.  If the com-
               pletion is not unique, the word is completed as far
-              as unique.  If the TAB-key is hit twice on the same
+              as unique.  If the TAB key is hit twice on the same
               position,  a list of all  possible  completions  is
               displayed.
 

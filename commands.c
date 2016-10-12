@@ -90,7 +90,7 @@ press_any_key(struct he_s *hedit)
  * semicolons.  if a command finds a semicolon at the end of its input,
  * a pointer to the character immediately following the semicolon is
  * returned.  if a separating semicolon is not found in the input, a
- * null-pointer is returned.
+ * null pointer is returned.
  */
 
   static const char *

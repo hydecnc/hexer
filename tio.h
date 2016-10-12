@@ -143,7 +143,7 @@ tio_keypad(int on);
   /* Set the keypad mode.
    * on=0: numeric keypad.
    * on=1: application keypad.  Select this mode if you want to use the
-   *       keypad (i.e. arrow-keys).
+   *       keypad (i.e. arrow keys).
    */
 
   int
@@ -235,7 +235,7 @@ tio_keyname(int key);
 
   const char *
 tio_keyrep(int key);
-  /* Returs a string representation of `key'.  If `key' is not a printable
+  /* Returns a string representation of `key'.  If `key' is not a printable
    * character an escape sequence is generated:
    *   key > 0xff      if key is a known special key, a unique sequence
    *                   ~<keyname> (i.e. ~UP for up-arrow)
@@ -343,7 +343,7 @@ tio_display(char *text, int indent);
   void
 tio_message(char **message, int indent);
   /* displays the array of strings `message' via `tio_display()' providing
-   * a simple pager.  this function assumes, that every string in
+   * a simple pager.  this function assumes that every string in
    * `message' displays as a single line.
    */
 
@@ -354,7 +354,7 @@ tio_printf( const char *fmt, ... ) __printflike(1, 2);
 tio_vprintf(const char *fmt, va_list);
   /* Similar to `printf()'.  `tio_printf()' understands the same @-commands
    * as `tio_display()'.  Note that @-commands in strings inserted via %s
-   * are executed.  Use `tio_raw_printf()' if you don't wan't @-commands to
+   * are executed.  Use `tio_raw_printf()' if you don't want @-commands to
    * be executed.
    */
 

@@ -109,7 +109,7 @@ enum regex_e {  /* arguments
   CHAR,         /* (char c)
                  *   matches the character `c'. */
   STRING,       /* (long n) <string of length `n'>
-                 *   matches the given string exactly.  the null-character is
+                 *   matches the given string exactly.  the null character is
 		 *   *not* interpreted as the end of the string. */
   PAR_OPEN,     /*   opening parenthesis. */
   PAR_CLOSE,    /* (long slot)

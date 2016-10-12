@@ -157,13 +157,13 @@ struct he_command_s {
      */
   struct he_command_s *next_command;
     /* The next command in the undo list.  This pointer is set only for
-     * the first command of a compound command.  A null-value in the first
+     * the first command of a compound command.  A null value in the first
      * command of a compound command indicates the end of the list.
      * NOTE: For all subcommands that are not the first command in a compound
      *   command, `next_command' has to be set to zero.
      */
   struct he_command_s *prev_command;
-    /* The previous command in the undo list.  A null-value in the first
+    /* The previous command in the undo list.  A null value in the first
      * command of a compound command indicates the beginning of the list.
      * For all subcommands that are not the first command in a compound
      * command, the value of `prev_command' is ignored.

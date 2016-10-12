@@ -278,10 +278,10 @@ HEXER(1)                                                 HEXER(1)
            In  IInnsseerrtt MMooddee the bytes you type are inserted at the
            current position of the cursor.  At any time, you  can
            toggle  the  active column (hex column or text column)
-           by pressing the TTAABB-key.  If the hex column is  active
+           by pressing the TTAABB key.  If the hex column is  active
            the bytes are entered as two digit hex numbers, if the
            text column is active, the bytes are entered as  ASCII
-           text.  The DDeelleettee- or BBaacckkSSppaaccee-key deletes the previ-
+           text.  The DDeelleettee or BBaacckkSSppaaccee key deletes the previ-
            ously inserted byte.  If the hex column is active, the
            previously inserted nibble (hex digit) is deleted.  It
            is not possible to delete more bytes  than  have  been
@@ -643,7 +643,7 @@ CCOOMMMMAANNDD LLIINNEE EEDDIITTIINNGG
 
        TTAABB    Try  to complete currently typed word.  If the com-
               pletion is not unique, the word is completed as far
-              as unique.  If the TTAABB-key is hit twice on the same
+              as unique.  If the TTAABB key is hit twice on the same
               position,  a list of all  possible  completions  is
               displayed.
 

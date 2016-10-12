@@ -70,14 +70,14 @@
 
 /* strings:
  * `readline()' returns strings of characters.  special characters (like
- * cursor-keys) are represented as escape-sequences.  an escape-sequence
+ * cursor keys) are represented as escape sequences.  an escape sequence
  * is made up of an escape character `\E' (0x1b) followed by the internal
  * representation of the key minus 254 (== HXKEY_BIAS) (we don't use 256 to
- * avoid null-characters).  we'll write down an escape-sequence as
+ * avoid null characters).  we'll write down an escape sequence as
  * `\E(HXKEY_keyname)'.  all characters will be stored as characters, even if
- * a `HXKEY_keyname' entry in the keylist exists.  the only two exeptions to
- * that rule are the null-character (represented as `\E(HXKEY_NULL)') and the
- * escape-character, which is represented as `\E\001' (that's why an offset
+ * a `HXKEY_keyname' entry in the keylist exists.  the only two exceptions to
+ * that rule are the null character (represented as `\E(HXKEY_NULL)') and the
+ * escape character, which is represented as `\E\001' (that's why an offset
  * of 254 (== HXKEY_BIAS) is used for the other keys).
  */
 
@@ -91,7 +91,7 @@ static char rl_vline[LINE_MAXLEN];
                            /* buffer for the "visible" line */
 static size_t rl_position; /* position of the cursor.  the position of the
                             * cursor is number of the character under the
-                            * cursor.  note that escape-sequences are
+                            * cursor.  note that escape sequences are
                             * considered to be a single character. */
 static size_t rl_offset;   /* number of characters scrolled out to the
                             * left, so the first character displayed on
@@ -118,7 +118,7 @@ int rl_backspace_jump;
 
 int rl_cancel_on_bs;
   /* if `rl_cancel_on_bs' is non-zero, hitting backspace on an empty line
-   * will return a null-pointer - just as if escape had been pressed.
+   * will return a null pointer - just as if escape had been pressed.
    */
 
 int rl_redisplay;
@@ -268,7 +268,7 @@ rl_query_yn(char *prompt, int dfl)
    * if `dfl == -1', the return key is ignored.  if case fo a windowchange
    * and if `rl_winch != 0', the function `(*rl_winch)()' is called.
    * return values:
-   *   -1:  the ESCAPE-key has been pressed.
+   *   -1:  the ESCAPE key has been pressed.
    *    0:  no.
    *    1:  yes.
    */
@@ -359,10 +359,10 @@ rl_get_vposition(void)
     else {
       ++i;
       if (rl.line[i] == 1)
-        /* ESCAPE-character */
+        /* ESCAPE character */
         vposition += strlen(tio_keyrep(HXKEY_ESCAPE));
       else if (rl.line[i] == (int)HXKEY_NULL - HXKEY_BIAS)
-        /* null-character */
+        /* null character */
         vposition += strlen(tio_keyrep(HXKEY_NULL));
       else {
         key = rl.line[i] + HXKEY_BIAS;
@@ -411,11 +411,11 @@ rl_make_vline_(struct rl_line_s *rrl)
     else {
       ++i;
       if (rrl->line[i] == 1) {
-        /* ESCAPE-character */
+        /* ESCAPE character */
         strcpy(rrl->vline + vposition, rep = tio_keyrep(HXKEY_ESCAPE));
         vposition += strlen(rep);
       } else if (rrl->line[i] == (int)HXKEY_NULL - HXKEY_BIAS) {
-        /* null-character */
+        /* null character */
         strcpy(rrl->vline + vposition, rep = tio_keyrep(HXKEY_NULL));
         vposition += strlen(rep);
       } else {
@@ -911,7 +911,7 @@ rl_complete(int context, int again)
       prefix[i] = 0;
       if (stop_f) {
 	if (again) {
-	  /* the completer-key has been hit twice on the same position.
+	  /* the completer key has been hit twice on the same position.
 	   * print out a completion list. */
 	  int k, l, m, n;
 	  char **list2;
