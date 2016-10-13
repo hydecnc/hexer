@@ -10,6 +10,9 @@ Change log for hexer, the multi-view binary editor
 	- add the year 2016 to the copyright notices of the changed files
 
 1.0.0	2016/10/12
+	- most of the following portability fixes were prompted by
+	  build failure reports on FreeBSD by
+	  Anastasios Mageirias <anastasios@mageirias.com>
 	- drop support for ancient compilers that do not support
 	  the "const" keyword or do not provide the alloca() function
 	- fix the build on systems that do not need or have alloca.h and
