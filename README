@@ -1,4 +1,4 @@
-README for Hexer version 1.0.1
+README for Hexer version 1.0.2
 
 Hexer is a multi buffer editor for binary files for UN*X that displays its
 buffer(s) as hex dump.  The user interface is kept similar to vi/ex.
@@ -12,8 +12,8 @@ Please read the files `COPYRIGHT' and `hexer.doc'.
 
 INSTALL:
 	- To unpack hexer (you've probably done this already), type
-		gunzip < hexer-1.0.1.tar.gz | tar -xvf -
-	  Change into the newly-created hexer-1.0.1/ subdirectory.
+		gunzip < hexer-1.0.2.tar.gz | tar -xvf -
+	  Change into the newly-created hexer-1.0.2/ subdirectory.
 	- Type `make'.
 	- If you want a command line version of the builtin calculator "myc",
 	  type `make myc'.
