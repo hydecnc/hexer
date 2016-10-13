@@ -222,7 +222,7 @@ he_free_command(struct he_command_s *command);
    */
 
   void
-he_compound_comand(struct he_s *hedit, struct he_command_s *command);
+he_compound_command(struct he_s *hedit, struct he_command_s *command);
 
   void
 he_subcommand(struct he_s *hedit,

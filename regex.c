@@ -10,7 +10,7 @@
  *   the longest string that matches a given regex.  Example:
  *   the expression
  *     a*\(abcd\|bc\)
- *   doesn't not match the whole string `aaabcd' but only the substring
+ *   doesn't match the whole string `aaabcd' but only the substring
  *   `aaabc`.  I'm not sure if this is a bug, since `vi' and 'vim' do the
  *   same.
  */

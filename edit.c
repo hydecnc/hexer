@@ -275,7 +275,7 @@ he_free_command(struct he_command_s * const command)
 /* he_free_command */
 
   void
-he_compound_comand(struct he_s *hedit, struct he_command_s *command)
+he_compound_command(struct he_s *hedit, struct he_command_s *command)
 {
   char *buf;
   size_t sz, pos;
@@ -345,7 +345,7 @@ he_compound_comand(struct he_s *hedit, struct he_command_s *command)
     }
   } /* if */
 }
-/* he_compound_comand */
+/* he_compound_command */
 
   void
 he_subcommand(struct he_s *hedit, int type, unsigned long position, unsigned long count, char *data)
@@ -368,7 +368,7 @@ he_subcommand(struct he_s *hedit, int type, unsigned long position, unsigned lon
 
   if (type < 0) {
     command->again = again;
-    he_compound_comand(hedit, command);
+    he_compound_command(hedit, command);
     command = 0;
   } else { /* (type >= 0) */
     if (!command) {
@@ -622,7 +622,7 @@ he_again(struct he_s *hedit, long position)
       struct he_command_s *i;
       for (i = command; i; i = i->next_subcommand) i->position = position;
       he_do_command(hedit, command);
-      he_compound_comand(hedit, command);
+      he_compound_command(hedit, command);
     }
     fseek(hedit->undo.swapfile, swap_position, SEEK_SET);
   } else {
@@ -669,7 +669,7 @@ he_again(struct he_s *hedit, long position)
       }
       for (i = command2; i; i = i->next_subcommand) i->position = position;
       he_do_command(hedit, command2);
-      he_compound_comand(hedit, command2);
+      he_compound_command(hedit, command2);
       /* The memory allocated by `command2' will not be freed here,
        * because it has been inserted into the undo list.
        */

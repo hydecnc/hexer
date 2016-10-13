@@ -903,7 +903,7 @@ unary:  error_f = calc_operation(sp - 2, 0);
       }
       break;
     case CO_BINARY_OPERATOR:
-      /* check if `y' is an unary minus */
+      /* check if `y' is a unary minus */
       if (y.u.bo == OP_SUB && (sp == 2 ? 1 : !CO_VALUE(stack[sp - 3]))) {
         stack[sp - 2].type = CO_UNARY_OPERATOR;
         stack[sp - 2].u.uo = OP_NEG;
