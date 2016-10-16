@@ -1,7 +1,8 @@
 README for Hexer version 1.0.2
 
-Hexer is a multi buffer editor for binary files for UN*X that displays its
-buffer(s) as hex dump.  The user interface is kept similar to vi/ex.
+Hexer is a multi-buffer editor for binary files for Unix-like systems
+that displays its buffer(s) as a hex dump.  The user interface is kept
+similar to vi/ex.
 
 All POSIX-compatible environments should be supported.
 
