@@ -1,4 +1,4 @@
-README for Hexer version 1.0.2
+README for Hexer version 1.0.3
 
 Hexer is a multi-buffer editor for binary files for Unix-like systems
 that displays its buffer(s) as a hex dump.  The user interface is kept
@@ -13,8 +13,8 @@ Please read the files `COPYRIGHT' and `hexer.doc'.
 
 INSTALL:
 	- To unpack hexer (you've probably done this already), type
-		gunzip < hexer-1.0.2.tar.gz | tar -xvf -
-	  Change into the newly-created hexer-1.0.2/ subdirectory.
+		gunzip < hexer-1.0.3.tar.gz | tar -xvf -
+	  Change into the newly-created hexer-1.0.3/ subdirectory.
 	- Type `make'.
 	- If you want a command line version of the builtin calculator "myc",
 	  type `make myc'.
