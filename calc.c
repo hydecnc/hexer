@@ -414,7 +414,7 @@ calc_operation(int position, int binary)
         } else
           int_f = 0;
         x.u.f = pow(x.u.f, y.u.f);
-        if (int_f && x.u.f < (unsigned)(1 << (LONG_BITS - 1)) - 1) {
+        if (int_f && x.u.f < (1u << (LONG_BITS - 1)) - 1) {
           x.type = CO_INTEGER;
           x.u.i = (int)x.u.f;
         }
