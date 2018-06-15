@@ -1,5 +1,7 @@
 Change log for hexer, the multi-view binary editor
 
+1.0.5	not yet ;)
+
 1.0.4	2018/03/24
 	- allow hexer to be cross-built: if CC_FOR_BUILD is defined in
 	  the build environment, use it as the command to build bin2c as
