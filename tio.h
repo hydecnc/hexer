@@ -2,7 +2,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -254,7 +254,7 @@ tio_vkeyrep(int key);
 
   char *
 tio_keyscan(int *key, char *s, int mode);
-  /* Check if `s' is a sting representation of a key.  on success,
+  /* Check if `s' is a string representation of a key.  on success,
    * the keycode is written to `*key' and a pointer to the first
    * character after the srep is returned, else `*key' is set to 0
    * and `s' is returned.

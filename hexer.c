@@ -2,7 +2,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2010, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -640,7 +640,7 @@ he_search(struct he_s *hedit, const char *exp, const char *replace, int directio
      * NOTE: the replace string won't be terminated with a null character
      *   since it may contain null characters.
      */
-    /* the length of the replace sting is written to `*replace_len'.
+    /* the length of the replace string is written to `*replace_len'.
      */
     /* the length of the match is written to `*replace_len'.
      */

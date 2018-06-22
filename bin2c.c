@@ -3,7 +3,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010, 2015 Peter Pentchev
+ * Copyright (c) 2009, 2010, 2015, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -186,7 +186,7 @@ main(int argc, char **argv)
     }
     if (!(i % 8)) fprintf(out, "\n ");
     fprintf(out, " 0\n};\n\n");
-      /* we write a trailing 0 so the array can be used as a sting. */
+      /* we write a trailing 0 so the array can be used as a string. */
   }
   fprintf(out, "/* end of %s.c */\n\n", name);
   fclose(in);

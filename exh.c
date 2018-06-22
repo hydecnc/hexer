@@ -3,7 +3,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,7 +97,7 @@ exh_shell_command(const char * const command, int pager_f)
                      * pager specified by the "PAGER" environment.  the
                      * default pager is `HE_DEFAULT_PAGER'. */
   /* we won't use the "-c"-switch (available for most shells), instead we'll
-   * gonna pipe the command into the shell.
+   * going to pipe the command into the shell.
    */
 {
   int shell_pid, pager_pid;

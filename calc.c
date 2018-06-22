@@ -3,7 +3,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2010, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -170,8 +170,8 @@ static char *calc_code_names[] = {
 enum calc_instruction_e {
   CI_ADD,      /* add the top two elements on the stack */
   CI_ADDI,     /* add an immediate value to the top element */
-  CI_SUB,      /* substact the top two elements */
-  CI_SUBI,     /* substact immediate value from the top element */
+  CI_SUB,      /* subtract the top two elements */
+  CI_SUBI,     /* subtract immediate value from the top element */
   CI_MUL,      /* multiply the top two elements */
   CI_MULI,     /* multiply an immediate value with the top element */
   CI_POW,      /* compute s[-2] ** s[-1] */

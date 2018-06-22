@@ -7,7 +7,7 @@
 
 #  -- Where? --
 #  The following lines determine where the binaries and manual pages for
-#  hexer are gonna live.
+#  hexer are going to live.
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 MANDIR ?= $(PREFIX)/man/man1

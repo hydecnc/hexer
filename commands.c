@@ -2,7 +2,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2010, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -372,7 +372,7 @@ exhcmd_substitute(struct he_s *hedit, const char *pattern, long begin, long end)
 	  he_message(0, "no match");
 	goto exit_exh_substitute;
       default:  /* found */
-        /* first we're gonna check if the match is in the selected area */
+        /* first we're going to check if the match is in the selected area */
         if (position + match_len > end + 1) {
           position += 1;
           break;
