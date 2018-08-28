@@ -165,7 +165,7 @@ process_args(const int argc, char * const argv[])
 	exit_f = 1;
 	break;
       default:
-        puts(usage_message);
+        fputs(usage_message, stderr);
 	exit_f = 2;
 	break;
     }
