@@ -2,6 +2,7 @@ Change log for hexer, the multi-view binary editor
 
 1.0.5	not yet ;)
 	- correct some typographical and grammatical errors
+	- exit with status 0 if -h/--help is specified
 
 1.0.4	2018/03/24
 	- allow hexer to be cross-built: if CC_FOR_BUILD is defined in

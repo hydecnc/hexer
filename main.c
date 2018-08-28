@@ -161,9 +161,12 @@ process_args(const int argc, char * const argv[])
         ++tio_tite_f;
         break;
       case 'h': /* help */
-      default:
         puts(usage_message);
 	exit_f = 1;
+	break;
+      default:
+        puts(usage_message);
+	exit_f = 2;
 	break;
     }
   }
@@ -193,7 +196,8 @@ process_args(const int argc, char * const argv[])
         if (!current_buffer) break;
       }
     if (current_buffer) he_status_message(0);
-  }
+  } else
+    exit_f--;
   return exit_f;
 }
 /* process_args */
