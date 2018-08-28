@@ -6,6 +6,10 @@ Change log for hexer, the multi-view binary editor
 	- output the usage message to the standard error stream if
 	  an invalid command-line option is specified
 	- add the -V/--version command-line option
+	- add the -F/--features command-line option
+	- move the terminal initialization a bit later in the processing
+	  of the command-line options to avoid spurious output when
+	  usage, version, or features information is requested
 
 1.0.4	2018/03/24
 	- allow hexer to be cross-built: if CC_FOR_BUILD is defined in

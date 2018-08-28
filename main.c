@@ -91,6 +91,8 @@ usage: hexer [options] [file [...]]\n\
       Display a short help message and exit.\n\
   -V/--version\n\
       Display program version information and exit.\n\
+  -F/--features\n\
+      List the features supported by the program and exit.\n\
   +command\n\
       This is equivalent to the -c option.\n\
   Note: The long options are not available on all systems.\n";
@@ -105,16 +107,19 @@ static struct option longopts[] = {
   { "help", 0, 0, 'h' },     /* print a short help message to `stdout'. */
   { "tite", 0, 0, 't' },     /* tite - turn off the ti/te sequence. */
   { "version", 0, 0, 'V' },  /* print program version information. */
+  { "features", 0, 0, 'F' }, /* display program features information. */
   { 0, 0, 0, 0 }
 };
 #endif /* HEXER_LONG_OPTIONS */
 
-static const char *shortopts = "Rvr:c:dthV";
+static const char *shortopts = "Rvr:c:dthVF";
 
 static int hexer_readonly;
 
 static char *startup_commands[HEXER_MAX_STARTUP_COMMANDS];
 static int startup_commands_n = 0;
+
+static int tio_initialized = 0;
 
   static int
 process_args(const int argc, char * const argv[])
@@ -171,6 +176,10 @@ process_args(const int argc, char * const argv[])
 	puts("hexer " HEXER_VERSION);
 	exit_f = 1;
 	break;
+      case 'F':
+	puts("Features: hexer=" HEXER_VERSION);
+	exit_f = 1;
+	break;
       default:
         fputs(usage_message, stderr);
 	exit_f = 2;
@@ -179,6 +188,8 @@ process_args(const int argc, char * const argv[])
   }
 
   if (!exit_f) {
+    if (tio_init(*argv) < 0) exit(1);
+    tio_initialized = 1;
     if (optind < argc) /* read the files */
       while (optind < argc) {
         if (!he_open_buffer(argv[optind], argv[optind])) {
@@ -238,9 +249,9 @@ main(const int argc, char * const argv[])
   he_messages = 0;
   setup_signal_handlers();
   hexer_version();
-  if (tio_init(*argv) < 0) exit(1);
   if ((exit_f = process_args(argc, argv)) ? 1 : !current_buffer) {
-    tio_reset();
+    if (tio_initialized)
+      tio_reset();
     exit(exit_f);
   }
   tio_start_application();
