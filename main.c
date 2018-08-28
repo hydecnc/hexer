@@ -88,7 +88,9 @@ usage: hexer [options] [file [...]]\n\
   -t/--tite\n\
       Turn off the usage of the termcap/terminfo ti/te sequence.\n\
   -h/--help\n\
-      Print out a short help message and exit.\n\
+      Display a short help message and exit.\n\
+  -V/--version\n\
+      Display program version information and exit.\n\
   +command\n\
       This is equivalent to the -c option.\n\
   Note: The long options are not available on all systems.\n";
@@ -102,11 +104,12 @@ static struct option longopts[] = {
                               * buffer. */
   { "help", 0, 0, 'h' },     /* print a short help message to `stdout'. */
   { "tite", 0, 0, 't' },     /* tite - turn off the ti/te sequence. */
+  { "version", 0, 0, 'V' },  /* print program version information. */
   { 0, 0, 0, 0 }
 };
 #endif /* HEXER_LONG_OPTIONS */
 
-static const char *shortopts = "Rvr:c:dth";
+static const char *shortopts = "Rvr:c:dthV";
 
 static int hexer_readonly;
 
@@ -162,6 +165,10 @@ process_args(const int argc, char * const argv[])
         break;
       case 'h': /* help */
         puts(usage_message);
+	exit_f = 1;
+	break;
+      case 'V':
+	puts("hexer " HEXER_VERSION);
 	exit_f = 1;
 	break;
       default:
