@@ -1,6 +1,6 @@
 Change log for hexer, the multi-view binary editor
 
-1.0.5	not yet ;)
+1.0.5	2018/09/22
 	- correct some typographical and grammatical errors
 	- exit with status 0 if -h/--help is specified
 	- output the usage message to the standard error stream if
