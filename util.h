@@ -1,4 +1,4 @@
-/* Copyright (c) 2009, 2015  Peter Pentchev
+/* Copyright (c) 2009, 2015, 2018  Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,6 @@
 
 #ifndef _UTIL_H_
 #define _UTIL_H_
-
-#if !HAVE_STRERROR
-char		*strerror(int);
-#endif
 
 int		 util_strsort(char **);
 int		 util_trunc(char *);

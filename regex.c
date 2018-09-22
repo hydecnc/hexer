@@ -16,7 +16,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009 - 2011, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009 - 2011, 2015, 2016, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -241,7 +241,7 @@ static long buffer_base;
 #define REGEX_ADVANCE {                                                       \
   if (bp >= buffer + REGEX_BLOCKSIZE) {                                       \
     long ii;                                                                   \
-    rx_memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);        \
+    memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);        \
     buffer_base += REGEX_BLOCKSIZE;                                           \
     rx_seek(buffer_base + REGEX_BLOCKSIZE);                                   \
     ii = rx_read(buffer + REGEX_BLOCKSIZE, REGEX_BLOCKSIZE);                   \
@@ -251,7 +251,7 @@ static long buffer_base;
     }                                                                         \
     bp -= REGEX_BLOCKSIZE;                                                    \
   } else if (bp < buffer) {                                                   \
-    rx_memmove(buffer + REGEX_BLOCKSIZE, buffer, REGEX_BLOCKSIZE);            \
+    memmove(buffer + REGEX_BLOCKSIZE, buffer, REGEX_BLOCKSIZE);            \
     buffer_base -= REGEX_BLOCKSIZE;                                           \
     if (position >= REGEX_BLOCKSIZE) {                                        \
       rx_seek(buffer_base - REGEX_BLOCKSIZE);                                 \
@@ -263,22 +263,6 @@ static long buffer_base;
     bp += REGEX_BLOCKSIZE;                                                    \
   }                                                                           \
 }
-
-#if !HAVE_MEMMOVE
-  static void
-rx_memmove(char *t, const char *s, const long count)
-{
-  register long i;
-
-  if (t > s)
-    for (i = count - 1; i >= 0; --i) t[i] = s[i];
-  else
-    for (i = 0; i < count; ++i) t[i] = s[i];
-}
-/* rx_memmove */
-#else
-#define rx_memmove(a, b, c) (void)memmove(a, b, c)
-#endif
 
   int
 regex_init(long (*read)(char *, long), long (*seek)(long), long (*tell)(void))
@@ -302,7 +286,7 @@ regex_set_position(long position)
     if (position - buffer_base > REGEX_BLOCKSIZE) {
       if (position - buffer_base < 2 * REGEX_BLOCKSIZE) {
 	bp = buffer + (position & REGEX_BLOCKMASK);
-	rx_memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);
+	memmove(buffer - REGEX_BLOCKSIZE, buffer, 2 * REGEX_BLOCKSIZE);
 	buffer_base += REGEX_BLOCKSIZE;
 	rx_seek(buffer_base);
 	i = rx_read(buffer + REGEX_BLOCKSIZE, REGEX_BLOCKSIZE);

@@ -2,7 +2,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2015 Peter Pentchev
+ * Copyright (c) 2009, 2015, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -93,30 +93,6 @@ util_strsort(char **list)
   return 0;
 }
 /* util_strsort */
-
-#if !HAVE_STRERROR
-#ifndef BSD
-extern const char * const sys_errlist[];
-#endif
-extern const int sys_nerr;
-
-/*
- * We are using an error buffer instead of just returning the result from
- * strerror(3) to avoid constness warnings.  Yes, this makes this function
- * not-thread-safe.  Well, strerror(3) isn't.
- */
-static char errbuf[512];
-
-  char *
-strerror(int errnum)
-{
-  if (errnum >= sys_nerr)
-    strcpy(errbuf, "Unknown error");
-  else
-    snprintf(errbuf, sizeof(errbuf), "%s", sys_errlist[errnum]);
-  return (errbuf);
-}
-#endif /* HAVE_STRERROR */
 
 int
 write_buf(const int fd, const char * const buf, const size_t len)

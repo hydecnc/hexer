@@ -3,7 +3,7 @@
  */
 
 /* Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2010, 2015 Peter Pentchev
+ * Copyright (c) 2009, 2010, 2015, 2018 Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,22 +82,6 @@ Buffer *last_buffer = 0;
    * NOTE:  If `last_buffer' is modified, the variables `last_position',
     *  `last_number' and `last_length' are set to 0, 1, -1 (respectively).
    */
-
-#if !HAVE_MEMMOVE
-  static void
-b_memmove(char *t, const char *s, const unsigned long count)
-{
-  register long i;
-
-  if (t > s)
-    for (i = count - 1; i >= 0; --i) t[i] = s[i];
-  else
-    for (i = 0; i < count; ++i) t[i] = s[i];
-}
-/* b_memmove */
-#else
-#define b_memmove(a, b, c) memmove(a, b, c)
-#endif
 
 /* Whenever the buffer is modified, the macro `BUFFER_CHANGED' is called.
  * Purpose: 1. The buffer is marked modified;  2. Discard all information
@@ -241,10 +225,10 @@ b_read(Buffer *buffer, char *target, unsigned long position, unsigned long count
   if (!(block = find_block(buffer, position))) return -1;
   if (count + position > buffer->size) count = buffer->size - position;
   if (count <= r) {
-    b_memmove(target, block->data + ofs, count);
+    memmove(target, block->data + ofs, count);
     return count;
   } else {
-    b_memmove(target, block->data + ofs, r);
+    memmove(target, block->data + ofs, r);
     long more = b_read(buffer, target + r, position + r, count - r);
     if (more < 0)
       return more;
@@ -264,11 +248,11 @@ b_write(Buffer *buffer, char *source, unsigned long position, unsigned long coun
   if (!(block = find_block(buffer, position))) return 0;
   if (count + position > buffer->size) count = buffer->size - position;
   if (count <= (bs - position % bs)) {
-    b_memmove(block->data + position % bs, source, count);
+    memmove(block->data + position % bs, source, count);
     return count;
   } else {
     unsigned long r = bs - position % bs;
-    b_memmove(block->data + position % bs, source, r);
+    memmove(block->data + position % bs, source, r);
     return r + b_write(buffer, source + r, position + r, count - r);
   }
 }
@@ -397,14 +381,14 @@ b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long sour
   if (count <= bs - t_offset) {
     if (count <= bs - s_offset) {
       assert(s_block = find_block(buffer, source_position));
-      b_memmove(t_block->data + t_offset, s_block->data + s_offset, count);
+      memmove(t_block->data + t_offset, s_block->data + s_offset, count);
     } else {
       assert(s_offset > t_offset);
       assert(s_block = find_block(buffer, source_position + count));
-      b_memmove(t_block->data + tr_offset - sr_offset, s_block->data,
+      memmove(t_block->data + tr_offset - sr_offset, s_block->data,
                 sr_offset);
       assert(s_block = find_block(buffer, source_position));
-      b_memmove(t_block->data + t_offset, s_block->data + s_offset,
+      memmove(t_block->data + t_offset, s_block->data + s_offset,
                 count - sr_offset);
     }
     return count;
@@ -413,18 +397,18 @@ b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long sour
     if (tr_offset >= sr_offset) {
       if (sr_offset) {
         assert(s_block = find_block(buffer, source_position + count));
-        b_memmove(t_block->data + tr_offset - sr_offset,
+        memmove(t_block->data + tr_offset - sr_offset,
                 s_block->data, sr_offset);
       }
       if (sr_offset != tr_offset) {
         assert(s_block =
                find_block(buffer, source_position + count - tr_offset));
-        b_memmove(t_block->data, s_block->data + bs - tr_offset + sr_offset,
+        memmove(t_block->data, s_block->data + bs - tr_offset + sr_offset,
                 tr_offset - sr_offset);
       }
     } else {
       assert(s_block = find_block(buffer, source_position + count));
-      b_memmove(t_block->data, s_block->data + sr_offset - tr_offset,
+      memmove(t_block->data, s_block->data + sr_offset - tr_offset,
               tr_offset);
     }
     r += b_copy_forward(buffer, target_position, source_position, count - r);

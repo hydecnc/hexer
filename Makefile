@@ -60,7 +60,7 @@ MYC = myc
 
 CTAGS = ctags -tawf tags
 
-OBJECTS = buffer.o tio.o edit.o main.o hexer.o readline.o regex.o port.o \
+OBJECTS = buffer.o tio.o edit.o main.o hexer.o readline.o regex.o \
           exh.o set.o map.o signal.o util.o commands.o helptext.o calc.o
 
 all: $(HEXER)
@@ -99,25 +99,6 @@ config.h:
 		fi; \
 		echo "- result: $$value"; \
 		printf "\\n#define HAVE_%s\\t%d\\n" "$$item" "$$value" >> config.h.auto; \
-	done
-	
-	# These configuration settings are deprecated; hexer expects
-	# a POSIX environment that provides these functions and
-	# header files.  If the build breaks or hexer doesn't run
-	# properly, try moving some of these to the upper section so
-	# the configuration stage can actually check for them; please
-	# also let the author know what your operating system, platform,
-	# and build environment is.
-	#
-	for item in \
-		STRCMP		\
-		STRCASECMP	\
-		MEMMOVE		\
-		FLOAT_H		\
-		STRERROR	\
-	    ; do \
-		echo "Assuming $$item is present"; \
-		printf "\\n/* Assumed; please let the author know if the build breaks */\\n#define HAVE_%s\\t%d\\n" "$$item" 1 >> config.h.auto; \
 	done
 	
 	[ ! -e config.h ] || rm config.h

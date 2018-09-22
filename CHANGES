@@ -10,6 +10,10 @@ Change log for hexer, the multi-view binary editor
 	- move the terminal initialization a bit later in the processing
 	  of the command-line options to avoid spurious output when
 	  usage, version, or features information is requested
+	- drop the commented-out code for testing and implementing
+	  functions expected in a POSIX environment as warned in
+	  version 1.0.0, namely strcmp(), strcasecmp(), memmove(),
+	  strerror(), and the float.h header file
 
 1.0.4	2018/03/24
 	- allow hexer to be cross-built: if CC_FOR_BUILD is defined in

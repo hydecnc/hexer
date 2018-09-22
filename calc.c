@@ -55,9 +55,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <math.h>
-#if HAVE_FLOAT_H
 #include <float.h>
-#endif
 #include <limits.h>
 
 #include "buffer.h"
