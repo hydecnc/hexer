@@ -377,17 +377,21 @@ b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long sour
   if (target_position > buffer->size) return -1;
   if (count + target_position > buffer->size)
     count = buffer->size - target_position;
-  assert(t_block = find_block(buffer, target_position + count - 1));
+  t_block = find_block(buffer, target_position + count - 1);
+  assert(t_block != NULL);
   if (count <= bs - t_offset) {
     if (count <= bs - s_offset) {
-      assert(s_block = find_block(buffer, source_position));
+      s_block = find_block(buffer, source_position);
+      assert(s_block != NULL);
       memmove(t_block->data + t_offset, s_block->data + s_offset, count);
     } else {
       assert(s_offset > t_offset);
-      assert(s_block = find_block(buffer, source_position + count));
+      s_block = find_block(buffer, source_position + count);
+      assert(s_block != NULL);
       memmove(t_block->data + tr_offset - sr_offset, s_block->data,
                 sr_offset);
-      assert(s_block = find_block(buffer, source_position));
+      s_block = find_block(buffer, source_position);
+      assert(s_block != NULL);
       memmove(t_block->data + t_offset, s_block->data + s_offset,
                 count - sr_offset);
     }
@@ -396,18 +400,20 @@ b_copy_forward(Buffer *buffer, unsigned long target_position, unsigned long sour
     unsigned long r = tr_offset;
     if (tr_offset >= sr_offset) {
       if (sr_offset) {
-        assert(s_block = find_block(buffer, source_position + count));
+        s_block = find_block(buffer, source_position + count);
+        assert(s_block != NULL);
         memmove(t_block->data + tr_offset - sr_offset,
                 s_block->data, sr_offset);
       }
       if (sr_offset != tr_offset) {
-        assert(s_block =
-               find_block(buffer, source_position + count - tr_offset));
+        s_block = find_block(buffer, source_position + count - tr_offset);
+        assert(s_block != NULL);
         memmove(t_block->data, s_block->data + bs - tr_offset + sr_offset,
                 tr_offset - sr_offset);
       }
     } else {
-      assert(s_block = find_block(buffer, source_position + count));
+      s_block = find_block(buffer, source_position + count);
+      assert(s_block != NULL);
       memmove(t_block->data, s_block->data + sr_offset - tr_offset,
               tr_offset);
     }
