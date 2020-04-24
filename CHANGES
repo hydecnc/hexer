@@ -1,6 +1,6 @@
 Change log for hexer, the multi-view binary editor
 
-1.0.6	not yet ;)
+1.0.6	2020/04/24
 	- add a missing "extern" for a variable in a header file
 	- fix some C compiler warnings
 
