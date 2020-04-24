@@ -1864,6 +1864,7 @@ tio_display(char *text, int indent_arg)
         break;
       case 'M':
         absolute_f = 1;
+        fallthrough;
       case 'm':
         i += 2;
         back_f = 0;

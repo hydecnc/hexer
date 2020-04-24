@@ -18,6 +18,14 @@
 #endif /* __GNUC__ */
 #endif /* __unused */
 
+#if !defined(fallthrough)
+#if defined(__GNUC__) && __GNUC__ >= 7
+#define fallthrough __attribute__((fallthrough))
+#else
+#define fallthrough /* fallthrough */
+#endif
+#endif
+
 /*
  * Buffer: (defaults)
  */

@@ -405,6 +405,7 @@ calc_operation(int position, int binary)
         int_f = 1;
         x.type = CO_FLOAT;
         x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         if (y.type != CO_FLOAT) {
           y.type = CO_FLOAT;
@@ -427,6 +428,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.type != CO_FLOAT) {
           x.u.i *= y.u.i;
@@ -435,6 +437,7 @@ calc_operation(int position, int binary)
           x.u.f = (double)x.u.i;
           x.type = CO_FLOAT;
         }
+        fallthrough;
       case CO_FLOAT:
         x.u.f *= y.type == CO_FLOAT ? y.u.f : (double)y.u.i;
         break;
@@ -453,6 +456,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.type != CO_FLOAT) {
           x.u.i /= y.u.i;
@@ -461,6 +465,7 @@ calc_operation(int position, int binary)
           x.u.f = (double)x.u.i;
           x.type = CO_FLOAT;
         }
+        fallthrough;
       case CO_FLOAT:
         x.u.f /= y.type == CO_FLOAT ? y.u.f : (double)y.u.i;
         break;
@@ -479,6 +484,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         x.u.i %= y.u.i;
         break;
@@ -493,6 +499,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.type != CO_FLOAT) {
           x.u.i += y.u.i;
@@ -501,6 +508,7 @@ calc_operation(int position, int binary)
           x.u.f = (double)x.u.i;
           x.type = CO_FLOAT;
         }
+        fallthrough;
       case CO_FLOAT:
         x.u.f += y.type == CO_FLOAT ? y.u.f : (double)y.u.i;
         break;
@@ -514,6 +522,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.type != CO_FLOAT) {
           x.u.i -= y.u.i;
@@ -522,6 +531,7 @@ calc_operation(int position, int binary)
           x.u.f = (double)x.u.i;
           x.type = CO_FLOAT;
         }
+        fallthrough;
       case CO_FLOAT:
         x.u.f -= y.type == CO_FLOAT ? y.u.f : (double)y.u.i;
         break;
@@ -540,6 +550,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.u.i >= LONG_BITS) y.u.i = LONG_BITS - 1;
         x.u.i <<= y.u.i;
@@ -560,6 +571,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.u.i >= LONG_BITS) y.u.i = LONG_BITS - 1;
         x.u.i >>= y.u.i;
@@ -580,6 +592,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         x.u.i = x.u.f < (y.type == CO_FLOAT ? y.u.f : (double)y.u.i);
         break;
@@ -599,6 +612,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         x.u.i = x.u.f <= (y.type == CO_FLOAT ? y.u.f : (double)y.u.i);
         break;
@@ -618,6 +632,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         x.u.i = x.u.f > (y.type == CO_FLOAT ? y.u.f : (double)y.u.i);
         break;
@@ -637,6 +652,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         x.u.i = x.u.f >= (y.type == CO_FLOAT ? y.u.f : (double)y.u.i);
         break;
@@ -656,6 +672,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         if (y.type == CO_INTEGER) y.u.f = (double)y.u.i;
         x.u.i = fabs(x.u.f - y.u.f) < DBL_EPSILON;
@@ -676,6 +693,7 @@ calc_operation(int position, int binary)
           break;
         } else
           x.u.f = (double)x.u.i;
+        fallthrough;
       case CO_FLOAT:
         if (y.type == CO_INTEGER) y.u.f = (double)y.u.i;
         x.u.i = fabs(x.u.f - y.u.f) >= DBL_EPSILON;
@@ -696,6 +714,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.u.i >= LONG_BITS) y.u.i = LONG_BITS - 1;
         x.u.i &= y.u.i;
@@ -716,6 +735,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.u.i >= LONG_BITS) y.u.i = LONG_BITS - 1;
         x.u.i ^= y.u.i;
@@ -736,6 +756,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         if (y.type == CO_INTEGER) x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         if (y.u.i >= LONG_BITS) y.u.i = LONG_BITS - 1;
         x.u.i |= y.u.i;
@@ -824,6 +845,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_INTEGER:
         x.type = CO_BOOLEAN;
+        fallthrough;
       case CO_BOOLEAN:
         x.u.i = !x.u.i;
         break;
@@ -846,6 +868,7 @@ calc_operation(int position, int binary)
       switch (x.type) {
       case CO_BOOLEAN:
         x.type = CO_INTEGER;
+        fallthrough;
       case CO_INTEGER:
         x.u.i = ~x.u.i;
         break;

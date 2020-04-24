@@ -50,6 +50,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#if !defined(fallthrough)
+#if defined(__GNUC__) && __GNUC__ >= 7
+#define fallthrough __attribute__((fallthrough))
+#else
+#define fallthrough /* fallthrough */
+#endif
+#endif
+
 static const char *usage = "\
 usage: bin2c [-t] [-h] [-o outputfile] [-n name] [inputfile]\n\
   -t  you can use this option if the inputfile is a small (< 1K) textfile.\n\
@@ -86,6 +94,7 @@ main(int argc, char **argv)
       break;
     default:
       fprintf(stderr, "%s: invalid option -- -%c\n", *argv, (char)c);
+      fallthrough;
     case 'h':
     case '?':
       fputs(usage, stderr);

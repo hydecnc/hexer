@@ -55,6 +55,11 @@ malloc_fatal(const size_t size)
   return p;
 }
 
+#if defined(__GNUC__) && __GNUC__ >= 7
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Walloc-size-larger-than="
+#endif
+
 static inline void *
 realloc_fatal(void * const p, const size_t size)
 {
@@ -63,6 +68,10 @@ realloc_fatal(void * const p, const size_t size)
     abort();
   return newp;
 }
+
+#if defined(__GNUC__) && __GNUC__ >= 7
+#pragma GCC diagnostic pop
+#endif
 
 static inline char *
 strdup_fatal(const char * const s)

@@ -1283,7 +1283,7 @@ he_visual_mode(struct he_s *hedit)
        * mode.
        */
       if (hedit->begin_selection < 0) goto exit_visual_mode;
-      /* fall through */
+      fallthrough;
     HE_CASE_MOTION:
     HE_CASE_MOTION_HJKL:
       he_motion(hedit, key, count);
@@ -2038,6 +2038,7 @@ he_clear_get(int command_mode)
     HE_CASE_MOTION_SHIFT:
     HE_CASE_MOTION_HJKL:
       if (command_mode) break;
+      fallthrough;
     default:
       key1 = 0;
     }
