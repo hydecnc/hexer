@@ -1,7 +1,7 @@
-#  Makefile for hexer version 1.0.5
+#  Makefile for hexer version 1.0.6
 
 #  Copyright (c) 1995,1996 Sascha Demetrio
-#  Copyright (c) 2009 - 2011, 2014 - 2016, 2018 Peter Pentchev
+#  Copyright (c) 2009 - 2011, 2014 - 2016, 2018, 2020 Peter Pentchev
 
 #  It might be helpful to read the `README'-file first.
 
@@ -26,7 +26,7 @@ CPPFLAGS_STD ?= -D_POSIX_C_SOURCE=200809L -D_XOPEN_SOURCE=700 \
 
 #  If you want to add some system specific defines, it's probably more
 #  appropriate to put them into `config.h'.
-CPPFLAGS += $(CPPFLAGS_STD) -DHEXER_VERSION=\"1.0.5\"
+CPPFLAGS += $(CPPFLAGS_STD) -DHEXER_VERSION=\"1.0.6\"
 
 #  -- Which compiler? --
 CC ?= cc
