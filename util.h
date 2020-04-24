@@ -1,4 +1,4 @@
-/* Copyright (c) 2009, 2015, 2018  Peter Pentchev
+/* Copyright (c) 2009, 2015, 2018, 2020  Peter Pentchev
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

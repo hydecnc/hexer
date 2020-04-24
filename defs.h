@@ -1,6 +1,6 @@
 /* defs.h:
  * Copyright (c) 1995,1996 Sascha Demetrio
- * Copyright (c) 2009, 2015, 2016 Peter Pentchev
+ * Copyright (c) 2009, 2015, 2016, 2020 Peter Pentchev
  */
 
 /*
