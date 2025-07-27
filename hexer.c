@@ -154,6 +154,22 @@ action_mapmagic(int current_value)
 }
 /* action_mapmagic */
 
+  static void
+action_fg(int current_value)
+{
+  tio_set_fg(current_value);
+  he_refresh_all(current_buffer->hedit);
+}
+/* action_fg */
+
+  static void
+action_bg(int current_value)
+{
+  tio_set_bg(current_value);
+  he_refresh_all(current_buffer->hedit);
+}
+/* action_bg */
+
 static const struct hexer_options_s {
   const char *option;
   enum s_option_e type;
@@ -166,8 +182,8 @@ static const struct hexer_options_s {
   { "TERM", S_STRING, "", (set_fn)action_TERM }, /* set in `hexer_init()' */
   { "specialnl", S_BOOL, "false", (set_fn)action_specialnl },
   { "mapmagic", S_BOOL, "false", (set_fn)action_mapmagic },
-  { "fg", S_INTEGER, "7", (set_fn)0 },
-  { "bg", S_INTEGER, "4", (set_fn)0 },
+  { "fg", S_INTEGER, "7", (set_fn)action_fg },
+  { "bg", S_INTEGER, "4", (set_fn)action_bg },
   { 0, (enum s_option_e)0, 0, 0 }
 };
 
